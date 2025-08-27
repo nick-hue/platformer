@@ -1,66 +1,98 @@
-/*******************************************************************************************
-*
-*   raylib [core] example - keyboard input
-*
-*   Example complexity rating: [★☆☆☆] 1/4
-*
-*   Example originally created with raylib 1.0, last time updated with raylib 1.0
-*
-*   Example licensed under an unmodified zlib/libpng license, which is an OSI-certified,
-*   BSD-like license that allows static linking with closed source software
-*
-*   Copyright (c) 2014-2025 Ramon Santamaria (@raysan5)
-*
-********************************************************************************************/
-
 #include "raylib.h"
+#include <cstdio>
 
-//------------------------------------------------------------------------------------
-// Program main entry point
-//------------------------------------------------------------------------------------
+#define SCREEN_WIDTH 800
+#define SCREEN_HEIGHT 450
+
+class Player {
+    public:
+        Vector2 position;
+        float velocity;
+        float width;
+        float height;
+        Rectangle rect;
+        Color color;
+
+        Player(float x, float y, float velocity, float width, float height, Color c) {
+            position = { x, y };
+            this->velocity = velocity;
+            this->width = width;
+            this->height = height;
+            rect = { position.x, position.y, width, height };
+            color = c;
+        }
+
+        void Update(){
+            printf("Player Position: x: %f, y: %f\n", position.x, position.y);
+            if (IsKeyDown(KEY_D)) Move({ 1, 0 });
+            if (IsKeyDown(KEY_A)) Move({ -1, 0 });
+            if (IsKeyDown(KEY_W)) Move({ 0, -1 });
+            if (IsKeyDown(KEY_S)) Move({ 0, 1 });
+        }
+
+        void Move(Vector2 direction) {
+            position.x += direction.x * velocity;
+            position.y += direction.y * velocity;
+            rect.x = position.x;
+            rect.y = position.y;
+        }
+
+        void Draw() {
+            DrawRectangleRec(rect, color);
+        }
+};
+
+class Object{
+    public:
+        Vector2 position;
+        float width;
+        float height;
+        Rectangle rect;
+        Color color;
+
+        Object(float x, float y, float width, float height, Color c) {
+            position = { x, y };
+            this->width = width;
+            this->height = height;
+            rect = { position.x, position.y, width, height };
+            color = c;
+        }
+
+        void Draw() {
+            DrawRectangleRec(rect, color);
+        }
+};
+
 int main(void)
 {
-    // Initialization
-    //--------------------------------------------------------------------------------------
-    const int screenWidth = 800;
-    const int screenHeight = 450;
 
-    InitWindow(screenWidth, screenHeight, "raylib [core] example - keyboard input");
+    InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Platformer");
+    SetWindowPosition(300,200);
+    SetTargetFPS(60);
 
-    Vector2 ballPosition = { (float)screenWidth/2, (float)screenHeight/2 };
+    Player player = { (float)SCREEN_WIDTH/2, (float)SCREEN_HEIGHT/2, 2.0f, 50, 50, MAROON };
+    Object platform = { 100, 350, 600, 20, DARKGRAY };
 
-    SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
-    //--------------------------------------------------------------------------------------
 
-    // Main game loop
-    while (!WindowShouldClose())    // Detect window close button or ESC key
-    {
-        // Update
-        //----------------------------------------------------------------------------------
-        if (IsKeyDown(KEY_RIGHT)) ballPosition.x += 2.0f;
-        if (IsKeyDown(KEY_LEFT)) ballPosition.x -= 2.0f;
-        if (IsKeyDown(KEY_UP)) ballPosition.y -= 2.0f;
-        if (IsKeyDown(KEY_DOWN)) ballPosition.y += 2.0f;
-        //----------------------------------------------------------------------------------
+    while (!WindowShouldClose()) 
+    {   
+        if (CheckCollisionRecs(player.rect, platform.rect))
+        {
+            printf("Collision Detected\n");
+        } else {
+            player.Update();
+        }
 
-        // Draw
-        //----------------------------------------------------------------------------------
         BeginDrawing();
 
             ClearBackground(RAYWHITE);
-
-            DrawText("move the ball with arrow keys", 10, 10, 20, DARKGRAY);
-
-            DrawCircleV(ballPosition, 50, MAROON);
+            player.Draw();
+            platform.Draw();
 
         EndDrawing();
-        //----------------------------------------------------------------------------------
     }
 
-    // De-Initialization
-    //--------------------------------------------------------------------------------------
-    CloseWindow();        // Close window and OpenGL context
-    //--------------------------------------------------------------------------------------
+    CloseWindow();        
 
     return 0;
 }

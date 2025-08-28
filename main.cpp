@@ -205,7 +205,6 @@ int main(void) {
         if (IsKeyPressed(KEY_TAB)) debug_show = !debug_show;
 
         float dt = GetFrameTime();
-        // for (auto& p : platforms) p.Sync(); // (if they ever moved)
 
         player.Update(dt, platforms);
 

@@ -6,7 +6,11 @@ CXXFLAGS := -std=c++17 -O2 -Wall -Wextra -Wpedantic -MMD -MP -Iinclude
 LDLIBS   := -lraylib -lGL -lm -lpthread -ldl -lrt -lX11
 
 # -------- Sources --------
-SRCS_EDITOR := src/editor/level_editor.cpp src/editor/grid.cpp src/editor/cell.cpp src/editor/debug_menu.cpp
+SRCS_EDITOR := src/editor/level_editor.cpp \
+               src/editor/grid.cpp \
+               src/editor/cell.cpp \
+               src/editor/debug_menu.cpp \
+               src/editor/info_screen.cpp
 SRCS_GAME   := src/game/main.cpp
 
 OBJS_EDITOR := $(SRCS_EDITOR:.cpp=.o)

@@ -3,46 +3,7 @@
 #include "grid.h"
 #include "cell.h"
 #include "debug_menu.h"
-
-class InfoScreen {
-    public:
-        Rectangle box;
-        Color currentColor;
-        Color mainColor;
-        Color outlineColor;
-
-
-        InfoScreen() {
-            box = { SCREEN_WIDTH - 200, 0, 200, 100 };
-            mainColor = LIGHTGRAY;
-            outlineColor = MAROON;
-        }
-
-        void GetMenuColor(){
-           Vector2 mouse_pos = GetMousePosition();
-            if (CheckCollisionPointRec(mouse_pos, box))
-                currentColor = Fade(mainColor, 0.5f);
-            else{
-                currentColor = mainColor;    
-            }
-        }
-
-        void Draw(ActionMode mode) {
-            GetMenuColor();
-            DrawRectangleRec(box, currentColor);
-            DrawRectangleLinesEx(box, 1, outlineColor);
-            DrawText("Info Screen", box.x + 10, box.y + 10, 20, DARKGRAY);
-            DrawText(("Action mode: " + GetActionModeString(mode)).c_str(), box.x + 10, box.y + 40, 18, DARKGRAY);
-        }
-
-        std::string GetActionModeString(ActionMode mode) {
-            switch (mode) {
-                case ActionMode::INSERT: return "INSERT";
-                case ActionMode::REMOVE: return "REMOVE";
-                default: return "Unknown";
-            }
-        }
-};
+#include "info_screen.h"
 
 class State {
     public:

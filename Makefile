@@ -1,27 +1,53 @@
-CXX = g++
-CXXFLAGS = -std=c++17
-LDFLAGS = -lraylib -lGL -lm -lpthread -ldl -lrt -lX11
-SRC = main.cpp
-BIN = app
+# ---- Compiler & Flags ----
+CXX      := g++
+CXXFLAGS := -std=c++17 -O2 -Wall -Wextra -Wpedantic -MMD -MP
+# Add debug symbols by running: make CXXFLAGS+='-g'
 
-LEVEL_EDITOR_SRC = level_editor.cpp
-LEVEL_EDITOR_BIN = level_editor
+# ---- Linker Flags & Libs (Linux + raylib) ----
+LDFLAGS  :=
+LDLIBS   := -lraylib -lGL -lm -lpthread -ldl -lrt -lX11
 
-all: $(BIN) $(LEVEL_EDITOR_BIN)
+# ---- Sources ----
+SRCS_COMMON := grid.cpp cell.cpp debug_menu.cpp
+SRCS_EDITOR := level_editor.cpp
+SRCS_MAIN   := main.cpp
 
+# ---- Executables ----
+BIN_EDITOR := level_editor
+BIN_MAIN   := main
 
-$(BIN): $(SRC)
-	$(CXX) $(CXXFLAGS) -o $(BIN) $(SRC) $(LDFLAGS)
+# ---- Objects / Deps ----
+OBJS_COMMON := $(SRCS_COMMON:.cpp=.o)
+OBJS_EDITOR := $(SRCS_EDITOR:.cpp=.o)
+OBJS_MAIN   := $(SRCS_MAIN:.cpp=.o)
 
-$(LEVEL_EDITOR_BIN): $(LEVEL_EDITOR_SRC)
-	$(CXX) $(CXXFLAGS) -o $(LEVEL_EDITOR_BIN) $(LEVEL_EDITOR_SRC) $(LDFLAGS)
+DEPS := $(OBJS_COMMON:.o=.d) $(OBJS_EDITOR:.o=.d) $(OBJS_MAIN:.o=.d)
 
+# ---- Default target ----
+all: $(BIN_EDITOR) $(BIN_MAIN)
 
-run: $(BIN)
-	LD_LIBRARY_PATH=/usr/local/lib:$$LD_LIBRARY_PATH ./$(BIN)
+# ---- Build rules ----
+$(BIN_EDITOR): $(OBJS_EDITOR) $(OBJS_COMMON)
+	$(CXX) $(CXXFLAGS) $^ -o $@ $(LDFLAGS) $(LDLIBS)
 
-run-level-editor: $(LEVEL_EDITOR_BIN)
-	LD_LIBRARY_PATH=/usr/local/lib:$$LD_LIBRARY_PATH ./$(LEVEL_EDITOR_BIN)
+$(BIN_MAIN): $(OBJS_MAIN) $(OBJS_COMMON)
+	$(CXX) $(CXXFLAGS) $^ -o $@ $(LDFLAGS) $(LDLIBS)
+
+# Generic .cpp -> .o rule (handles all sources)
+%.o: %.cpp
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+# ---- Convenience targets ----
+run-level-editor: $(BIN_EDITOR)
+	./$(BIN_EDITOR)
+
+run-main: $(BIN_MAIN)
+	./$(BIN_MAIN)
 
 clean:
-	rm -f $(BIN) $(LEVEL_EDITOR_BIN)
+	rm -f $(BIN_EDITOR) $(BIN_MAIN) *.o *.d
+
+.PHONY: all clean run-level-editor run-main
+
+# Include auto-generated dependency files
+-include $(DEPS)

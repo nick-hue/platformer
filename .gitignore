@@ -1,3 +1,18 @@
-/app
-/level_editor
 .vscode
+# ---- Build artifacts ----
+*.o
+*.d
+*.out
+*.exe
+*.a
+*.so
+*.dll
+
+# Project binaries
+app
+level_editor
+main
+
+# VS Code
+.vscode/
+*.code-workspace

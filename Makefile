@@ -10,7 +10,8 @@ SRCS_EDITOR := src/editor/level_editor.cpp \
                src/editor/grid.cpp \
                src/editor/cell.cpp \
                src/editor/debug_menu.cpp \
-               src/editor/info_screen.cpp
+               src/editor/info_screen.cpp \
+			   src/editor/my_button.cpp
 
 SRCS_GAME   := src/game/main.cpp
 

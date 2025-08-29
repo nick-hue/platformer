@@ -6,6 +6,16 @@ InfoScreen::InfoScreen() {
     mainColor = LIGHTGRAY;
     outlineColor = MAROON;
     currentColor = mainColor;
+
+    insertButton = { 24.0f, 24.0f, 120.0f, 30.0f , "Insert" };
+    removeButton = { 24.0f, 64.0f, 120.0f, 30.0f , "Remove" };
+    bucketButton = { 24.0f, 104.0f, 120.0f, 30.0f , "Bucket" };
+    moveButton = { 24.0f, 144.0f, 120.0f, 30.0f , "Move" };
+
+    buttons.push_back(insertButton);
+    buttons.push_back(removeButton);
+    buttons.push_back(bucketButton);
+    buttons.push_back(moveButton);
 }
 
 void InfoScreen::GetMenuColor() {
@@ -28,6 +38,10 @@ void InfoScreen::DrawWidgets(){
     Rectangle btn = { 24.0f, 24.0f, 120.0f, 30.0f };
     if (GuiButton(btn, "#191#Show Message")) {
         printf("Show Message button pressed\n");
+    }
+
+    for (auto &button : buttons){
+        button.Draw();
     }
 }
 

@@ -2,6 +2,8 @@
 #include "raylib.h"
 #include "level_editor_defs.h" // for SCREEN_WIDTH, ActionMode
 #include "raygui.h"
+#include "my_button.h"
+#include <vector>
 
 class InfoScreen {
 public:
@@ -10,6 +12,19 @@ public:
     Color currentColor{};
     Color mainColor{};
     Color outlineColor{};
+
+    // Rectangle insertButton{};
+    // Rectangle removeButton{};
+    // Rectangle bucketButton{};
+    // Rectangle moveButton{};
+
+    MyButton insertButton{};
+    MyButton removeButton{};
+    MyButton bucketButton{};
+    MyButton moveButton{};
+
+    std::vector<MyButton> buttons;
+
 
     InfoScreen();
 

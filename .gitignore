@@ -1,18 +1,14 @@
-.vscode
-# ---- Build artifacts ----
+# build
+bin/
 *.o
 *.d
-*.out
-*.exe
-*.a
-*.so
-*.dll
 
-# Project binaries
-app
+# executables (if built in root by mistake)
 level_editor
+platformer
 main
 
-# VS Code
+# logs
+*.log
+
 .vscode/
-*.code-workspace

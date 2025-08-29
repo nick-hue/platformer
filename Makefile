@@ -1,53 +1,51 @@
-# ---- Compiler & Flags ----
+# -------- Compiler --------
 CXX      := g++
-CXXFLAGS := -std=c++17 -O2 -Wall -Wextra -Wpedantic -MMD -MP
-# Add debug symbols by running: make CXXFLAGS+='-g'
+CXXFLAGS := -std=c++17 -O2 -Wall -Wextra -Wpedantic -MMD -MP -Iinclude
 
-# ---- Linker Flags & Libs (Linux + raylib) ----
-LDFLAGS  :=
+# -------- Linker (Linux + raylib) --------
 LDLIBS   := -lraylib -lGL -lm -lpthread -ldl -lrt -lX11
 
-# ---- Sources ----
-SRCS_COMMON := grid.cpp cell.cpp debug_menu.cpp
-SRCS_EDITOR := level_editor.cpp
-SRCS_MAIN   := main.cpp
+# -------- Sources --------
+SRCS_EDITOR := src/editor/level_editor.cpp src/editor/grid.cpp src/editor/cell.cpp src/editor/debug_menu.cpp
+SRCS_GAME   := src/game/main.cpp
 
-# ---- Executables ----
-BIN_EDITOR := level_editor
-BIN_MAIN   := main
-
-# ---- Objects / Deps ----
-OBJS_COMMON := $(SRCS_COMMON:.cpp=.o)
 OBJS_EDITOR := $(SRCS_EDITOR:.cpp=.o)
-OBJS_MAIN   := $(SRCS_MAIN:.cpp=.o)
+OBJS_GAME   := $(SRCS_GAME:.cpp=.o)
 
-DEPS := $(OBJS_COMMON:.o=.d) $(OBJS_EDITOR:.o=.d) $(OBJS_MAIN:.o=.d)
+DEPS := $(OBJS_EDITOR:.o=.d) $(OBJS_GAME:.o=.d)
 
-# ---- Default target ----
-all: $(BIN_EDITOR) $(BIN_MAIN)
+# -------- Binaries --------
+BIN_DIR := bin
+BIN_EDITOR := $(BIN_DIR)/level_editor
+BIN_GAME   := $(BIN_DIR)/platformer
 
-# ---- Build rules ----
-$(BIN_EDITOR): $(OBJS_EDITOR) $(OBJS_COMMON)
-	$(CXX) $(CXXFLAGS) $^ -o $@ $(LDFLAGS) $(LDLIBS)
+# -------- Rules --------
+.PHONY: all clean run-editor run-game
 
-$(BIN_MAIN): $(OBJS_MAIN) $(OBJS_COMMON)
-	$(CXX) $(CXXFLAGS) $^ -o $@ $(LDFLAGS) $(LDLIBS)
+all: $(BIN_EDITOR) $(BIN_GAME)
 
-# Generic .cpp -> .o rule (handles all sources)
+$(BIN_DIR):
+	mkdir -p $(BIN_DIR)
+
+$(BIN_EDITOR): $(BIN_DIR) $(OBJS_EDITOR)
+	$(CXX) $(CXXFLAGS) -o $@ $(OBJS_EDITOR) $(LDLIBS)
+
+$(BIN_GAME): $(BIN_DIR) $(OBJS_GAME) src/editor/grid.cpp src/editor/cell.cpp
+	# If the game starts using grid/cell/debug_menu, add them above; otherwise remove them.
+	$(CXX) $(CXXFLAGS) -o $@ $(OBJS_GAME) $(LDLIBS)
+
+# Generic compile rule
 %.o: %.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-# ---- Convenience targets ----
-run-level-editor: $(BIN_EDITOR)
+run-editor: $(BIN_EDITOR)
 	./$(BIN_EDITOR)
 
-run-main: $(BIN_MAIN)
-	./$(BIN_MAIN)
+run-game: $(BIN_GAME)
+	./$(BIN_GAME)
 
 clean:
-	rm -f $(BIN_EDITOR) $(BIN_MAIN) *.o *.d
+	rm -rf $(BIN_DIR) $(OBJS_EDITOR) $(OBJS_GAME) $(DEPS)
 
-.PHONY: all clean run-level-editor run-main
-
-# Include auto-generated dependency files
+# Auto header deps
 -include $(DEPS)

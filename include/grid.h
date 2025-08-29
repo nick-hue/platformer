@@ -12,7 +12,7 @@ public:
     Grid();
     void Draw();
     void ShowSelectedCell();
-    bool IsInbounds(Vector2 grid_pos);
+    bool IsInbounds(int gx, int gy);
 };
 
 

@@ -186,11 +186,11 @@ void ShowDebug(const Player& player) {
 
 // ---------- Main ----------
 int main(void) {
-    InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Platformer");
+    InitWindow(EDITOR_WIDTH, EDITOR_HEIGHT, "Platformer");
     SetWindowPosition(300, 200);
     SetTargetFPS(60);
 
-    Player player((float)SCREEN_WIDTH/2.0f - 25.0f, (float)SCREEN_HEIGHT/2.0f, 50, 50, MAROON);
+    Player player((float)EDITOR_WIDTH/2.0f - 25.0f, (float)EDITOR_HEIGHT/2.0f, 50, 50, MAROON);
 
     // World geometry
     Object platform(100, 350, 600, 20, DARKGRAY);

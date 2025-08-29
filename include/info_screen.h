@@ -13,21 +13,16 @@ public:
     Color mainColor{};
     Color outlineColor{};
 
-    // Rectangle insertButton{};
-    // Rectangle removeButton{};
-    // Rectangle bucketButton{};
-    // Rectangle moveButton{};
-
+    ActionMode& mode;            // reference to external state
     MyButton insertButton{};
     MyButton removeButton{};
     MyButton bucketButton{};
     MyButton moveButton{};
 
-    std::vector<MyButton> buttons;
-
-
     InfoScreen();
+    explicit InfoScreen(ActionMode& modeRef);
 
+    std::vector<MyButton> buttons;
     // Update hover color based on mouse
     void GetMenuColor();
 

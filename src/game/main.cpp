@@ -189,6 +189,7 @@ int main(void) {
     InitWindow(EDITOR_WIDTH, EDITOR_HEIGHT, "Platformer");
     SetWindowPosition(300, 200);
     SetTargetFPS(60);
+    DrawFPS(10, 10);
 
     Player player((float)EDITOR_WIDTH/2.0f - 25.0f, (float)EDITOR_HEIGHT/2.0f, 50, 50, MAROON);
 

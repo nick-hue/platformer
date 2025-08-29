@@ -10,16 +10,18 @@
 class State {
     public:
         DebugMenu debugMenu;
-        ActionMode actionMode;
+        ActionMode actionMode{ActionMode::INSERT};
         InfoScreen infoScreen;
         Grid grid;
 
-        State() {
-            debugMenu = DebugMenu();
-            actionMode = ActionMode::INSERT;
-            infoScreen = InfoScreen();
-            grid = Grid();
-        }
+        // State() {
+        //     debugMenu = DebugMenu();
+        //     actionMode = ActionMode::INSERT;
+        //     infoScreen = InfoScreen(actionMode);
+        //     grid = Grid();
+        // }
+        State() : actionMode(ActionMode::INSERT), infoScreen(actionMode), grid() {}
+
 };
 State state;
 
@@ -44,7 +46,7 @@ void HandleInput(){
         int gy = (int)mouse_pos.y / CELL_SIZE;
 
         if (!state.grid.IsInbounds(gx, gy)) {
-            printf("Out of bounds: (%d, %d)\n", gx, gy);
+            // printf("Out of bounds: (%d, %d)\n", gx, gy);
             return;
         }
 

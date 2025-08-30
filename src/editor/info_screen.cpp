@@ -7,15 +7,15 @@ InfoScreen::InfoScreen(ActionMode& modeRef) : mode(modeRef) {
     outlineColor = MAROON;
     currentColor = mainColor;
 
-    insertButton = { EDITOR_WIDTH + 20.0f, 64.0f, 120.0f, 30.0f , "#22# Insert", 'I'};
+    insertButton = { EDITOR_WIDTH + 20.0f, 64.0f, 120.0f, 30.0f , "Insert", "#22#", 'I'};
     insertButton.onClick = [&]{ mode = ActionMode::INSERT; };
 
-    removeButton = { EDITOR_WIDTH + 20.0f, 104.0f, 120.0f, 30.0f , "#28# Remove", 'R'};
+    removeButton = { EDITOR_WIDTH + 20.0f, 104.0f, 120.0f, 30.0f , "Remove", "#28#", 'R'};
     removeButton.onClick = [&]{ mode = ActionMode::REMOVE; };
 
-    bucketButton = { EDITOR_WIDTH + 20.0f, 144.0f, 120.0f, 30.0f , "#29# Bucket", 'B'};
+    bucketButton = { EDITOR_WIDTH + 20.0f, 144.0f, 120.0f, 30.0f , "Bucket", "#29#", 'B'};
     bucketButton.onClick = [&]{ mode = ActionMode::BUCKET; };
-    moveButton = { EDITOR_WIDTH + 20.0f, 184.0f, 120.0f, 30.0f , "#68# Move", 'M'};
+    moveButton = { EDITOR_WIDTH + 20.0f, 184.0f, 120.0f, 30.0f , "Move", "#68#", 'M'};
     moveButton.onClick = [&]{ mode = ActionMode::MOVE; };
 
     buttons = { insertButton, removeButton, bucketButton, moveButton };

@@ -4,23 +4,25 @@ MyButton::MyButton() {
     box = { 0, 0, 100, 30 };
     text = "Button";
     onClick = nullptr;
-    selectLetter = '\0';
+    selectLetter = '-';
+    iconId = "#00#";
+    displayText = iconId + std::string(" ") + text + " [" + selectLetter + "]";
 }
 
-
-
-MyButton::MyButton(float x, float y, float width, float height, const char* text, char selectLetter) {
+MyButton::MyButton(float x, float y, float width, float height, const char* text, const char* iconId, char selectLetter) {
     box = { x, y, width, height };
     this->text = text;
     this->selectLetter = selectLetter;
+    this->iconId = iconId;
+    displayText = this->iconId + std::string(" ") + this->text +
+                  " [" + this->selectLetter + "]";
 }
 
 int MyButton::Draw() {
-    GuiButton(box, text);
+    if (GuiButton(box, displayText.c_str())) {
+        if (onClick) onClick();
+        return 1;
+    }
+    return 0;
 
-    if (GuiButton(box, text)) {
-            if (onClick) onClick();
-            return 1;
-        }
-        return 0;
 }

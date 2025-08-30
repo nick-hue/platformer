@@ -25,6 +25,7 @@ class Map {
 
         Map(const char *filename);
 
+        // makes the cells that were occupied (from the file) into tiles for the game
         void CellToTiles();
 };
 

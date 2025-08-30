@@ -33,22 +33,6 @@ Map::Map(const char *filename){
 
     matrix.assign(MAP_HEIGHT, std::vector<Cell>(MAP_WIDTH));
 
-    // for (int y = 0; y < MAP_HEIGHT; ++y) {
-
-    //     if (!std::getline(in, line)) {
-    //         printf("Unexpected end of file at row %d\n", y);
-    //         break;
-    //     }
-    //     for (int x = 0; x < line.size(); x++){
-    //         if (x % 2 == 1) continue;
-    //         int v = line[x] - '0'; // convert char to int
-    //         printf("%d-", v);
-    //         matrix[y][x] = Cell(x, y, cell_size, (v == 1));
-
-    //     }
-    //     printf("\n");
-    // }
-
     for (int y = 0; y < MAP_HEIGHT; ++y) {
         if (!std::getline(in, line)) {
             printf("Unexpected end of file at row %d\n", y);

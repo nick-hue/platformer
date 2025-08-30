@@ -13,7 +13,7 @@ SRCS_EDITOR := src/editor/level_editor.cpp \
                src/editor/info_screen.cpp \
 			   src/editor/my_button.cpp
 
-SRCS_GAME   := src/game/main.cpp
+SRCS_GAME   := src/game/game.cpp
 
 OBJS_EDITOR := $(SRCS_EDITOR:.cpp=.o)
 OBJS_GAME   := $(SRCS_GAME:.cpp=.o)

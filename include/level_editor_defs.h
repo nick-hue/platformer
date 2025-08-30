@@ -15,8 +15,8 @@ constexpr int GUI_WIDTH  = 256;
 constexpr int GUI_HEIGHT = EDITOR_HEIGHT;
 
 // WINDOW DIMENSIONS
-constexpr int SCREEN_WIDTH  = EDITOR_WIDTH + GUI_WIDTH;
-constexpr int SCREEN_HEIGHT  = EDITOR_HEIGHT;
+constexpr int EDITOR_SCREEN_WIDTH  = EDITOR_WIDTH + GUI_WIDTH;
+constexpr int EDITOR_SCREEN_HEIGHT  = EDITOR_HEIGHT;
 
 constexpr int CELL_SIZE = 32;
 constexpr int GRID_WIDTH  = EDITOR_WIDTH  / CELL_SIZE;
@@ -49,3 +49,5 @@ inline const char* ToDrawString(ActionMode m) {
         default:                 return "Action Mode : Unknown";
     }
 }
+
+void ExportMap(const char *filename);

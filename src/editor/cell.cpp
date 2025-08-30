@@ -2,13 +2,21 @@
 #include "cell.h"
 
 Cell::Cell(Vector2 pos, Color filledCol, Color emptyCol, Color filledSelCol, Color emptySelCol)
-: position{pos},
-  filledColor{filledCol},
-  emptyColor{emptyCol},
-  filledSelectionColor{filledSelCol},
-  emptySelectionColor{emptySelCol},
-  isOccupied{false}
-{}
+{
+    position = pos;
+    filledColor = filledCol;
+    emptyColor = emptyCol;
+    filledSelectionColor = filledSelCol;
+    emptySelectionColor = emptySelCol;
+    isOccupied = false;
+}
+
+Cell::Cell(int gx, int gy, int cell_size, bool occupied)
+{
+    position = { (float)(gx * cell_size), (float)(gy * cell_size) };
+    isOccupied = occupied;
+    cellSize = cell_size;
+}
 
 void Cell::Draw() const {
     const Rectangle r = Rect();

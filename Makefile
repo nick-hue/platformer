@@ -16,7 +16,9 @@ SRCS_EDITOR := src/editor/level_editor.cpp \
 SRCS_GAME   := 	src/game/game.cpp \
 				src/game/game_debug.cpp \
 				src/game/player.cpp \
-				src/game/tile.cpp
+				src/game/tile.cpp \
+				src/game/map.cpp \
+				src/editor/cell.cpp
 
 OBJS_EDITOR := $(SRCS_EDITOR:.cpp=.o)
 OBJS_GAME   := $(SRCS_GAME:.cpp=.o)

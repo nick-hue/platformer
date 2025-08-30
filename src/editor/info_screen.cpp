@@ -1,6 +1,6 @@
 #include "info_screen.h"
 
-InfoScreen::InfoScreen(ActionMode& modeRef) : mode(modeRef) {
+InfoScreen::InfoScreen(ActionMode& modeRef, std::string& exportedMapNameRef) : mode(modeRef), exportedMapName(exportedMapNameRef) {
     // use floats to avoid narrowing
     box = { (float)EDITOR_WIDTH, 0.0f, (float)GUI_WIDTH, (float)GUI_HEIGHT};
     mainColor = LIGHTGRAY;
@@ -15,10 +15,14 @@ InfoScreen::InfoScreen(ActionMode& modeRef) : mode(modeRef) {
 
     bucketButton = { EDITOR_WIDTH + 20.0f, 144.0f, 120.0f, 30.0f , "Bucket", "#29#", 'B'};
     bucketButton.onClick = [&]{ mode = ActionMode::BUCKET; };
+    
     moveButton = { EDITOR_WIDTH + 20.0f, 184.0f, 120.0f, 30.0f , "Move", "#68#", 'M'};
     moveButton.onClick = [&]{ mode = ActionMode::MOVE; };
 
-    buttons = { insertButton, removeButton, bucketButton, moveButton };
+    exportButton = { EDITOR_WIDTH + 20.0f, 224.0f, 120.0f, 30.0f , "Export", "#05#", 'E'};
+    exportButton.onClick = [&]{ ExportMap(exportedMapName.c_str()); };
+
+    buttons = { insertButton, removeButton, bucketButton, moveButton, exportButton};
 
 }
 
@@ -40,6 +44,9 @@ void InfoScreen::DrawWidgets(){
     for (auto &button : buttons){
         button.Draw();
     }
+
+    // GuiTextBox((Rectangle){ EDITOR_WIDTH + 20.0f, 300.0f, 200.0f, 30.0f }, (char *)"Type here...", 20, true);
+
 }
 
 void InfoScreen::Draw(ActionMode mode) {

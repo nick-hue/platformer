@@ -1,6 +1,7 @@
 #pragma once
 #include "raylib.h"
 #include "level_editor_defs.h" // for CELL_SIZE
+#include <iostream>
 
 class Cell {
 public:
@@ -12,8 +13,10 @@ public:
     Color   emptySelectionColor{GRAY};
 
     bool    isOccupied{false};
+    int     cellSize{CELL_SIZE};
 
     Cell() = default;
+    Cell(int gx, int gy, int cell_size, bool occupied);
     Cell(Vector2 pos, Color filledCol = DARKGRAY, Color emptyCol = LIGHTGRAY, Color filledSelCol = MAROON, Color emptySelCol = GRAY);
 
     // Draw Cell
@@ -24,6 +27,10 @@ public:
 
     // Axis-aligned rectangle helper
     Rectangle Rect() const {
-        return Rectangle{ position.x, position.y, (float)CELL_SIZE, (float)CELL_SIZE };
+        return Rectangle{ position.x, position.y, (float)cellSize, (float)cellSize };
+    }
+
+    void ToString(){
+        std::cout << "Cell(" << position.x << ", " << position.y << ", " << cellSize << ", " << isOccupied << ")\n";
     }
 };

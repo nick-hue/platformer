@@ -1,6 +1,6 @@
 #pragma once
 #include "raylib.h"
-#include "level_editor_defs.h" // for SCREEN_WIDTH, ActionMode
+#include "level_editor_defs.h"
 #include "raygui.h"
 #include "my_button.h"
 #include <vector>
@@ -14,13 +14,16 @@ public:
     Color outlineColor{};
 
     ActionMode& mode;            // reference to external state
+    std::string& exportedMapName;
     MyButton insertButton{};
     MyButton removeButton{};
     MyButton bucketButton{};
     MyButton moveButton{};
+    MyButton exportButton{};
+
 
     InfoScreen();
-    explicit InfoScreen(ActionMode& modeRef);
+    explicit InfoScreen(ActionMode& modeRef, std::string& exportedMapNameRef);
 
     std::vector<MyButton> buttons;
     // Update hover color based on mouse

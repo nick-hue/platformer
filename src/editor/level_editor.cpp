@@ -13,6 +13,7 @@ class State {
         ActionMode actionMode{ActionMode::INSERT};
         InfoScreen infoScreen;
         Grid grid;
+        std::string exportedMapName{"exported_map.txt"};
 
         // State() {
         //     debugMenu = DebugMenu();
@@ -20,7 +21,7 @@ class State {
         //     infoScreen = InfoScreen(actionMode);
         //     grid = Grid();
         // }
-        State() : actionMode(ActionMode::INSERT), infoScreen(actionMode), grid() {}
+        State() : actionMode(ActionMode::INSERT), infoScreen(actionMode, exportedMapName), grid() {}
 
 };
 State state;
@@ -38,7 +39,10 @@ void HandleInput(){
     if (IsKeyPressed(KEY_M)) {
         state.actionMode = ActionMode::MOVE;
     }
-
+    if (IsKeyPressed(KEY_E) && IsKeyDown(KEY_LEFT_CONTROL)) {
+        printf("Exporting...\n");
+        ExportMap(state.exportedMapName.c_str());
+    }
 
     if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
         Vector2 mouse_pos = GetMousePosition();
@@ -75,12 +79,34 @@ void HandleInput(){
 
     if (IsKeyPressed(KEY_TAB)) state.debugMenu.active = !state.debugMenu.active;
 }
-//TODO: bucket mode 
+
+void ExportMap(const char *filename){
+    FILE *file = fopen(filename, "w");
+    if (!file) {
+        printf("Failed to open file for writing: %s\n", filename);
+        return;
+    }
+
+    std::string header = std::to_string(GRID_WIDTH) + ", " + std::to_string(GRID_HEIGHT) + ", " + std::to_string(CELL_SIZE) + " \n";
+    fputs(header.c_str(), file);
+
+    for (int y = 0; y < GRID_HEIGHT; ++y) {
+        for (int x = 0; x < GRID_WIDTH; ++x) {
+            fputc(state.grid.matrix[x][y].isOccupied ? '1' : '0', file);
+            if (x < GRID_WIDTH - 1) fputc(',', file);
+        }
+        fputc('\n', file);
+    }
+
+    fclose(file);
+    printf("Map exported to %s\n", filename);
+}
+
 //TODO: move mode 
 
 int main(void)
 {
-    InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Level Editor");
+    InitWindow(EDITOR_SCREEN_WIDTH, EDITOR_SCREEN_HEIGHT, "Level Editor");
     SetWindowPosition(300, 100);
     SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
 

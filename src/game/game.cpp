@@ -1,19 +1,5 @@
-#include "raylib.h"
-#include <cstdio>
-#include <vector>
-#include <string>
-#include <algorithm>
+#include "game.h"
 
-#define SCREEN_WIDTH 800
-#define SCREEN_HEIGHT 450
-
-// ---------- Physics Constants ----------
-static const float GRAVITY          = 2000.0f;  
-static const float JUMP_VELOCITY    = -700.0f;  // (negative is up)
-static const float JUMP_CUT_MULT    = 0.45f;    // when releasing jump early
-static const float MOVE_SPEED       = 300.0f;   // px/s
-static const float COYOTE_TIME      = 0.08f;    // s after leaving ground you can still jump
-static const float JUMP_BUFFER_TIME = 0.10f;    // s before landing a jump press is buffered
 
 // ---------- Objects ----------
 struct Object {
@@ -186,12 +172,12 @@ void ShowDebug(const Player& player) {
 
 // ---------- Main ----------
 int main(void) {
-    InitWindow(EDITOR_WIDTH, EDITOR_HEIGHT, "Platformer");
+    InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Platformer");
     SetWindowPosition(300, 200);
     SetTargetFPS(60);
     DrawFPS(10, 10);
 
-    Player player((float)EDITOR_WIDTH/2.0f - 25.0f, (float)EDITOR_HEIGHT/2.0f, 50, 50, MAROON);
+    Player player((float)SCREEN_WIDTH/2.0f - 25.0f, (float)SCREEN_HEIGHT/2.0f, 50, 50, MAROON);
 
     // World geometry
     Object platform(100, 350, 600, 20, DARKGRAY);

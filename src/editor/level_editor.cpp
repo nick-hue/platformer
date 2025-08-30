@@ -64,9 +64,11 @@ void HandleInput(){
                 break;
             case ActionMode::BUCKET:
                 // TODO: Implement bucket fill
+                state.grid.BucketFill(gx, gy);
                 break;
             case ActionMode::MOVE:
                 // TODO: Implement move
+                state.grid.MoveFrom(gx, gy);
                 break;
         }
     }

@@ -31,3 +31,63 @@ bool Grid::IsInbounds(int gx, int gy) {
     return (gx >= 0 && gx < GRID_WIDTH &&
             gy >= 0 && gy < GRID_HEIGHT);
 }
+
+void Grid::BucketHelper(int gx, int gy) {
+    if (!IsInbounds(gx, gy)) return;
+
+    // If the cell is not occupied, fill it
+    if (!matrix[gx][gy].isOccupied) {
+        matrix[gx][gy].isOccupied = true;
+        // Recursively fill adjacent cells
+        BucketHelper(gx + 1, gy);
+        BucketHelper(gx - 1, gy);
+        BucketHelper(gx, gy + 1);
+        BucketHelper(gx, gy - 1);
+    }
+}
+
+void Grid::BucketFill(int gx, int gy) {
+    if (matrix[gx][gy].isOccupied) {
+        printf("Bucket fill aborted: Cell (%d, %d) is occupied\n", gx, gy);
+        return;
+    }    
+    printf("Bucketing from (%d, %d)\n", gx, gy);
+
+    BucketHelper(gx, gy);
+
+}
+
+int Grid::GetAdjacentCells(int gx, int gy, std::vector<Cell> &outCells)
+{
+    if (IsInbounds(gx + 1, gy) && matrix[gx + 1][gy].isOccupied) outCells.push_back(matrix[gx + 1][gy]);
+    if (IsInbounds(gx - 1, gy) && matrix[gx - 1][gy].isOccupied) outCells.push_back(matrix[gx - 1][gy]);
+    if (IsInbounds(gx, gy + 1) && matrix[gx][gy + 1].isOccupied) outCells.push_back(matrix[gx][gy + 1]);
+    if (IsInbounds(gx, gy - 1) && matrix[gx][gy - 1].isOccupied) outCells.push_back(matrix[gx][gy - 1]);
+
+    return outCells.size();
+}
+
+
+void Grid::MoveFrom(int gx, int gy) {
+    // TODO: Implement move
+    if (!matrix[gx][gy].isOccupied) {
+        printf("Move aborted: Cell (%d, %d) is not occupied\n", gx, gy);
+        return;
+    }
+    
+    printf("Moving from (%d, %d)\n", gx, gy);
+
+    // select all adjacent cells
+    std::vector<Cell> adjacentCells;
+
+    int check = GetAdjacentCells(gx, gy, adjacentCells);
+    if (check > 0) {
+        printf("Found %d adjacent cells\n", check);
+    } else {
+        printf("No adjacent cells found\n");
+    }
+    printf("Found %d adjacent cells\n", adjacentCells.size());
+
+    // TODO: Implement move
+}
+

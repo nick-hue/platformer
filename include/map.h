@@ -28,6 +28,8 @@ class Map {
 
         Map(const char *filename);
 
+        // loads the map from a file
+        void LoadMap(const char *filename);
         // makes the cells that were occupied (from the file) into tiles for the game
         void CellToTiles();
         void DrawEndPoint();

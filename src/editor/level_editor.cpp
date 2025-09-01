@@ -4,7 +4,6 @@
 #include "cell.h"
 #include "debug_menu.h"
 #include "info_screen.h"
-#define RAYGUI_IMPLEMENTATION
 #include "raygui.h"
 
 class State {
@@ -13,35 +12,42 @@ class State {
         ActionMode actionMode{ActionMode::INSERT};
         InfoScreen infoScreen;
         Grid grid;
-        std::string exportedMapName{"exported_map.txt"};
+        std::string exportedMapName{"assets/maps/exported_map_1.txt"};
 
-        State() : actionMode(ActionMode::INSERT), infoScreen(actionMode, exportedMapName), grid() {}
+        State() : actionMode(ActionMode::INSERT), infoScreen(actionMode, exportedMapName, grid), grid() {}
 
 };
 State state;
 
 void HandleInput(){
-    if (IsKeyPressed(KEY_I)){
-        state.actionMode = ActionMode::INSERT;
-    }
-    if (IsKeyPressed(KEY_R)) {
-        state.actionMode = ActionMode::REMOVE;
-    }
-    if (IsKeyPressed(KEY_B)) {
-        state.actionMode = ActionMode::BUCKET;
-    }
-    if (IsKeyPressed(KEY_M)) {
-        state.actionMode = ActionMode::MOVE;
-    }
-    if (IsKeyPressed(KEY_E) && IsKeyDown(KEY_LEFT_CONTROL)) {
+    if (IsKeyDown(KEY_LEFT_CONTROL) && IsKeyPressed(KEY_E)) {
         printf("Exporting...\n");
         ExportMap(state.exportedMapName.c_str());
     }
-    if (IsKeyPressed(KEY_S)) {
+    
+    int pressedKey = GetKeyPressed();
+    switch (pressedKey)
+    {
+    case KEY_I:
+        state.actionMode = ActionMode::INSERT;
+        break;
+    case KEY_R:
+        state.actionMode = ActionMode::REMOVE;
+        break;
+    case KEY_B:
+        state.actionMode = ActionMode::BUCKET;
+        break;
+    case KEY_M:
+        state.actionMode = ActionMode::MOVE;
+        break;
+    case KEY_S:
         state.actionMode = ActionMode::START_POINT;
-    }
-    if (IsKeyPressed(KEY_E)) {
+        break;
+    case KEY_E:
         state.actionMode = ActionMode::END_POINT;
+        break;
+    default:
+        break;
     }
 
     if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
@@ -57,17 +63,13 @@ void HandleInput(){
         switch (state.actionMode) {
             case ActionMode::INSERT:
                 // set occupied
-                // state.grid.At(gx, gy).isOccupied = true;
                 state.grid.matrix[gx][gy].isOccupied = true;
-
                 break;
             case ActionMode::REMOVE:
                 // clear occupied
-                // state.grid.At(gx, gy).isOccupied = false;
                 state.grid.matrix[gx][gy].isOccupied = false;
                 break;
             case ActionMode::BUCKET:
-                // TODO: Implement bucket fill
                 state.grid.BucketFill(gx, gy);
                 break;
             case ActionMode::MOVE:
@@ -118,7 +120,11 @@ void ExportMap(const char *filename){
 //TODO: move mode 
 //TODO: make connected tiles into one bigger
 //TODO: load prexisting editor
-//
+//TODO: add clear button
+//TODO: add spikes
+//TODO: add info label
+
+
 
 int main(void)
 {

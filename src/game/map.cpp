@@ -5,7 +5,10 @@ Map::Map(){
 }
 
 Map::Map(const char *filename){
-    
+    LoadMap(filename);
+}
+
+void Map::LoadMap(const char *filename){
     std::ifstream in(filename);
     if (!in) {
         TraceLog(LOG_WARNING, "Map::LoadMap: could not open file: %s", filename);

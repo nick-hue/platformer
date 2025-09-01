@@ -1,12 +1,7 @@
 #include "grid.h"
 
 Grid::Grid() {
-    for (int i = 0; i < GRID_WIDTH; i++) {
-        for (int j = 0; j < GRID_HEIGHT; j++) {
-            Vector2 pos = { float(i * CELL_SIZE), float(j * CELL_SIZE) };
-            matrix[i][j] = Cell(pos, DARKGRAY, LIGHTGRAY, MAROON, GRAY);
-        }
-    }
+    Clear();
 }
 
 void Grid::DrawStartingPoint(){
@@ -17,6 +12,16 @@ void Grid::DrawStartingPoint(){
 void Grid::DrawEndingPoint(){
     DrawRectangleRec({ endingPoint.x * CELL_SIZE, endingPoint.y * CELL_SIZE, CELL_SIZE, CELL_SIZE }, matrix[int(endingPoint.x)][int(endingPoint.y)].endingPointColor);
     DrawRectangleLinesEx({ endingPoint.x * CELL_SIZE, endingPoint.y * CELL_SIZE, CELL_SIZE, CELL_SIZE }, 3.0f, RED);
+}
+
+void Grid::Clear()
+{
+    for (int i = 0; i < GRID_WIDTH; i++) {
+        for (int j = 0; j < GRID_HEIGHT; j++) {
+            Vector2 pos = { float(i * CELL_SIZE), float(j * CELL_SIZE) };
+            matrix[i][j] = Cell(pos, DARKGRAY, LIGHTGRAY, MAROON, GRAY);
+        }
+    }
 }
 
 void Grid::Draw() {

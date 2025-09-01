@@ -6,7 +6,7 @@ MyButton::MyButton() {
     onClick = nullptr;
     selectLetter = "-";
     iconId = "#00#";
-    displayText = iconId + std::string(" ") + text + " [" + selectLetter + "]";
+    displayText = iconId + std::string(" ") + text + selectLetter;
 }
 
 MyButton::MyButton(float x, float y, float width, float height, const char* text, const char* iconId, const char* selectLetter) {
@@ -14,8 +14,7 @@ MyButton::MyButton(float x, float y, float width, float height, const char* text
     this->text = text;
     this->selectLetter = selectLetter;
     this->iconId = iconId;
-    displayText = this->iconId + std::string(" ") + this->text +
-                  " [" + this->selectLetter + "]";
+    displayText = this->iconId + std::string(" ") + this->text + this->selectLetter;
 }
 
 int MyButton::Draw() {

@@ -24,6 +24,8 @@ public:
     void SetEndPoint(int gx, int gy);
     void DrawStartingPoint();
     void DrawEndingPoint();
+    void Clear();
+
 };
 
 

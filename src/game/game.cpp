@@ -1,16 +1,22 @@
 #include "game.h"
 
-// todo: load sprite
+// TODO: load sprite
+// TODO: add reset level 
+// TODO: add pause 
+
 
 void GameState::CheckWin()
 {
     if (CheckCollisionRecs(player.rect, {GameState::map.endingPoint.x, GameState::map.endingPoint.y, (float)map.TILE_WIDTH, (float)map.TILE_HEIGHT})) {
         // Reset player position to starting point
-        player.position = map.startingPoint;
         // Reload the map
-        // map.LoadMap("exported_map.txt");
-        // Message, show next map
         printf("Congratulations! You've completed the level!\n");
+        levelIndex++;
+        
+        currLevelFilename = "assets/maps/exported_map_" + std::to_string(levelIndex) + ".txt";
+        printf("Loading next level: %s\n", currLevelFilename.c_str());
+        map.LoadMap(currLevelFilename.c_str());
+        player.position = map.startingPoint;
     }
 }
 

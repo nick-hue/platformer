@@ -11,6 +11,6 @@ main
 # logs
 *.log
 
-exported_map.txt
+assets/maps
 
 .vscode/

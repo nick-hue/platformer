@@ -15,12 +15,6 @@ class State {
         Grid grid;
         std::string exportedMapName{"exported_map.txt"};
 
-        // State() {
-        //     debugMenu = DebugMenu();
-        //     actionMode = ActionMode::INSERT;
-        //     infoScreen = InfoScreen(actionMode);
-        //     grid = Grid();
-        // }
         State() : actionMode(ActionMode::INSERT), infoScreen(actionMode, exportedMapName), grid() {}
 
 };
@@ -42,6 +36,9 @@ void HandleInput(){
     if (IsKeyPressed(KEY_E) && IsKeyDown(KEY_LEFT_CONTROL)) {
         printf("Exporting...\n");
         ExportMap(state.exportedMapName.c_str());
+    }
+    if (IsKeyPressed(KEY_S)) {
+        state.actionMode = ActionMode::START_POINT;
     }
 
     if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
@@ -74,6 +71,9 @@ void HandleInput(){
                 // TODO: Implement move
                 state.grid.MoveFrom(gx, gy);
                 break;
+            case ActionMode::START_POINT:
+                state.grid.SetStartPoint(gx, gy);
+                break;
         }
     }
 
@@ -87,7 +87,11 @@ void ExportMap(const char *filename){
         return;
     }
 
-    std::string header = std::to_string(GRID_WIDTH) + ", " + std::to_string(GRID_HEIGHT) + ", " + std::to_string(CELL_SIZE) + " \n";
+    if (state.grid.startingPoint.x == -1.0f && state.grid.startingPoint.y == -1.0f) {
+        state.grid.SetStartPoint(0,0);
+    }
+
+    std::string header = std::to_string(GRID_WIDTH) + ", " + std::to_string(GRID_HEIGHT) + ", " + std::to_string(CELL_SIZE) + ", " + std::to_string(int(state.grid.startingPoint.x)) + ", " + std::to_string(int(state.grid.startingPoint.y)) + "\n";
     fputs(header.c_str(), file);
 
     for (int y = 0; y < GRID_HEIGHT; ++y) {
@@ -103,6 +107,10 @@ void ExportMap(const char *filename){
 }
 
 //TODO: move mode 
+//TODO: starting point from editor 
+//TODO: make connected tiles into one bigger
+//TODO: load prexisting editor
+//
 
 int main(void)
 {

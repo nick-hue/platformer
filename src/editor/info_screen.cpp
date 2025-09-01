@@ -22,7 +22,10 @@ InfoScreen::InfoScreen(ActionMode& modeRef, std::string& exportedMapNameRef) : m
     exportButton = { EDITOR_WIDTH + 20.0f, 224.0f, 120.0f, 30.0f , "Export", "#05#", 'E'};
     exportButton.onClick = [&]{ ExportMap(exportedMapName.c_str()); };
 
-    buttons = { insertButton, removeButton, bucketButton, moveButton, exportButton};
+    startPointButton = { EDITOR_WIDTH + 20.0f, 264.0f, 120.0f, 30.0f , "Start Point", "#170#", 'S'};
+    startPointButton.onClick = [&]{ mode = ActionMode::START_POINT; };
+
+    buttons = { insertButton, removeButton, bucketButton, moveButton, exportButton, startPointButton};
 
 }
 
@@ -40,13 +43,9 @@ void InfoScreen::DrawBase(ActionMode mode){
 }
 
 void InfoScreen::DrawWidgets(){
-    
     for (auto &button : buttons){
         button.Draw();
     }
-
-    // GuiTextBox((Rectangle){ EDITOR_WIDTH + 20.0f, 300.0f, 200.0f, 30.0f }, (char *)"Type here...", 20, true);
-
 }
 
 void InfoScreen::Draw(ActionMode mode) {

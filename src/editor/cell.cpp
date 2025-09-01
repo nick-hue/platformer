@@ -1,13 +1,14 @@
 // cell.cpp
 #include "cell.h"
 
-Cell::Cell(Vector2 pos, Color filledCol, Color emptyCol, Color filledSelCol, Color emptySelCol)
+Cell::Cell(Vector2 pos, Color filledCol, Color emptyCol, Color filledSelCol, Color emptySelCol, Color startingPointColor)
 {
     position = pos;
     filledColor = filledCol;
     emptyColor = emptyCol;
     filledSelectionColor = filledSelCol;
     emptySelectionColor = emptySelCol;
+    startingPointColor = startingPointColor;
     isOccupied = false;
 }
 
@@ -21,7 +22,6 @@ Cell::Cell(int gx, int gy, int cell_size, bool occupied)
 void Cell::Draw() const {
     const Rectangle r = Rect();
     DrawRectangleRec(r, isOccupied ? filledColor : emptyColor);
-    // Grid lines for readability
     DrawRectangleLinesEx(r, 1.0f, Fade(BLACK, 0.15f));
 }
 

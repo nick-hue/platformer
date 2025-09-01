@@ -27,7 +27,8 @@ enum class ActionMode {
     INSERT,
     REMOVE,
     BUCKET,
-    MOVE
+    MOVE,
+    START_POINT
 };
 
 inline const char* ToString(ActionMode m) {
@@ -36,6 +37,7 @@ inline const char* ToString(ActionMode m) {
         case ActionMode::REMOVE: return "REMOVE";
         case ActionMode::BUCKET: return "BUCKET";
         case ActionMode::MOVE: return "MOVE";
+        case ActionMode::START_POINT: return "START_POINT";
         default:                 return "Unknown";
     }
 }
@@ -46,6 +48,7 @@ inline const char* ToDrawString(ActionMode m) {
         case ActionMode::REMOVE: return "Action Mode : REMOVE";
         case ActionMode::BUCKET: return "Action Mode : BUCKET";
         case ActionMode::MOVE: return "Action Mode : MOVE";
+        case ActionMode::START_POINT: return "Action Mode : START_POINT";
         default:                 return "Action Mode : Unknown";
     }
 }

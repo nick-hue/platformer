@@ -20,7 +20,7 @@ public:
     MyButton bucketButton{};
     MyButton moveButton{};
     MyButton exportButton{};
-
+    MyButton startPointButton{};
 
     InfoScreen();
     explicit InfoScreen(ActionMode& modeRef, std::string& exportedMapNameRef);

@@ -23,6 +23,7 @@ public:
     float coyoteTimer{0.0f};
     float jumpBufferTimer{0.0f};
 
+    Player() = default;
     Player(float x, float y, float w, float h, Color c);
 
     void HandleInput(float dt);

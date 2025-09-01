@@ -13,7 +13,7 @@ Map::Map(const char *filename){
     }
     
     std::string line;
-    int mapWidth, mapHeight, cell_size;
+    int mapWidth, mapHeight, cellSize, startPosX, startPosY;
 
     if (!std::getline(in, line)) {
         TraceLog(LOG_WARNING, "Map::LoadMap: missing header line");
@@ -23,13 +23,17 @@ Map::Map(const char *filename){
     printf("Reading map dimensions\n");
     std::replace(line.begin(), line.end(), ',', ' ');
     std::istringstream iss(line);
-    iss >> mapWidth >> mapHeight >> cell_size;
-    std::cout << "Width=" << mapWidth << " Height=" << mapHeight << " CellSize=" << cell_size << "\n";
+    iss >> mapWidth >> mapHeight >> cellSize >> startPosX >> startPosY;
+    std::cout << "Width=" << mapWidth << " Height=" << mapHeight << " CellSize=" << cellSize << 
+                " StartPosX=" << startPosX << " StartPosY=" << startPosY << "\n";
 
     MAP_WIDTH = mapWidth;
     MAP_HEIGHT = mapHeight;
-    TILE_WIDTH = cell_size;
-    TILE_HEIGHT = cell_size;
+    TILE_WIDTH = cellSize;
+    TILE_HEIGHT = cellSize;
+    // startingPoint = { (float)(startPosX * cellSize), (float)(startPosY * cellSize) };
+    // -1 to go one up
+    startingPoint = { (float)(startPosX * cellSize), (float)((startPosY - 1) * cellSize) };
 
     matrix.assign(MAP_HEIGHT, std::vector<Cell>(MAP_WIDTH));
 
@@ -45,12 +49,6 @@ Map::Map(const char *filename){
             matrix[y][x] = Cell(x, y, TILE_WIDTH, (v == 1));
         }
     }
-
-    // for (const auto& row : matrix) {
-    //     for (Cell cell : row) {
-    //         cell.ToString();
-    //     }
-    // }
 
     CellToTiles();
 }

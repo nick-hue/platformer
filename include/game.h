@@ -18,5 +18,5 @@ class GameState {
         Player player;
         Map map;
 
-    GameState() : player((float)GAME_SCREEN_WIDTH/2.0f - 25.0f, (float)GAME_SCREEN_HEIGHT/2.0f, 50, 50, MAROON), map("exported_map.txt") {}
+    GameState() : player(), map("exported_map.txt") {}
 };

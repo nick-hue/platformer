@@ -9,6 +9,12 @@ Grid::Grid() {
     }
 }
 
+void Grid::DrawStartingPoint(){
+    DrawRectangleRec({ startingPoint.x * CELL_SIZE, startingPoint.y * CELL_SIZE, CELL_SIZE, CELL_SIZE }, matrix[int(startingPoint.x)][int(startingPoint.y)].startingPointColor);
+    DrawRectangleLinesEx({ startingPoint.x * CELL_SIZE, startingPoint.y * CELL_SIZE, CELL_SIZE, CELL_SIZE }, 3.0f, RED);
+}
+
+
 void Grid::Draw() {
     for (int i = 0; i < GRID_WIDTH; i++) {
         DrawLine(i * CELL_SIZE, 0, i * CELL_SIZE, EDITOR_HEIGHT, GRAY);
@@ -17,6 +23,12 @@ void Grid::Draw() {
             matrix[i][j].Draw();
         }
     }
+
+    if (startingPoint.x != -1.0f && startingPoint.y != -1.0f) {
+        DrawStartingPoint();
+    }
+   
+
 }
 
 void Grid::ShowSelectedCell() {
@@ -86,8 +98,16 @@ void Grid::MoveFrom(int gx, int gy) {
     } else {
         printf("No adjacent cells found\n");
     }
-    printf("Found %d adjacent cells\n", adjacentCells.size());
+    printf("Found %ld adjacent cells\n", adjacentCells.size());
 
     // TODO: Implement move
 }
 
+void Grid::SetStartPoint(int gx, int gy) {
+    if (!IsInbounds(gx, gy)) {
+        printf("SetStartPoint aborted: Cell (%d, %d) is out of bounds\n", gx, gy);
+        return;
+    }
+    printf("Start point set to (%d, %d)\n", gx, gy);
+    startingPoint = { float(gx), float(gy) };
+}

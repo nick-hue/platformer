@@ -9,6 +9,7 @@ public:
     int width  = GRID_WIDTH;
     int height = GRID_HEIGHT;
     Cell matrix[GRID_WIDTH][GRID_HEIGHT];
+    Vector2 startingPoint{-1.0f,-1.0f};
 
     Grid();
     void Draw();
@@ -18,6 +19,8 @@ public:
     void BucketHelper(int gx, int gy);
     void MoveFrom(int gx, int gy);
     int GetAdjacentCells(int gx, int gy, std::vector<Cell>& outCells);
+    void SetStartPoint(int gx, int gy);
+    void DrawStartingPoint();
 };
 
 

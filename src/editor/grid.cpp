@@ -14,6 +14,10 @@ void Grid::DrawStartingPoint(){
     DrawRectangleLinesEx({ startingPoint.x * CELL_SIZE, startingPoint.y * CELL_SIZE, CELL_SIZE, CELL_SIZE }, 3.0f, RED);
 }
 
+void Grid::DrawEndingPoint(){
+    DrawRectangleRec({ endingPoint.x * CELL_SIZE, endingPoint.y * CELL_SIZE, CELL_SIZE, CELL_SIZE }, matrix[int(endingPoint.x)][int(endingPoint.y)].endingPointColor);
+    DrawRectangleLinesEx({ endingPoint.x * CELL_SIZE, endingPoint.y * CELL_SIZE, CELL_SIZE, CELL_SIZE }, 3.0f, RED);
+}
 
 void Grid::Draw() {
     for (int i = 0; i < GRID_WIDTH; i++) {
@@ -27,7 +31,10 @@ void Grid::Draw() {
     if (startingPoint.x != -1.0f && startingPoint.y != -1.0f) {
         DrawStartingPoint();
     }
-   
+
+    if (endingPoint.x != -1.0f && endingPoint.y != -1.0f) {
+        DrawEndingPoint();
+    }
 
 }
 
@@ -110,4 +117,13 @@ void Grid::SetStartPoint(int gx, int gy) {
     }
     printf("Start point set to (%d, %d)\n", gx, gy);
     startingPoint = { float(gx), float(gy) };
+}
+
+void Grid::SetEndPoint(int gx, int gy){
+    if (!IsInbounds(gx, gy)) {
+        printf("SetEndPoint aborted: Cell (%d, %d) is out of bounds\n", gx, gy);
+        return;
+    }
+    printf("End point set to (%d, %d)\n", gx, gy);
+    endingPoint = { float(gx), float(gy) };
 }

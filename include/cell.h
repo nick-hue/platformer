@@ -12,13 +12,14 @@ public:
     Color   filledSelectionColor{MAROON};
     Color   emptySelectionColor{GRAY};
     Color   startingPointColor{GOLD};
+    Color   endingPointColor{BLUE};
 
     bool    isOccupied{false};
     int     cellSize{CELL_SIZE};
 
     Cell() = default;
     Cell(int gx, int gy, int cell_size, bool occupied);
-    Cell(Vector2 pos, Color filledCol = DARKGRAY, Color emptyCol = LIGHTGRAY, Color filledSelCol = MAROON, Color emptySelCol = GRAY, Color startingPointCol = GOLD);
+    Cell(Vector2 pos, Color filledCol = DARKGRAY, Color emptyCol = LIGHTGRAY, Color filledSelCol = MAROON, Color emptySelCol = GRAY, Color startingPointCol = GOLD, Color endingPointCol = BLUE);
 
     // Draw Cell
     void Draw() const;

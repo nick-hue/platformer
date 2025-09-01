@@ -10,12 +10,12 @@ public:
     std::string text{};
     std::function<void()> onClick;
     std::string iconId{};
-    char selectLetter{};
+    std::string selectLetter{};
     std::string displayText{};
 
 
     MyButton();
-    MyButton(float x, float y, float width, float height, const char* text, const char* iconId, char selectLetter);
+    MyButton(float x, float y, float width, float height, const char* text, const char* iconId, const char* selectLetter);
     int Draw();
 
 };

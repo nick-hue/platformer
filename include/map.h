@@ -17,6 +17,7 @@ class Map {
         int TILE_HEIGHT{0};
 
         Vector2 startingPoint{-1.0f,-1.0f};
+        Vector2 endingPoint{-1.0f,-1.0f};
 
         // cells: dynamic 2D matrix
         std::vector<std::vector<Cell>> matrix;
@@ -29,5 +30,6 @@ class Map {
 
         // makes the cells that were occupied (from the file) into tiles for the game
         void CellToTiles();
+        void DrawEndPoint();
 };
 

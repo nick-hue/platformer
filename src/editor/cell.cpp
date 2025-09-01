@@ -1,7 +1,7 @@
 // cell.cpp
 #include "cell.h"
 
-Cell::Cell(Vector2 pos, Color filledCol, Color emptyCol, Color filledSelCol, Color emptySelCol, Color startingPointColor)
+Cell::Cell(Vector2 pos, Color filledCol, Color emptyCol, Color filledSelCol, Color emptySelCol, Color startingPointColor, Color endingPointColor)
 {
     position = pos;
     filledColor = filledCol;
@@ -9,6 +9,7 @@ Cell::Cell(Vector2 pos, Color filledCol, Color emptyCol, Color filledSelCol, Col
     filledSelectionColor = filledSelCol;
     emptySelectionColor = emptySelCol;
     startingPointColor = startingPointColor;
+    endingPointColor = endingPointColor;
     isOccupied = false;
 }
 

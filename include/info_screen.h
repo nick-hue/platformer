@@ -5,6 +5,10 @@
 #include "my_button.h"
 #include <vector>
 
+constexpr float BUTTON_WIDTH = 150.0f;
+constexpr float BUTTON_HEIGHT = 30.0f;
+constexpr float SIDE_OFFSET = 20.0f;
+
 class InfoScreen {
 public:
     // UI state
@@ -21,6 +25,7 @@ public:
     MyButton moveButton{};
     MyButton exportButton{};
     MyButton startPointButton{};
+    MyButton endPointButton{};
 
     InfoScreen();
     explicit InfoScreen(ActionMode& modeRef, std::string& exportedMapNameRef);

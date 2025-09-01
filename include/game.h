@@ -19,4 +19,6 @@ class GameState {
         Map map;
 
     GameState() : player(), map("exported_map.txt") {}
+
+    void CheckWin();
 };

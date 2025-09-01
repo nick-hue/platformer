@@ -40,6 +40,9 @@ void HandleInput(){
     if (IsKeyPressed(KEY_S)) {
         state.actionMode = ActionMode::START_POINT;
     }
+    if (IsKeyPressed(KEY_E)) {
+        state.actionMode = ActionMode::END_POINT;
+    }
 
     if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
         Vector2 mouse_pos = GetMousePosition();
@@ -74,6 +77,8 @@ void HandleInput(){
             case ActionMode::START_POINT:
                 state.grid.SetStartPoint(gx, gy);
                 break;
+            case ActionMode::END_POINT:
+                state.grid.SetEndPoint(gx, gy);
         }
     }
 
@@ -91,7 +96,11 @@ void ExportMap(const char *filename){
         state.grid.SetStartPoint(0,0);
     }
 
-    std::string header = std::to_string(GRID_WIDTH) + ", " + std::to_string(GRID_HEIGHT) + ", " + std::to_string(CELL_SIZE) + ", " + std::to_string(int(state.grid.startingPoint.x)) + ", " + std::to_string(int(state.grid.startingPoint.y)) + "\n";
+    std::string header = std::to_string(GRID_WIDTH) + ", " + std::to_string(GRID_HEIGHT) 
+                        + ", " + std::to_string(CELL_SIZE)
+                        + ", " + std::to_string(int(state.grid.startingPoint.x)) + ", " + std::to_string(int(state.grid.startingPoint.y)) + 
+                        + ", " + std::to_string(int(state.grid.endingPoint.x)) + ", " + std::to_string(int(state.grid.endingPoint.y)) + "\n";
+
     fputs(header.c_str(), file);
 
     for (int y = 0; y < GRID_HEIGHT; ++y) {
@@ -107,7 +116,6 @@ void ExportMap(const char *filename){
 }
 
 //TODO: move mode 
-//TODO: starting point from editor 
 //TODO: make connected tiles into one bigger
 //TODO: load prexisting editor
 //

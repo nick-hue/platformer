@@ -13,7 +13,7 @@ Map::Map(const char *filename){
     }
     
     std::string line;
-    int mapWidth, mapHeight, cellSize, startPosX, startPosY;
+    int mapWidth, mapHeight, cellSize, startPosX, startPosY, endPosX, endPosY;
 
     if (!std::getline(in, line)) {
         TraceLog(LOG_WARNING, "Map::LoadMap: missing header line");
@@ -23,9 +23,10 @@ Map::Map(const char *filename){
     printf("Reading map dimensions\n");
     std::replace(line.begin(), line.end(), ',', ' ');
     std::istringstream iss(line);
-    iss >> mapWidth >> mapHeight >> cellSize >> startPosX >> startPosY;
+    iss >> mapWidth >> mapHeight >> cellSize >> startPosX >> startPosY >> endPosX >> endPosY;
     std::cout << "Width=" << mapWidth << " Height=" << mapHeight << " CellSize=" << cellSize << 
-                " StartPosX=" << startPosX << " StartPosY=" << startPosY << "\n";
+                " StartPosX=" << startPosX << " StartPosY=" << startPosY << 
+                " EndPosX=" << endPosX << " EndPosY=" << endPosY << "\n";
 
     MAP_WIDTH = mapWidth;
     MAP_HEIGHT = mapHeight;
@@ -34,6 +35,9 @@ Map::Map(const char *filename){
     // startingPoint = { (float)(startPosX * cellSize), (float)(startPosY * cellSize) };
     // -1 to go one up
     startingPoint = { (float)(startPosX * cellSize), (float)((startPosY - 1) * cellSize) };
+    endingPoint = { (float)(endPosX * cellSize), (float)((endPosY - 1) * cellSize) };
+
+    printf("%f-%f\n", endingPoint.x, endingPoint.y);
 
     matrix.assign(MAP_HEIGHT, std::vector<Cell>(MAP_WIDTH));
 
@@ -62,4 +66,9 @@ void Map::CellToTiles() {
             }
         }
     }
+}
+
+void Map::DrawEndPoint() {
+    DrawRectangleV(endingPoint, {(float)TILE_WIDTH, (float)TILE_HEIGHT}, GREEN);
+    DrawRectangleLinesEx({endingPoint.x, endingPoint.y, (float)TILE_WIDTH, (float)TILE_HEIGHT}, 2.0f, BLACK);
 }

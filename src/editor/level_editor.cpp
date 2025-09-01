@@ -8,13 +8,16 @@
 
 class State {
     public:
+        Grid grid;
         DebugMenu debugMenu;
         ActionMode actionMode{ActionMode::INSERT};
-        InfoScreen infoScreen;
-        Grid grid;
+        TriangleMode triangleMode{TriangleMode::NONE};
         std::string exportedMapName{"assets/maps/exported_map_1.txt"};
+        InfoScreen infoScreen;
 
-        State() : actionMode(ActionMode::INSERT), infoScreen(actionMode, exportedMapName, grid), grid() {}
+    State()
+        : grid(), debugMenu(), actionMode(ActionMode::INSERT), triangleMode(TriangleMode::NONE), exportedMapName("assets/maps/exported_map_1.txt"), infoScreen(actionMode, triangleMode, exportedMapName, grid) // now grid is constructed
+        {}
 
 };
 State state;
@@ -50,13 +53,13 @@ void HandleInput(){
         break;
     }
 
-    if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
-        Vector2 mouse_pos = GetMousePosition();
-        int gx = (int)mouse_pos.x / CELL_SIZE;
-        int gy = (int)mouse_pos.y / CELL_SIZE;
+    Vector2 mouse_pos = GetMousePosition();
+    int gx = (int)mouse_pos.x / CELL_SIZE;
+    int gy = (int)mouse_pos.y / CELL_SIZE;
 
+    // check continuous button press actions
+    if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
         if (!state.grid.IsInbounds(gx, gy)) {
-            // printf("Out of bounds: (%d, %d)\n", gx, gy);
             return;
         }
 
@@ -69,6 +72,14 @@ void HandleInput(){
                 // clear occupied
                 state.grid.matrix[gx][gy].isOccupied = false;
                 break;
+            default:
+                break;
+        }
+    }
+
+    // check one-time button press actions
+    if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
+        switch (state.actionMode) {
             case ActionMode::BUCKET:
                 state.grid.BucketFill(gx, gy);
                 break;
@@ -81,6 +92,14 @@ void HandleInput(){
                 break;
             case ActionMode::END_POINT:
                 state.grid.SetEndPoint(gx, gy);
+                break;
+            case ActionMode::TRIANGLE:
+                printf("%s\n", ToDrawString(state.actionMode));
+                printf("%s\n", ToString(state.triangleMode));
+                state.grid.MakeCustomTriangle(gx, gy, state.triangleMode);
+                break;
+            default:
+                break;
         }
     }
 
@@ -120,11 +139,11 @@ void ExportMap(const char *filename){
 //TODO: move mode 
 //TODO: make connected tiles into one bigger
 //TODO: load prexisting editor
-//TODO: add clear button
 //TODO: add spikes
 //TODO: add info label
-
-
+//TODO: make remove remove spikes
+//TODO: spikes not be able to fill occupied spots
+//
 
 int main(void)
 {

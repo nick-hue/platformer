@@ -41,6 +41,9 @@ void Grid::Draw() {
         DrawEndingPoint();
     }
 
+    for (MyTriangle tri : triangles) {
+        tri.Draw();
+    }
 }
 
 void Grid::ShowSelectedCell() {
@@ -92,8 +95,8 @@ int Grid::GetAdjacentCells(int gx, int gy, std::vector<Cell> &outCells)
 }
 
 
+// TODO: Implement move
 void Grid::MoveFrom(int gx, int gy) {
-    // TODO: Implement move
     if (!matrix[gx][gy].isOccupied) {
         printf("Move aborted: Cell (%d, %d) is not occupied\n", gx, gy);
         return;
@@ -131,4 +134,33 @@ void Grid::SetEndPoint(int gx, int gy){
     }
     printf("End point set to (%d, %d)\n", gx, gy);
     endingPoint = { float(gx), float(gy) };
+}
+
+bool Grid::AvailableTriangleSpot(Vector2 pos){
+    for (Vector2 v : triangleSpots){
+        if (v.x == pos.x && v.y == pos.y){
+            printf("Triangle already on grid.\n");
+            return false;
+        }
+    }
+    return true;
+}
+
+void Grid::MakeCustomTriangle(int gx, int gy, TriangleMode mode){
+    if (!IsInbounds(gx, gy)) {
+        printf("DrawTriangle aborted: Cell (%d, %d) is out of bounds\n", gx, gy);
+        return;
+    }
+    
+    Vector2 pos = {(float)gx * CELL_SIZE, (float) gy * CELL_SIZE};
+    
+    if (!AvailableTriangleSpot(pos)) return;
+    
+    printf("%d\n", mode);
+    printf("Placing triangle at: %f-%f\n", pos.x, pos.y);
+    MyTriangle triangle = (MyTriangle){pos, BLUE, mode};
+    triangles.emplace_back(triangle);
+    triangleSpots.emplace_back(pos);
+    printf("triangles size: %ld\n", triangles.size());
+
 }

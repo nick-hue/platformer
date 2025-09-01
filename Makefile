@@ -12,7 +12,8 @@ SRCS_EDITOR := src/editor/level_editor.cpp \
                src/editor/debug_menu.cpp \
                src/editor/info_screen.cpp \
 			   src/editor/my_button.cpp \
-			   src/third_party/raygui_impl.cpp
+			   src/third_party/raygui_impl.cpp \
+			   src/editor/my_triangle.cpp
 
 SRCS_GAME   := 	src/game/game.cpp \
 				src/game/game_debug.cpp \

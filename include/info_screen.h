@@ -12,7 +12,7 @@ constexpr float NON_TEXT_BUTTON_WIDTH = 30.0f;
 constexpr float NON_TEXT_BUTTON_HEIGHT = 30.0f;
 constexpr float BUTTON_TOP_PADDING = 40.0f;
 constexpr float SIDE_OFFSET = 20.0f;
-
+constexpr float SMALL_BUTTONS_SIDE_PADDING = 40.0f;
 
 class InfoScreen {
 public:
@@ -22,7 +22,8 @@ public:
     Color mainColor{};
     Color outlineColor{};
 
-    ActionMode& mode;            // reference to external state
+    ActionMode& actionMode;            // reference to external state
+    TriangleMode& triangleMode;            // reference to external state
     std::string& exportedMapName;
     Grid& grid;
 
@@ -35,18 +36,23 @@ public:
     MyButton endPointButton{};
     MyButton clearButton{};
 
+    MyButton spikeButtonUP{};
+    MyButton spikeButtonDOWN{};
+    MyButton spikeButtonRIGHT{};
+    MyButton spikeButtonLEFT{};
+
     InfoScreen();
-    explicit InfoScreen(ActionMode& modeRef, std::string& exportedMapNameRef, Grid& gridRef);
+    explicit InfoScreen(ActionMode& actionModeRef, TriangleMode& triangleModeRef, std::string& exportedMapNameRef, Grid& gridRef);
 
     std::vector<MyButton> buttons;
     // Update hover color based on mouse
-    void InitializeButtons();
+    void MakeButtons();
 
     void GetMenuColor();
 
     // Drawing background and title of the section
-    void DrawBase(ActionMode mode);
+    void DrawBase(ActionMode actionMode);
     void DrawWidgets();
     // Draw the panel
-    void Draw(ActionMode mode);
+    void Draw(ActionMode actionMode);
 };

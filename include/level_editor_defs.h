@@ -2,10 +2,6 @@
 #pragma once
 #include <string>
 
-// Keep this header *standalone*: no project headers here (no grid.h, cell.h, etc.)
-
-// --- Window / grid config ---
-
 // EDITOR DIMENSIONS
 constexpr int EDITOR_WIDTH  = 1024;
 constexpr int EDITOR_HEIGHT = 512;
@@ -29,7 +25,16 @@ enum class ActionMode {
     BUCKET,
     MOVE,
     START_POINT,
-    END_POINT
+    END_POINT,
+    TRIANGLE
+};
+
+enum class TriangleMode {
+    UP,
+    DOWN,
+    LEFT,
+    RIGHT,
+    NONE
 };
 
 inline const char* ToString(ActionMode m) {
@@ -40,6 +45,7 @@ inline const char* ToString(ActionMode m) {
         case ActionMode::MOVE: return "MOVE";
         case ActionMode::START_POINT: return "START_POINT";
         case ActionMode::END_POINT: return "END_POINT";
+        case ActionMode::TRIANGLE: return "TRIANGLE";
         default:                 return "Unknown";
     }
 }
@@ -52,7 +58,19 @@ inline const char* ToDrawString(ActionMode m) {
         case ActionMode::MOVE: return "Action Mode : MOVE";
         case ActionMode::START_POINT: return "Action Mode : START_POINT";
         case ActionMode::END_POINT: return "Action Mode : END_POINT";
+        case ActionMode::TRIANGLE: return "Action Mode : TRIANGLE";
         default:                 return "Action Mode : Unknown";
+        
+    }
+}
+
+inline const char* ToString(TriangleMode m) {
+    switch (m) {
+        case TriangleMode::UP: return "UP";
+        case TriangleMode::DOWN: return "DOWN";
+        case TriangleMode::RIGHT: return "RIGHT";
+        case TriangleMode::LEFT: return "LEFT";
+        default:                 return "Unknown";
     }
 }
 

@@ -1,19 +1,26 @@
 #pragma once
 #include "raylib.h"
-#include "level_editor_defs.h"  // for GRID_* and CELL_SIZE
-#include "cell.h"               // Grid stores Cells, so we need the full type
+#include "level_editor_defs.h"  
+#include "cell.h"               
 #include <vector>
+#include "my_triangle.h"
+
 
 class Grid {
 public:
     int width  = GRID_WIDTH;
     int height = GRID_HEIGHT;
     Cell matrix[GRID_WIDTH][GRID_HEIGHT];
+    
+    std::vector<MyTriangle> triangles;
+    std::vector<Vector2> triangleSpots;
+
     Vector2 startingPoint{-1.0f,-1.0f};
     Vector2 endingPoint{-1.0f,-1.0f};
 
     Grid();
     void Draw();
+    void Clear();
     void ShowSelectedCell();
     bool IsInbounds(int gx, int gy);
     void BucketFill(int gx, int gy);
@@ -24,8 +31,8 @@ public:
     void SetEndPoint(int gx, int gy);
     void DrawStartingPoint();
     void DrawEndingPoint();
-    void Clear();
-
+    void MakeCustomTriangle(int gx, int gy, TriangleMode mode);
+    bool AvailableTriangleSpot(Vector2 pos);
 };
 
 

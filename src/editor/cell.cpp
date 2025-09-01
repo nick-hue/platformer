@@ -1,15 +1,15 @@
 // cell.cpp
 #include "cell.h"
 
-Cell::Cell(Vector2 pos, Color filledCol, Color emptyCol, Color filledSelCol, Color emptySelCol, Color startingPointColor, Color endingPointColor)
+Cell::Cell(Vector2 pos, Color filledCol, Color emptyCol, Color filledSelCol, Color emptySelCol, Color startingPointCol, Color endingPointCol)
 {
     position = pos;
     filledColor = filledCol;
     emptyColor = emptyCol;
     filledSelectionColor = filledSelCol;
     emptySelectionColor = emptySelCol;
-    startingPointColor = startingPointColor;
-    endingPointColor = endingPointColor;
+    startingPointColor = startingPointCol;
+    endingPointColor = endingPointCol;
     isOccupied = false;
 }
 

@@ -14,7 +14,7 @@ MyButton::MyButton(float x, float y, float width, float height, const char* text
     this->text = text;
     this->selectLetter = selectLetter;
     this->iconId = iconId;
-    displayText = this->iconId + std::string(" ") + this->text + this->selectLetter;
+    displayText = this->iconId + this->text + this->selectLetter;
 }
 
 int MyButton::Draw() {

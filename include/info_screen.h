@@ -22,8 +22,8 @@ public:
     Color mainColor{};
     Color outlineColor{};
 
-    ActionMode& actionMode;            // reference to external state
-    TriangleMode& triangleMode;            // reference to external state
+    ActionMode& actionMode;            
+    TriangleMode& triangleMode;        
     std::string& exportedMapName;
     Grid& grid;
 
@@ -41,13 +41,14 @@ public:
     MyButton spikeButtonRIGHT{};
     MyButton spikeButtonLEFT{};
 
+    std::vector<MyButton> buttons;
+
     InfoScreen();
     explicit InfoScreen(ActionMode& actionModeRef, TriangleMode& triangleModeRef, std::string& exportedMapNameRef, Grid& gridRef);
 
-    std::vector<MyButton> buttons;
-    // Update hover color based on mouse
     void MakeButtons();
-
+    
+    // Update hover color based on mouse
     void GetMenuColor();
 
     // Drawing background and title of the section

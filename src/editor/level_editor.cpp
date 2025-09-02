@@ -83,8 +83,7 @@ void HandleInput(){
             case ActionMode::BUCKET:
                 state.grid.BucketFill(gx, gy);
                 break;
-            case ActionMode::MOVE:
-                // TODO: Implement move
+            case ActionMode::MOVE: // TODO: Implement move
                 state.grid.MoveFrom(gx, gy);
                 break;
             case ActionMode::START_POINT:
@@ -95,7 +94,7 @@ void HandleInput(){
                 break;
             case ActionMode::TRIANGLE:
                 printf("%s\n", ToDrawString(state.actionMode));
-                printf("%s\n", ToString(state.triangleMode));
+                printf("Triangle Mode: %s\n", ToString(state.triangleMode));
                 state.grid.MakeCustomTriangle(gx, gy, state.triangleMode);
                 break;
             default:

@@ -43,6 +43,8 @@ void Grid::Draw() {
 
     for (MyTriangle tri : triangles) {
         tri.Draw();
+        // tri.ToString();
+
     }
 }
 
@@ -157,9 +159,9 @@ void Grid::MakeCustomTriangle(int gx, int gy, TriangleMode mode){
     if (!AvailableTriangleSpot(pos)) return;
     
     printf("%d\n", mode);
+    printf("Placing triangle at: %d-%d\n", gx, gy);
     printf("Placing triangle at: %f-%f\n", pos.x, pos.y);
-    MyTriangle triangle = (MyTriangle){pos, BLUE, mode};
-    triangles.emplace_back(triangle);
+    triangles.emplace_back(MyTriangle(pos, BLUE, mode));
     triangleSpots.emplace_back(pos);
     printf("triangles size: %ld\n", triangles.size());
 

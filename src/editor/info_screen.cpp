@@ -11,7 +11,7 @@ InfoScreen::InfoScreen(ActionMode& actionModeRef, TriangleMode& triangleModeRef,
 }
 
 void InfoScreen::MakeButtons(){
-    float height_placement = 64.0f;
+    float height_placement = 100.0f;
 
     insertButton = { EDITOR_WIDTH + SIDE_OFFSET, height_placement, BUTTON_WIDTH, BUTTON_HEIGHT, " Insert", "#22#", " [I]"};
     insertButton.onClick = [&]{ actionMode = ActionMode::INSERT; };
@@ -80,12 +80,13 @@ void InfoScreen::GetMenuColor() {
     currentColor = CheckCollisionPointRec(mouse_pos, box) ? Fade(mainColor, 0.5f) : mainColor;
 }
 
-void InfoScreen::DrawBase(ActionMode mode){
+void InfoScreen::DrawBase(ActionMode mode, TriangleMode triangleMode){
     GetMenuColor();
     DrawRectangleRec(box, currentColor);
     DrawLineEx({EDITOR_WIDTH+3, 0}, {EDITOR_WIDTH+3, EDITOR_HEIGHT}, 5.0f, DARKGRAY);
-    DrawText("Info Screen", (int)(box.x + 10), (int)(box.y + 10), 20, DARKGRAY);
-    DrawText(ToDrawString(mode), (int)(box.x + 10), (int)(box.y + 40), 18, DARKGRAY);
+    DrawText("Info Screen", (int)(box.x + 10), (int)(box.y + 10), 24, DARKGRAY);
+    DrawText(ToDrawString(mode), (int)(box.x + 10), (int)(box.y + 40), 20, DARKGRAY);
+    DrawText(ToDrawString(triangleMode), (int)(box.x + 10), (int)(box.y + 60), 20, DARKGRAY);
 }
 
 void InfoScreen::DrawWidgets(){
@@ -95,7 +96,7 @@ void InfoScreen::DrawWidgets(){
     }
 }
 
-void InfoScreen::Draw(ActionMode mode) {
-    DrawBase(mode);
+void InfoScreen::Draw(ActionMode mode, TriangleMode triMode) {
+    DrawBase(mode, triMode);
     DrawWidgets();
 }

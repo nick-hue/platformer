@@ -43,8 +43,6 @@ void Grid::Draw() {
 
     for (MyTriangle tri : triangles) {
         tri.Draw();
-        // tri.ToString();
-
     }
 }
 
@@ -138,14 +136,14 @@ void Grid::SetEndPoint(int gx, int gy){
     endingPoint = { float(gx), float(gy) };
 }
 
-bool Grid::AvailableTriangleSpot(Vector2 pos){
+bool Grid::TriangleExistsAt(Vector2 pos){
     for (Vector2 v : triangleSpots){
         if (v.x == pos.x && v.y == pos.y){
             printf("Triangle already on grid.\n");
-            return false;
+            return true;
         }
     }
-    return true;
+    return false;
 }
 
 void Grid::MakeCustomTriangle(int gx, int gy, TriangleMode mode){
@@ -156,13 +154,13 @@ void Grid::MakeCustomTriangle(int gx, int gy, TriangleMode mode){
     
     Vector2 pos = {(float)gx * CELL_SIZE, (float) gy * CELL_SIZE};
     
-    if (!AvailableTriangleSpot(pos)) return;
+    if (TriangleExistsAt(pos)) return;
     
-    printf("%d\n", mode);
-    printf("Placing triangle at: %d-%d\n", gx, gy);
-    printf("Placing triangle at: %f-%f\n", pos.x, pos.y);
-    triangles.emplace_back(MyTriangle(pos, BLUE, mode));
-    triangleSpots.emplace_back(pos);
+    // printf("%d\n", mode);
+    // printf("Placing triangle at: %d-%d\n", gx, gy);
+    // printf("Placing triangle at: %f-%f\n", pos.x, pos.y)
+    triangles.emplace_back(MyTriangle(gx, gy, BLUE, mode));
+    triangleSpots.emplace_back((Vector2){(float)gx,(float)gy});
     printf("triangles size: %ld\n", triangles.size());
 
 }

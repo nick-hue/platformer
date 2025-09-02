@@ -52,8 +52,8 @@ public:
     void GetMenuColor();
 
     // Drawing background and title of the section
-    void DrawBase(ActionMode actionMode);
+    void DrawBase(ActionMode actionMode, TriangleMode triangleMode);
     void DrawWidgets();
     // Draw the panel
-    void Draw(ActionMode actionMode);
+    void Draw(ActionMode actionMode, TriangleMode triMode);
 };

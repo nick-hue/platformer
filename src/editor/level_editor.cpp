@@ -71,8 +71,21 @@ void HandleInput(){
             case ActionMode::REMOVE:
                 // clear occupied
                 state.grid.matrix[gx][gy].isOccupied = false;
+                Vector2 pos = (Vector2){(float)gx, (float)gy};
+                
+                if (state.grid.TriangleExistsAt(pos)){
+                    // use get triangle at funciton to get the triangle and 
+                    auto it = std::find(state.grid.triangleSpots.begin(), state.grid.triangleSpots.end(), pos);
+                    int removeIndex = it - state.grid.triangleSpots.begin();
+                    printf("%d\n", removeIndex);
+                    // state.grid.triangles.erase(removeIndex);
+                    // state.grid.triangleSpots.erase(std::remove(state.grid.triangleSpots.begin(), state.grid.triangleSpots.end(), pos), state.grid.triangleSpots.end());
+                }
                 break;
             default:
+                break;
+            case ActionMode::TRIANGLE:
+                state.grid.MakeCustomTriangle(gx, gy, state.triangleMode);
                 break;
         }
     }
@@ -91,11 +104,6 @@ void HandleInput(){
                 break;
             case ActionMode::END_POINT:
                 state.grid.SetEndPoint(gx, gy);
-                break;
-            case ActionMode::TRIANGLE:
-                printf("%s\n", ToDrawString(state.actionMode));
-                printf("Triangle Mode: %s\n", ToString(state.triangleMode));
-                state.grid.MakeCustomTriangle(gx, gy, state.triangleMode);
                 break;
             default:
                 break;
@@ -138,7 +146,6 @@ void ExportMap(const char *filename){
 //TODO: move mode 
 //TODO: make connected tiles into one bigger
 //TODO: load prexisting editor
-//TODO: add spikes
 //TODO: add info label
 //TODO: make remove remove spikes
 //TODO: spikes not be able to fill occupied spots
@@ -162,7 +169,7 @@ int main(void)
             state.grid.Draw();
             state.grid.ShowSelectedCell();
             state.debugMenu.Draw();
-            state.infoScreen.Draw(state.actionMode);
+            state.infoScreen.Draw(state.actionMode, state.triangleMode);
         EndDrawing();
         //----------------------------------------------------------------------------------
     }

@@ -74,4 +74,16 @@ inline const char* ToString(TriangleMode m) {
     }
 }
 
+inline const char* ToDrawString(TriangleMode m) {
+    switch (m) {
+        case TriangleMode::UP: return "Triangle Mode : UP";
+        case TriangleMode::DOWN: return "Triangle Mode : DOWN";
+        case TriangleMode::LEFT: return "Triangle Mode : LEFT";
+        case TriangleMode::RIGHT: return "Triangle Mode : RIGHT";
+        case TriangleMode::NONE: return "Triangle Mode : NONE";
+        default:                 return "Triangle Mode : Unknown";
+        
+    }
+}
+
 void ExportMap(const char *filename);

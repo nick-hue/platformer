@@ -1,7 +1,10 @@
 #include "my_triangle.h"
 
-MyTriangle::MyTriangle(Vector2 pos, Color c, TriangleMode m) {
-    position = pos;
+MyTriangle::MyTriangle(int gx, int gy, Color c, TriangleMode m) {
+    gridPosX = gx;
+    gridPosY = gy;
+    position.x = gx * CELL_SIZE;
+    position.y = gy * CELL_SIZE;
     color    = c;
     mode     = m;
 }

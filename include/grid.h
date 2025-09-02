@@ -32,7 +32,7 @@ public:
     void DrawStartingPoint();
     void DrawEndingPoint();
     void MakeCustomTriangle(int gx, int gy, TriangleMode mode);
-    bool AvailableTriangleSpot(Vector2 pos);
+    bool TriangleExistsAt(Vector2 pos);
 };
 
 

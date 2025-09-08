@@ -9,6 +9,9 @@ InfoScreen::InfoScreen(ActionMode& actionModeRef, TriangleMode& triangleModeRef,
     showMessageBox = false;
     messageBox = { 85, 70, 250, 100 };
 
+    strncpy(importBuf,  importedMapName.c_str(), sizeof(importBuf)-1);
+    strncpy(exportBuf,  exportedMapName.c_str(), sizeof(exportBuf)-1);
+
     MakeButtons();
 }
 
@@ -38,11 +41,14 @@ void InfoScreen::MakeButtons(){
     importButton = { EDITOR_WIDTH + SIDE_OFFSET, height_placement, BUTTON_WIDTH, BUTTON_HEIGHT, "Import", "#03#", " [CTRL + I]"};
     importButton.onClick = [&]{ grid.ImportMap(importedMapName.c_str()); };
     buttons.push_back(importButton);
+    importBox = { EDITOR_WIDTH + SIDE_OFFSET + BUTTON_WIDTH + 5, height_placement,  BUTTON_WIDTH, 28 };
 
     height_placement+=BUTTON_TOP_PADDING;
     exportButton = { EDITOR_WIDTH + SIDE_OFFSET, height_placement, BUTTON_WIDTH, BUTTON_HEIGHT, "Export", "#04#", " [CTRL + E]"};
     exportButton.onClick = [&]{ grid.ExportMap(exportedMapName.c_str()); };
     buttons.push_back(exportButton);
+    exportBox = { EDITOR_WIDTH + SIDE_OFFSET + BUTTON_WIDTH + 5, height_placement,  BUTTON_WIDTH, 28 };
+
 
     height_placement+=BUTTON_TOP_PADDING;
     startPointButton = { EDITOR_WIDTH + SIDE_OFFSET, height_placement, BUTTON_WIDTH, BUTTON_HEIGHT, "Start Point", "#170#", " [S]"};
@@ -101,13 +107,12 @@ void InfoScreen::DrawWidgets(){
         // printf("%s\n", button.displayText.c_str());
         button.Draw();
     }
+
+    DrawRectangleRec(importBox, Fade(GRAY, 0.8f));
+    DrawRectangleRec(exportBox, Fade(GRAY, 0.8f));
 }
 
-void InfoScreen::Draw(ActionMode mode, TriangleMode triMode) {
-    DrawBase(mode, triMode);
-    DrawWidgets();
-
-
+void InfoScreen::HandleClearMessageBox(){
     if (showMessageBox){
         int result = GuiMessageBox(messageBox, "#191#Clear Grid", "Are you sure you want to clear the grid?", "No;Yes");
 
@@ -121,6 +126,40 @@ void InfoScreen::Draw(ActionMode mode, TriangleMode triMode) {
             grid.Clear();
             showMessageBox = false;
         }
-        
     }
+}
+
+void InfoScreen::HandleFilePathTextBoxes(){
+    if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+        Vector2 mp = GetMousePosition();
+        bool inImport = CheckCollisionPointRec(mp, importBox);
+        bool inExport = CheckCollisionPointRec(mp, exportBox);
+        editImportPath = inImport;
+        editExportPath = !inImport && inExport;
+        if (!inImport && !inExport) ClearTextFocus();
+    }
+
+    if (GuiTextBox(importBox, importBuf,  sizeof(importBuf),  editImportPath)) {
+        // toggles on Enter; leave as-is or add a small "✎" button to toggle
+        printf("Toggle import path...\n");
+        actionMode = ActionMode::NONE;
+        triangleMode = TriangleMode::NONE;
+        editImportPath = false;                
+        importedMapName = importBuf;
+    }
+    if (GuiTextBox(exportBox, exportBuf,  sizeof(exportBuf),  editExportPath)) {
+        printf("Toggle export path...\n");
+        actionMode = ActionMode::NONE;
+        triangleMode = TriangleMode::NONE;
+        editExportPath = false;
+        exportedMapName = exportBuf;
+    }
+}
+
+void InfoScreen::Draw(ActionMode mode, TriangleMode triMode) {
+    DrawBase(mode, triMode);
+    DrawWidgets();
+    HandleClearMessageBox();
+    HandleFilePathTextBoxes();
+
 }

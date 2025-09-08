@@ -12,12 +12,12 @@ class State {
         DebugMenu debugMenu;
         ActionMode actionMode{ActionMode::NONE};
         TriangleMode triangleMode{TriangleMode::NONE};
-        std::string exportedMapName{"assets/maps/exported_map_1.txt"};
-        std::string importedMapName{"assets/maps/imported_map_1.txt"};
+        std::string exportedMapName{"exported_map_1.txt"};
+        std::string importedMapName{"imported_map_1.txt"};
         InfoScreen infoScreen;
 
     State()
-        : grid(), debugMenu(), actionMode(ActionMode::NONE), triangleMode(TriangleMode::NONE), exportedMapName("assets/maps/exported_map_1.txt"), importedMapName("assets/maps/imported_map_1.txt"), infoScreen(actionMode, triangleMode, exportedMapName, importedMapName, grid) 
+        : grid(), debugMenu(), actionMode(ActionMode::NONE), triangleMode(TriangleMode::NONE), exportedMapName("exported_map_1.txt"), importedMapName("imported_map_1.txt"), infoScreen(actionMode, triangleMode, exportedMapName, importedMapName, grid) 
         {}
 
 };
@@ -145,6 +145,8 @@ void HandleInput(){
 //TODO: make connected tiles into one bigger
 //TODO: load prexisting editor
 //TODO: add info label
+//TODO: drag n drop level file
+//TODO: make check before import or exporting.
 
 int main(void)
 {
@@ -164,7 +166,6 @@ int main(void)
             state.grid.ShowSelectedCell();
             state.debugMenu.Draw();
             state.infoScreen.Draw(state.actionMode, state.triangleMode);
-
         EndDrawing();
 
     }

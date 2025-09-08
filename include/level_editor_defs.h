@@ -7,7 +7,7 @@ constexpr int EDITOR_WIDTH  = 1024;
 constexpr int EDITOR_HEIGHT = 512;
 
 // GUI DIMENSIONS
-constexpr int GUI_WIDTH  = 256;
+constexpr int GUI_WIDTH  = 384;
 constexpr int GUI_HEIGHT = EDITOR_HEIGHT;
 
 // WINDOW DIMENSIONS

@@ -5,6 +5,7 @@
 #include "grid.h"
 #include "my_button.h"
 #include <vector>
+#include <cstring>
 
 constexpr float BUTTON_WIDTH = 150.0f;
 constexpr float BUTTON_HEIGHT = 30.0f;
@@ -24,6 +25,13 @@ public:
 
     Rectangle messageBox{};
     bool showMessageBox;
+
+    bool editImportPath = false;
+    bool editExportPath = false;
+    char importBuf[256]  = "imported_map_1.txt";
+    char exportBuf[256]  = "exported_map_1.txt";
+    Rectangle exportBox;
+    Rectangle importBox;
 
     ActionMode& actionMode;            
     TriangleMode& triangleMode;        
@@ -58,7 +66,15 @@ public:
 
     // Drawing background and title of the section
     void DrawBase(ActionMode actionMode, TriangleMode triangleMode);
+    // Draw Buttons and text boxes
     void DrawWidgets();
     // Draw the panel
     void Draw(ActionMode actionMode, TriangleMode triMode);
+    // Handle the behavior of the clear grid pop up box
+    void HandleClearMessageBox();
+    // Handle the behavior of the filepath text boxes
+    void HandleFilePathTextBoxes();
+
+    bool IsEditingText() const { return editImportPath || editExportPath; }
+    void ClearTextFocus() { editImportPath = editExportPath = false; }
 };

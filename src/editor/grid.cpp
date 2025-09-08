@@ -163,13 +163,16 @@ void Grid::MakeCustomTriangle(int gx, int gy, TriangleMode mode){
 }
 
 void Grid::ImportMap(const char *filename){
-    printf("Importing map from %s\n", filename);
+    printf("Importing map from %s/%s\n", baseMapFilePath.c_str(), filename);
 }
 
 void Grid::ExportMap(const char *filename){
-    FILE *file = fopen(filename, "w");
+    printf("Exporting map to %s/%s\n", baseMapFilePath.c_str(), filename);
+
+    std::string final_filepath = baseMapFilePath + filename;
+    FILE *file = fopen(final_filepath.c_str(), "w");
     if (!file) {
-        printf("Failed to open file for writing: %s\n", filename);
+        printf("Failed to open file for writing: %s\n", final_filepath.c_str());
         return;
     }
 
@@ -196,7 +199,7 @@ void Grid::ExportMap(const char *filename){
     }
 
     fclose(file);
-    printf("Map exported to %s\n", filename);
+    printf("Map exported to %s\n", final_filepath.c_str());
 }
 
 

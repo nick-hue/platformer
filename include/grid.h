@@ -11,6 +11,7 @@ public:
     int width  = GRID_WIDTH;
     int height = GRID_HEIGHT;
     Cell matrix[GRID_WIDTH][GRID_HEIGHT];
+    std::string baseMapFilePath = "assets/maps";
     
     std::vector<MyTriangle> triangles;
     std::vector<Vector2> triangleSpots;

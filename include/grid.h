@@ -4,14 +4,20 @@
 #include "cell.h"               
 #include <vector>
 #include "my_triangle.h"
-
+#include <fstream>
+#include <algorithm>
+#include <string>
+#include <fstream>
+#include <sstream>
+#include <algorithm>
+#include <iostream>
 
 class Grid {
 public:
     int width  = GRID_WIDTH;
     int height = GRID_HEIGHT;
     Cell matrix[GRID_WIDTH][GRID_HEIGHT];
-    std::string baseMapFilePath = "assets/maps";
+    std::string baseMapFilePath = "assets/maps/custom/";
     
     std::vector<MyTriangle> triangles;
     std::vector<Vector2> triangleSpots;

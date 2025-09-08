@@ -24,6 +24,12 @@ void Grid::Clear()
     }
     triangles.clear();
     triangleSpots.clear();
+
+    startingPoint.x = -1.0f;
+    startingPoint.y = -1.0f;
+    
+    endingPoint.x = -1.0f;
+    endingPoint.y = -1.0f;
 }
 
 void Grid::Draw() {
@@ -162,17 +168,65 @@ void Grid::MakeCustomTriangle(int gx, int gy, TriangleMode mode){
 
 }
 
-void Grid::ImportMap(const char *filename){
-    printf("Importing map from %s/%s\n", baseMapFilePath.c_str(), filename);
+void Grid::ImportMap(const char* filename) {
+    // Build the same path you log/Export with
+    std::string fullpath = baseMapFilePath + filename;
+    printf("Importing map from %s\n", fullpath.c_str());  // simpler & accurate
+
+    std::ifstream in(fullpath);
+    if (!in) {
+        TraceLog(LOG_WARNING, "Map::LoadMap: could not open file: %s", fullpath.c_str());
+        return;
+    }
+
+    std::string line;
+    int fileW=0, fileH=0, fileCell=0, startX=0, startY=0, endX=0, endY=0;
+
+    if (!std::getline(in, line)) {
+        TraceLog(LOG_WARNING, "Map::LoadMap: missing header line");
+        return;
+    }
+
+    // Header: "W, H, CELL, startX, startY, endX, endY"
+    std::replace(line.begin(), line.end(), ',', ' ');
+    std::istringstream iss(line);
+    iss >> fileW >> fileH >> fileCell >> startX >> startY >> endX >> endY;
+
+    printf("Width=%d Height=%d Cell=%d  Start=(%d,%d) End=(%d,%d)\n",
+           fileW, fileH, fileCell, startX, startY, endX, endY);
+
+    Clear();
+
+    if (startX >= 0 && startX < GRID_WIDTH && startY >= 0 && startY < GRID_HEIGHT) {
+        startingPoint = { (float)startX, (float)startY };
+    } else {
+        startingPoint = { -1.0f, -1.0f };
+    }
+
+    if (endX >= 0 && endX < GRID_WIDTH && endY >= 0 && endY < GRID_HEIGHT) {
+        endingPoint = { (float)endX, (float)endY };
+    } else {
+        endingPoint = { -1.0f, -1.0f };
+    }
+
+    for (int y = 0; y < fileH && y < GRID_HEIGHT; ++y) {
+        if (!std::getline(in, line)) break;
+        std::stringstream ss(line);
+        std::string token;
+        for (int x = 0; x < fileW && x < GRID_WIDTH && std::getline(ss, token, ','); ++x) {
+            int v = std::stoi(token);
+            matrix[x][y].isOccupied = (v == 1);
+        }
+    }
 }
 
 void Grid::ExportMap(const char *filename){
     printf("Exporting map to %s/%s\n", baseMapFilePath.c_str(), filename);
 
-    std::string final_filepath = baseMapFilePath + filename;
-    FILE *file = fopen(final_filepath.c_str(), "w");
+    std::string fullPath = baseMapFilePath + filename;
+    FILE *file = fopen(fullPath.c_str(), "w");
     if (!file) {
-        printf("Failed to open file for writing: %s\n", final_filepath.c_str());
+        printf("Failed to open file for writing: %s\n", fullPath.c_str());
         return;
     }
 
@@ -199,7 +253,7 @@ void Grid::ExportMap(const char *filename){
     }
 
     fclose(file);
-    printf("Map exported to %s\n", final_filepath.c_str());
+    printf("Map exported to %s\n", fullPath.c_str());
 }
 
 

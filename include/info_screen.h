@@ -68,6 +68,10 @@ public:
     void DrawBase(ActionMode actionMode, TriangleMode triangleMode);
     // Draw Buttons and text boxes
     void DrawWidgets();
+    // Draw Buttons
+    void DrawButtons();
+    // Draw Text Boxes
+    void DrawTextBoxes();
     // Draw the panel
     void Draw(ActionMode actionMode, TriangleMode triMode);
     // Handle the behavior of the clear grid pop up box
@@ -75,6 +79,7 @@ public:
     // Handle the behavior of the filepath text boxes
     void HandleFilePathTextBoxes();
 
+    // check if user is editing import or export path
     bool IsEditingText() const { return editImportPath || editExportPath; }
     void ClearTextFocus() { editImportPath = editExportPath = false; }
 };

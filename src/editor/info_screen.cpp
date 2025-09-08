@@ -102,14 +102,20 @@ void InfoScreen::DrawBase(ActionMode mode, TriangleMode triangleMode){
     DrawText(ToDrawString(triangleMode), (int)(box.x + 10), (int)(box.y + 60), 20, DARKGRAY);
 }
 
-void InfoScreen::DrawWidgets(){
+void InfoScreen::DrawButtons(){
     for (auto &button : buttons){
-        // printf("%s\n", button.displayText.c_str());
         button.Draw();
     }
+}
 
+void InfoScreen::DrawTextBoxes(){
     DrawRectangleRec(importBox, Fade(GRAY, 0.8f));
     DrawRectangleRec(exportBox, Fade(GRAY, 0.8f));
+}
+
+void InfoScreen::DrawWidgets(){
+   DrawButtons();
+   DrawTextBoxes();   
 }
 
 void InfoScreen::HandleClearMessageBox(){
@@ -140,7 +146,6 @@ void InfoScreen::HandleFilePathTextBoxes(){
     }
 
     if (GuiTextBox(importBox, importBuf,  sizeof(importBuf),  editImportPath)) {
-        // toggles on Enter; leave as-is or add a small "✎" button to toggle
         printf("Toggle import path...\n");
         actionMode = ActionMode::NONE;
         triangleMode = TriangleMode::NONE;
@@ -154,6 +159,17 @@ void InfoScreen::HandleFilePathTextBoxes(){
         editExportPath = false;
         exportedMapName = exportBuf;
     }
+
+    // have to make it work with not wsl
+    // Handle Drag n Drop
+    // if (IsFileDropped()) {
+    //     FilePathList dropped = LoadDroppedFiles();
+    //     if (dropped.count > 0) {
+    //         importedMapName = dropped.paths[0];
+    //         printf("Dropped file: %s\n", importedMapName.c_str());
+    //     }
+    //     UnloadDroppedFiles(dropped);
+    // }
 }
 
 void InfoScreen::Draw(ActionMode mode, TriangleMode triMode) {

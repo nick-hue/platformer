@@ -213,11 +213,59 @@ void Grid::ImportMap(const char* filename) {
         if (!std::getline(in, line)) break;
         std::stringstream ss(line);
         std::string token;
+
         for (int x = 0; x < fileW && x < GRID_WIDTH && std::getline(ss, token, ','); ++x) {
-            int v = std::stoi(token);
-            matrix[x][y].isOccupied = (v == 1);
+            int v = 0;
+            try { v = std::stoi(token); } catch (...) { v = 0; }
+
+            switch (v) {
+                case 0: // EMPTY
+                    matrix[x][y].isOccupied = false;
+                    break;
+                case 1: // FILLED
+                    matrix[x][y].isOccupied = true;
+                    break;
+                case 2: // TRI_UP
+                    matrix[x][y].isOccupied = false;
+                    MakeCustomTriangle(x, y, TriangleMode::UP);
+                    break;
+                case 3: // TRI_DOWN
+                    matrix[x][y].isOccupied = false;
+                    MakeCustomTriangle(x, y, TriangleMode::DOWN);
+                    break;
+                case 4: // TRI_LEFT
+                    matrix[x][y].isOccupied = false;
+                    MakeCustomTriangle(x, y, TriangleMode::LEFT);
+                    break;
+                case 5: // TRI_RIGHT
+                    matrix[x][y].isOccupied = false;
+                    MakeCustomTriangle(x, y, TriangleMode::RIGHT);
+                    break;
+                default:
+                    matrix[x][y].isOccupied = false;
+                    break;
+            }
         }
     }
+    
+}
+
+StoreItem Grid::ClassifyCell(int x, int y) const {
+    int idx = GetTriangleIndex(x, y);
+    if (idx != -1) {
+        switch (triangles[idx].mode) {
+            case TriangleMode::UP:    return StoreItem::TRI_UP;
+            case TriangleMode::DOWN:  return StoreItem::TRI_DOWN;
+            case TriangleMode::LEFT:  return StoreItem::TRI_LEFT;
+            case TriangleMode::RIGHT: return StoreItem::TRI_RIGHT;
+            default: break;
+        }
+    }
+    return matrix[x][y].isOccupied ? StoreItem::FILLED : StoreItem::EMPTY;
+}
+
+char Grid::GetOutputChar(int x, int y) const {
+    return StoreItemToChar(ClassifyCell(x, y));
 }
 
 void Grid::ExportMap(const char *filename){
@@ -246,7 +294,8 @@ void Grid::ExportMap(const char *filename){
 
     for (int y = 0; y < GRID_HEIGHT; ++y) {
         for (int x = 0; x < GRID_WIDTH; ++x) {
-            fputc(matrix[x][y].isOccupied ? '1' : '0', file);
+            char putChar = GetOutputChar(x, y);
+            fputc(putChar, file);
             if (x < GRID_WIDTH - 1) fputc(',', file);
         }
         fputc('\n', file);
@@ -257,7 +306,7 @@ void Grid::ExportMap(const char *filename){
 }
 
 
-int Grid::GetTriangleIndex(int gx, int gy) {
+int Grid::GetTriangleIndex(int gx, int gy) const {
     for (size_t i = 0; i < triangleSpots.size(); ++i) {
         if (triangleSpots[i].x == gx && triangleSpots[i].y == gy) {
             return static_cast<int>(i);

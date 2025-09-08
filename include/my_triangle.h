@@ -17,7 +17,5 @@ public:
     
     // Draw Cell
     void Draw();
-
-    // notimpleemtn
     void ToString();
 };

@@ -42,7 +42,11 @@ public:
     bool TriangleExistsAt(Vector2 pos);
     void ImportMap(const char *filename);
     void ExportMap(const char *filename);
-    int GetTriangleIndex(int gx, int gy);
+  
+    int GetTriangleIndex(int gx, int gy) const;
+
+    StoreItem ClassifyCell(int x, int y) const;
+    char GetOutputChar(int x, int y) const;
 };
 
 

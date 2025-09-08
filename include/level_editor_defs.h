@@ -38,6 +38,16 @@ enum class TriangleMode {
     NONE
 };
 
+enum class StoreItem {
+    EMPTY,
+    FILLED,
+    TRI_UP,
+    TRI_DOWN,
+    TRI_LEFT,
+    TRI_RIGHT
+};
+
+
 inline const char* ToString(ActionMode m) {
     switch (m) {
         case ActionMode::INSERT: return "INSERT";
@@ -89,3 +99,16 @@ inline const char* ToDrawString(TriangleMode m) {
     }
 }
 
+inline char StoreItemToChar(StoreItem s) {
+    return char('0' + static_cast<int>(s)); // '0'..'5'
+}
+
+inline StoreItem StoreItemFromTriangleMode(TriangleMode m) {
+    switch (m) {
+        case TriangleMode::UP:    return StoreItem::TRI_UP;
+        case TriangleMode::DOWN:  return StoreItem::TRI_DOWN;
+        case TriangleMode::LEFT:  return StoreItem::TRI_LEFT;
+        case TriangleMode::RIGHT: return StoreItem::TRI_RIGHT;
+        default:                  return StoreItem::EMPTY;
+    }
+}

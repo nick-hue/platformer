@@ -143,10 +143,10 @@ void HandleInput(){
 
 //TODO: move mode 
 //TODO: make connected tiles into one bigger
-//TODO: load prexisting editor
 //TODO: add info label
 //TODO: drag n drop level file
 //TODO: make check before import or exporting.
+//TODO: make triangles be saved.
 
 int main(void)
 {

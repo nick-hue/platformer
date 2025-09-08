@@ -6,8 +6,8 @@ InfoScreen::InfoScreen(ActionMode& actionModeRef, TriangleMode& triangleModeRef,
     mainColor = LIGHTGRAY;
     outlineColor = MAROON;
     currentColor = mainColor;
-    showMessageBox = false;
-    messageBox = { 85, 70, 250, 100 };
+    showClearGridMessageBox = false;
+    messageBox = { 85, 70, 400, 200 };
 
     strncpy(importBuf,  importedMapName.c_str(), sizeof(importBuf)-1);
     strncpy(exportBuf,  exportedMapName.c_str(), sizeof(exportBuf)-1);
@@ -39,16 +39,15 @@ void InfoScreen::MakeButtons(){
 
     height_placement+=BUTTON_TOP_PADDING;
     importButton = { EDITOR_WIDTH + SIDE_OFFSET, height_placement, BUTTON_WIDTH, BUTTON_HEIGHT, "Import", "#03#", " [CTRL + I]"};
-    importButton.onClick = [&]{ grid.ImportMap(importedMapName.c_str()); };
+    importButton.onClick = [&]{ showImportMessageBox = true; };
     buttons.push_back(importButton);
     importBox = { EDITOR_WIDTH + SIDE_OFFSET + BUTTON_WIDTH + 5, height_placement,  BUTTON_WIDTH, 28 };
 
     height_placement+=BUTTON_TOP_PADDING;
     exportButton = { EDITOR_WIDTH + SIDE_OFFSET, height_placement, BUTTON_WIDTH, BUTTON_HEIGHT, "Export", "#04#", " [CTRL + E]"};
-    exportButton.onClick = [&]{ grid.ExportMap(exportedMapName.c_str()); };
+    exportButton.onClick = [&]{ showExportMessageBox = true; };
     buttons.push_back(exportButton);
     exportBox = { EDITOR_WIDTH + SIDE_OFFSET + BUTTON_WIDTH + 5, height_placement,  BUTTON_WIDTH, 28 };
-
 
     height_placement+=BUTTON_TOP_PADDING;
     startPointButton = { EDITOR_WIDTH + SIDE_OFFSET, height_placement, BUTTON_WIDTH, BUTTON_HEIGHT, "Start Point", "#170#", " [S]"};
@@ -62,7 +61,7 @@ void InfoScreen::MakeButtons(){
 
     height_placement+=BUTTON_TOP_PADDING;
     clearButton = { EDITOR_WIDTH + SIDE_OFFSET, height_placement, BUTTON_WIDTH, NON_TEXT_BUTTON_HEIGHT, "Clear", "#24#", ""};
-    clearButton.onClick = [&]{ showMessageBox = true; actionMode = ActionMode::NONE; };
+    clearButton.onClick = [&]{ showClearGridMessageBox = true; actionMode = ActionMode::NONE; };
     buttons.push_back(clearButton);
 
     height_placement+=BUTTON_TOP_PADDING;
@@ -119,20 +118,52 @@ void InfoScreen::DrawWidgets(){
 }
 
 void InfoScreen::HandleClearMessageBox(){
-    if (showMessageBox){
+    if (showClearGridMessageBox){
         int result = GuiMessageBox(messageBox, "#191#Clear Grid", "Are you sure you want to clear the grid?", "No;Yes");
-
-        printf("result = %d\n", result);
-        if (result == 1) {
+        // printf("result = %d\n", result);
+        if (result == 0 || result == 1) {
+            printf("Pressed 'x' or 'no'\n");
             printf("Abort clearing screen\n");
-            showMessageBox = false;
+            showClearGridMessageBox = false;
             return;
         } else if (result == 2) {
             printf("Clearing screen...\n");
             grid.Clear();
-            showMessageBox = false;
+            showClearGridMessageBox = false;
         }
     }
+
+    if (showImportMessageBox){
+        int result = GuiMessageBox(messageBox, "#191#Importing Map", ("Are you sure you want to import the map?\nMap name : " + importedMapName).c_str(), "No;Yes");
+        // printf("result = %d\n", result);
+        if (result == 0 || result == 1) {
+            printf("Pressed 'x' or 'no'\n");
+            printf("Abort importing map\n");
+            showImportMessageBox = false;
+            return;
+        } else if (result == 2) {
+            printf("Importing map...\n");
+            grid.ImportMap(importedMapName.c_str());
+            showImportMessageBox = false;
+        }
+    }
+   
+    if (showExportMessageBox){
+        int result = GuiMessageBox(messageBox, "#191#Exporting Map", ("Are you sure you want to export the map?\nMap name : " + exportedMapName).c_str(), "No;Yes");
+        // printf("result = %d\n", result);
+        if (result == 0 || result == 1) {
+            printf("Pressed 'x' or 'no'\n");
+            printf("Abort exporting map\n");
+            showExportMessageBox = false;
+            return;
+        } else if (result == 2) {
+            printf("Exporting map...\n");
+            grid.ExportMap(exportedMapName.c_str());
+            showExportMessageBox = false;
+        }
+    }
+
+
 }
 
 void InfoScreen::HandleFilePathTextBoxes(){
@@ -151,6 +182,7 @@ void InfoScreen::HandleFilePathTextBoxes(){
         triangleMode = TriangleMode::NONE;
         editImportPath = false;                
         importedMapName = importBuf;
+        printf("Filename set to %s\n", importedMapName.c_str());
     }
     if (GuiTextBox(exportBox, exportBuf,  sizeof(exportBuf),  editExportPath)) {
         printf("Toggle export path...\n");
@@ -158,6 +190,7 @@ void InfoScreen::HandleFilePathTextBoxes(){
         triangleMode = TriangleMode::NONE;
         editExportPath = false;
         exportedMapName = exportBuf;
+        printf("Filename set to %s\n", exportedMapName.c_str());
     }
 
     // have to make it work with not wsl

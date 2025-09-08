@@ -26,12 +26,14 @@ State state;
 void HandleInput(){
     if (IsKeyDown(KEY_LEFT_CONTROL) && IsKeyPressed(KEY_E)) {
         printf("Exporting...\n");
-        state.grid.ExportMap(state.exportedMapName.c_str());
+        state.infoScreen.showExportMessageBox = true;
+        // state.grid.ExportMap(state.exportedMapName.c_str());
     }
 
     if (IsKeyDown(KEY_LEFT_CONTROL) && IsKeyPressed(KEY_I)) {
         printf("Importing...\n");
-        state.grid.ImportMap(state.importedMapName.c_str());
+        state.infoScreen.showImportMessageBox = true;
+        // state.grid.ImportMap(state.importedMapName.c_str());
     }
     
     int pressedKey = GetKeyPressed();
@@ -146,7 +148,6 @@ void HandleInput(){
 //TODO: add info label
 //TODO: drag n drop level file
 //TODO: make check before import or exporting.
-//TODO: make triangles be saved.
 
 int main(void)
 {

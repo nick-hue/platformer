@@ -6,6 +6,7 @@
 #include "my_button.h"
 #include <vector>
 #include <cstring>
+#include <string>
 
 constexpr float BUTTON_WIDTH = 150.0f;
 constexpr float BUTTON_HEIGHT = 30.0f;
@@ -24,7 +25,9 @@ public:
     Color outlineColor{};
 
     Rectangle messageBox{};
-    bool showMessageBox;
+    bool showClearGridMessageBox;
+    bool showImportMessageBox;
+    bool showExportMessageBox;
 
     bool editImportPath = false;
     bool editExportPath = false;
@@ -32,6 +35,7 @@ public:
     char exportBuf[256]  = "exported_map_1.txt";
     Rectangle exportBox;
     Rectangle importBox;
+
 
     ActionMode& actionMode;            
     TriangleMode& triangleMode;        

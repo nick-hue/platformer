@@ -10,13 +10,14 @@ class State {
     public:
         Grid grid;
         DebugMenu debugMenu;
-        ActionMode actionMode{ActionMode::INSERT};
+        ActionMode actionMode{ActionMode::NONE};
         TriangleMode triangleMode{TriangleMode::NONE};
         std::string exportedMapName{"assets/maps/exported_map_1.txt"};
+        std::string importedMapName{"assets/maps/imported_map_1.txt"};
         InfoScreen infoScreen;
 
     State()
-        : grid(), debugMenu(), actionMode(ActionMode::INSERT), triangleMode(TriangleMode::NONE), exportedMapName("assets/maps/exported_map_1.txt"), infoScreen(actionMode, triangleMode, exportedMapName, grid) // now grid is constructed
+        : grid(), debugMenu(), actionMode(ActionMode::NONE), triangleMode(TriangleMode::NONE), exportedMapName("assets/maps/exported_map_1.txt"), importedMapName("assets/maps/imported_map_1.txt"), infoScreen(actionMode, triangleMode, exportedMapName, importedMapName, grid) 
         {}
 
 };
@@ -27,27 +28,54 @@ void HandleInput(){
         printf("Exporting...\n");
         state.grid.ExportMap(state.exportedMapName.c_str());
     }
+
+    if (IsKeyDown(KEY_LEFT_CONTROL) && IsKeyPressed(KEY_I)) {
+        printf("Importing...\n");
+        state.grid.ImportMap(state.importedMapName.c_str());
+    }
     
     int pressedKey = GetKeyPressed();
     switch (pressedKey)
     {
     case KEY_I:
         state.actionMode = ActionMode::INSERT;
+        state.triangleMode = TriangleMode::NONE;
         break;
     case KEY_R:
         state.actionMode = ActionMode::REMOVE;
+        state.triangleMode = TriangleMode::NONE;
         break;
     case KEY_B:
         state.actionMode = ActionMode::BUCKET;
+        state.triangleMode = TriangleMode::NONE;
         break;
     case KEY_M:
         state.actionMode = ActionMode::MOVE;
+        state.triangleMode = TriangleMode::NONE;
         break;
     case KEY_S:
         state.actionMode = ActionMode::START_POINT;
+        state.triangleMode = TriangleMode::NONE;
         break;
     case KEY_E:
         state.actionMode = ActionMode::END_POINT;
+        state.triangleMode = TriangleMode::NONE;
+        break;
+    case KEY_LEFT:
+        state.actionMode = ActionMode::TRIANGLE;
+        state.triangleMode = TriangleMode::LEFT;
+        break;
+    case KEY_RIGHT:
+        state.actionMode = ActionMode::TRIANGLE;
+        state.triangleMode = TriangleMode::RIGHT;
+        break;  
+    case KEY_UP:
+        state.actionMode = ActionMode::TRIANGLE;
+        state.triangleMode = TriangleMode::UP;
+        break;
+    case KEY_DOWN:
+        state.actionMode = ActionMode::TRIANGLE;
+        state.triangleMode = TriangleMode::DOWN;
         break;
     default:
         break;
@@ -77,7 +105,7 @@ void HandleInput(){
                 removeIndex = state.grid.GetTriangleIndex(gx,gy);
                 if (removeIndex == -1) return;
 
-                printf("remove index : %d\n", removeIndex);
+                // printf("remove index : %d\n", removeIndex);
                 state.grid.triangles.erase(state.grid.triangles.begin() + removeIndex);
                 state.grid.triangleSpots.erase(state.grid.triangleSpots.begin() + removeIndex);
                 break;
@@ -112,8 +140,6 @@ void HandleInput(){
 
     if (IsKeyPressed(KEY_TAB)) state.debugMenu.active = !state.debugMenu.active;
 }
-
-
 
 //TODO: move mode 
 //TODO: make connected tiles into one bigger

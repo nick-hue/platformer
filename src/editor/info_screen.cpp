@@ -1,6 +1,6 @@
 #include "info_screen.h"
 
-InfoScreen::InfoScreen(ActionMode& actionModeRef, TriangleMode& triangleModeRef, std::string& exportedMapNameRef, Grid& gridRef) : actionMode(actionModeRef), triangleMode(triangleModeRef), exportedMapName(exportedMapNameRef), grid(gridRef) {
+InfoScreen::InfoScreen(ActionMode& actionModeRef, TriangleMode& triangleModeRef, std::string& exportedMapNameRef, std::string& importedMapNameRef, Grid& gridRef) : actionMode(actionModeRef), triangleMode(triangleModeRef), exportedMapName(exportedMapNameRef), importedMapName(importedMapNameRef), grid(gridRef) {
     // use floats to avoid narrowing
     box = { (float)EDITOR_WIDTH, 0.0f, (float)GUI_WIDTH, (float)GUI_HEIGHT};
     mainColor = LIGHTGRAY;
@@ -16,26 +16,31 @@ void InfoScreen::MakeButtons(){
     float height_placement = 100.0f;
 
     insertButton = { EDITOR_WIDTH + SIDE_OFFSET, height_placement, BUTTON_WIDTH, BUTTON_HEIGHT, " Insert", "#22#", " [I]"};
-    insertButton.onClick = [&]{ actionMode = ActionMode::INSERT; };
+    insertButton.onClick = [&]{ actionMode = ActionMode::INSERT; triangleMode = TriangleMode::NONE; };
     buttons.push_back(insertButton);
 
     height_placement+=BUTTON_TOP_PADDING;
     removeButton = { EDITOR_WIDTH + SIDE_OFFSET, height_placement, BUTTON_WIDTH, BUTTON_HEIGHT, "Remove", "#28#", " [R]"};
-    removeButton.onClick = [&]{ actionMode = ActionMode::REMOVE; };
+    removeButton.onClick = [&]{ actionMode = ActionMode::REMOVE; triangleMode = TriangleMode::NONE; };
     buttons.push_back(removeButton);
 
     height_placement+=BUTTON_TOP_PADDING;
     bucketButton = { EDITOR_WIDTH + SIDE_OFFSET, height_placement, BUTTON_WIDTH, BUTTON_HEIGHT, "Bucket", "#29#", " [B]"};
-    bucketButton.onClick = [&]{ actionMode = ActionMode::BUCKET; };
+    bucketButton.onClick = [&]{ actionMode = ActionMode::BUCKET; triangleMode = TriangleMode::NONE; };
     buttons.push_back(bucketButton);
 
     height_placement+=BUTTON_TOP_PADDING;
     moveButton = { EDITOR_WIDTH + SIDE_OFFSET, height_placement, BUTTON_WIDTH, BUTTON_HEIGHT, "Move", "#68#", " [M]"};
-    moveButton.onClick = [&]{ actionMode = ActionMode::MOVE; };
+    moveButton.onClick = [&]{ actionMode = ActionMode::MOVE; triangleMode = TriangleMode::NONE; };
     buttons.push_back(moveButton);
 
     height_placement+=BUTTON_TOP_PADDING;
-    exportButton = { EDITOR_WIDTH + SIDE_OFFSET, height_placement, BUTTON_WIDTH, BUTTON_HEIGHT, "Export", "#05#", " [CTRL + E]"};
+    importButton = { EDITOR_WIDTH + SIDE_OFFSET, height_placement, BUTTON_WIDTH, BUTTON_HEIGHT, "Import", "#03#", " [CTRL + I]"};
+    importButton.onClick = [&]{ grid.ImportMap(importedMapName.c_str()); };
+    buttons.push_back(importButton);
+
+    height_placement+=BUTTON_TOP_PADDING;
+    exportButton = { EDITOR_WIDTH + SIDE_OFFSET, height_placement, BUTTON_WIDTH, BUTTON_HEIGHT, "Export", "#04#", " [CTRL + E]"};
     exportButton.onClick = [&]{ grid.ExportMap(exportedMapName.c_str()); };
     buttons.push_back(exportButton);
 
@@ -51,7 +56,6 @@ void InfoScreen::MakeButtons(){
 
     height_placement+=BUTTON_TOP_PADDING;
     clearButton = { EDITOR_WIDTH + SIDE_OFFSET, height_placement, BUTTON_WIDTH, NON_TEXT_BUTTON_HEIGHT, "Clear", "#24#", ""};
-    // clearButton.onClick = [&]{ grid.Clear(); showMessageBox = true;};
     clearButton.onClick = [&]{ showMessageBox = true; actionMode = ActionMode::NONE; };
     buttons.push_back(clearButton);
 

@@ -153,19 +153,17 @@ void Grid::MakeCustomTriangle(int gx, int gy, TriangleMode mode){
         printf("DrawTriangle aborted: Cell (%d, %d) is out of bounds\n", gx, gy);
         return;
     }
-    
-    // Vector2 pos = {(float)gx * CELL_SIZE, (float) gy * CELL_SIZE};
-    // if (TriangleExistsAt(pos)) return;
 
     if (TriangleExistsAt(Vector2{ static_cast<float>(gx), static_cast<float>(gy) })) return;
 
-    // printf("%d\n", mode);
-    // printf("Placing triangle at: %d-%d\n", gx, gy);
-    // printf("Placing triangle at: %f-%f\n", pos.x, pos.y)
     triangles.emplace_back(MyTriangle(gx, gy, BLUE, mode));
     triangleSpots.emplace_back(Vector2{ static_cast<float>(gx), static_cast<float>(gy) });
     printf("triangles size: %ld\n", triangles.size());
 
+}
+
+void Grid::ImportMap(const char *filename){
+    printf("Importing map from %s\n", filename);
 }
 
 void Grid::ExportMap(const char *filename){
@@ -177,6 +175,9 @@ void Grid::ExportMap(const char *filename){
 
     if (startingPoint.x == -1.0f && startingPoint.y == -1.0f) {
         SetStartPoint(0,0);
+    }
+    if (endingPoint.x == -1.0f && endingPoint.y == -1.0f) {
+        SetEndPoint(1,1);
     }
 
     std::string header = std::to_string(GRID_WIDTH) + ", " + std::to_string(GRID_HEIGHT) 

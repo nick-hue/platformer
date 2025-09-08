@@ -28,12 +28,14 @@ public:
     ActionMode& actionMode;            
     TriangleMode& triangleMode;        
     std::string& exportedMapName;
+    std::string& importedMapName;
     Grid& grid;
 
     MyButton insertButton{};
     MyButton removeButton{};
     MyButton bucketButton{};
     MyButton moveButton{};
+    MyButton importButton{};
     MyButton exportButton{};
     MyButton startPointButton{};
     MyButton endPointButton{};
@@ -47,7 +49,7 @@ public:
     std::vector<MyButton> buttons;
 
     InfoScreen();
-    explicit InfoScreen(ActionMode& actionModeRef, TriangleMode& triangleModeRef, std::string& exportedMapNameRef, Grid& gridRef);
+    explicit InfoScreen(ActionMode& actionModeRef, TriangleMode& triangleModeRef, std::string& exportedMapNameRef, std::string& importedMapNameRef, Grid& gridRef);
 
     void MakeButtons();
     

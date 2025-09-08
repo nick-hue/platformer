@@ -34,7 +34,7 @@ void InfoScreen::MakeButtons(){
 
     height_placement+=BUTTON_TOP_PADDING;
     exportButton = { EDITOR_WIDTH + SIDE_OFFSET, height_placement, BUTTON_WIDTH, BUTTON_HEIGHT, "Export", "#05#", " [CTRL + E]"};
-    exportButton.onClick = [&]{ ExportMap(exportedMapName.c_str()); };
+    exportButton.onClick = [&]{ grid.ExportMap(exportedMapName.c_str()); };
     buttons.push_back(exportButton);
 
     height_placement+=BUTTON_TOP_PADDING;

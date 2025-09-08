@@ -86,4 +86,3 @@ inline const char* ToDrawString(TriangleMode m) {
     }
 }
 
-void ExportMap(const char *filename);

@@ -22,6 +22,8 @@ void Grid::Clear()
             matrix[i][j] = Cell(pos, DARKGRAY, LIGHTGRAY, MAROON, GRAY);
         }
     }
+    triangles.clear();
+    triangleSpots.clear();
 }
 
 void Grid::Draw() {
@@ -152,9 +154,10 @@ void Grid::MakeCustomTriangle(int gx, int gy, TriangleMode mode){
         return;
     }
     
-    Vector2 pos = {(float)gx * CELL_SIZE, (float) gy * CELL_SIZE};
-    
-    if (TriangleExistsAt(pos)) return;
+    // Vector2 pos = {(float)gx * CELL_SIZE, (float) gy * CELL_SIZE};
+    // if (TriangleExistsAt(pos)) return;
+
+    if (TriangleExistsAt((Vector2) {(float)gx, (float)gy})) return;
     
     // printf("%d\n", mode);
     // printf("Placing triangle at: %d-%d\n", gx, gy);
@@ -163,4 +166,44 @@ void Grid::MakeCustomTriangle(int gx, int gy, TriangleMode mode){
     triangleSpots.emplace_back((Vector2){(float)gx,(float)gy});
     printf("triangles size: %ld\n", triangles.size());
 
+}
+
+void Grid::ExportMap(const char *filename){
+    FILE *file = fopen(filename, "w");
+    if (!file) {
+        printf("Failed to open file for writing: %s\n", filename);
+        return;
+    }
+
+    if (startingPoint.x == -1.0f && startingPoint.y == -1.0f) {
+        SetStartPoint(0,0);
+    }
+
+    std::string header = std::to_string(GRID_WIDTH) + ", " + std::to_string(GRID_HEIGHT) 
+                        + ", " + std::to_string(CELL_SIZE)
+                        + ", " + std::to_string(int(startingPoint.x)) + ", " + std::to_string(int(startingPoint.y)) + 
+                        + ", " + std::to_string(int(endingPoint.x)) + ", " + std::to_string(int(endingPoint.y)) + "\n";
+
+    fputs(header.c_str(), file);
+
+    for (int y = 0; y < GRID_HEIGHT; ++y) {
+        for (int x = 0; x < GRID_WIDTH; ++x) {
+            fputc(matrix[x][y].isOccupied ? '1' : '0', file);
+            if (x < GRID_WIDTH - 1) fputc(',', file);
+        }
+        fputc('\n', file);
+    }
+
+    fclose(file);
+    printf("Map exported to %s\n", filename);
+}
+
+
+int Grid::GetTriangleIndex(int gx, int gy) {
+    for (size_t i = 0; i < triangleSpots.size(); ++i) {
+        if (triangleSpots[i].x == gx && triangleSpots[i].y == gy) {
+            return static_cast<int>(i);
+        }
+    }
+    return -1;  // Not found
 }

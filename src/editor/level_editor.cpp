@@ -25,7 +25,7 @@ State state;
 void HandleInput(){
     if (IsKeyDown(KEY_LEFT_CONTROL) && IsKeyPressed(KEY_E)) {
         printf("Exporting...\n");
-        ExportMap(state.exportedMapName.c_str());
+        state.grid.ExportMap(state.exportedMapName.c_str());
     }
     
     int pressedKey = GetKeyPressed();
@@ -57,6 +57,7 @@ void HandleInput(){
     int gx = (int)mouse_pos.x / CELL_SIZE;
     int gy = (int)mouse_pos.y / CELL_SIZE;
 
+    int removeIndex = -1;
     // check continuous button press actions
     if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
         if (!state.grid.IsInbounds(gx, gy)) {
@@ -71,21 +72,18 @@ void HandleInput(){
             case ActionMode::REMOVE:
                 // clear occupied
                 state.grid.matrix[gx][gy].isOccupied = false;
-                Vector2 pos = (Vector2){(float)gx, (float)gy};
-                
-                if (state.grid.TriangleExistsAt(pos)){
-                    // use get triangle at funciton to get the triangle and 
-                    auto it = std::find(state.grid.triangleSpots.begin(), state.grid.triangleSpots.end(), pos);
-                    int removeIndex = it - state.grid.triangleSpots.begin();
-                    printf("%d\n", removeIndex);
-                    // state.grid.triangles.erase(removeIndex);
-                    // state.grid.triangleSpots.erase(std::remove(state.grid.triangleSpots.begin(), state.grid.triangleSpots.end(), pos), state.grid.triangleSpots.end());
-                }
-                break;
-            default:
+                removeIndex = state.grid.GetTriangleIndex(gx,gy);
+                if (removeIndex == -1) return;
+
+                printf("remove index : %d\n", removeIndex);
+                state.grid.triangles.erase(state.grid.triangles.begin() + removeIndex);
+                state.grid.triangleSpots.erase(state.grid.triangleSpots.begin() + removeIndex);
                 break;
             case ActionMode::TRIANGLE:
+                if (state.grid.matrix[gx][gy].isOccupied) break;
                 state.grid.MakeCustomTriangle(gx, gy, state.triangleMode);
+                break;
+            default:
                 break;
         }
     }
@@ -113,57 +111,27 @@ void HandleInput(){
     if (IsKeyPressed(KEY_TAB)) state.debugMenu.active = !state.debugMenu.active;
 }
 
-void ExportMap(const char *filename){
-    FILE *file = fopen(filename, "w");
-    if (!file) {
-        printf("Failed to open file for writing: %s\n", filename);
-        return;
-    }
 
-    if (state.grid.startingPoint.x == -1.0f && state.grid.startingPoint.y == -1.0f) {
-        state.grid.SetStartPoint(0,0);
-    }
-
-    std::string header = std::to_string(GRID_WIDTH) + ", " + std::to_string(GRID_HEIGHT) 
-                        + ", " + std::to_string(CELL_SIZE)
-                        + ", " + std::to_string(int(state.grid.startingPoint.x)) + ", " + std::to_string(int(state.grid.startingPoint.y)) + 
-                        + ", " + std::to_string(int(state.grid.endingPoint.x)) + ", " + std::to_string(int(state.grid.endingPoint.y)) + "\n";
-
-    fputs(header.c_str(), file);
-
-    for (int y = 0; y < GRID_HEIGHT; ++y) {
-        for (int x = 0; x < GRID_WIDTH; ++x) {
-            fputc(state.grid.matrix[x][y].isOccupied ? '1' : '0', file);
-            if (x < GRID_WIDTH - 1) fputc(',', file);
-        }
-        fputc('\n', file);
-    }
-
-    fclose(file);
-    printf("Map exported to %s\n", filename);
-}
 
 //TODO: move mode 
 //TODO: make connected tiles into one bigger
 //TODO: load prexisting editor
 //TODO: add info label
-//TODO: make remove remove spikes
-//TODO: spikes not be able to fill occupied spots
+//TODO: make clear ask before removing
 //
 
 int main(void)
 {
     InitWindow(EDITOR_SCREEN_WIDTH, EDITOR_SCREEN_HEIGHT, "Level Editor");
     SetWindowPosition(300, 100);
-    SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
+    SetTargetFPS(60);              
 
     printf("GRID: %dx%d\n", GRID_WIDTH, GRID_HEIGHT);
 
-    while (!WindowShouldClose())    // Detect window close button or ESC key
+    while (!WindowShouldClose())   
     {
         HandleInput();
 
-        //----------------------------------------------------------------------------------
         BeginDrawing();
             ClearBackground(RAYWHITE);
             state.grid.Draw();
@@ -171,13 +139,10 @@ int main(void)
             state.debugMenu.Draw();
             state.infoScreen.Draw(state.actionMode, state.triangleMode);
         EndDrawing();
-        //----------------------------------------------------------------------------------
+
     }
 
-    // De-Initialization
-    //--------------------------------------------------------------------------------------
-    CloseWindow();        // Close window and OpenGL context
-    //--------------------------------------------------------------------------------------
+    CloseWindow();
 
     return 0;
 }

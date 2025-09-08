@@ -22,6 +22,9 @@ public:
     Color mainColor{};
     Color outlineColor{};
 
+    Rectangle messageBox{};
+    bool showMessageBox;
+
     ActionMode& actionMode;            
     TriangleMode& triangleMode;        
     std::string& exportedMapName;

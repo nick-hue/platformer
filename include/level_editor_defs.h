@@ -26,7 +26,8 @@ enum class ActionMode {
     MOVE,
     START_POINT,
     END_POINT,
-    TRIANGLE
+    TRIANGLE,
+    NONE
 };
 
 enum class TriangleMode {
@@ -46,6 +47,7 @@ inline const char* ToString(ActionMode m) {
         case ActionMode::START_POINT: return "START_POINT";
         case ActionMode::END_POINT: return "END_POINT";
         case ActionMode::TRIANGLE: return "TRIANGLE";
+        case ActionMode::NONE: return "NONE";
         default:                 return "Unknown";
     }
 }
@@ -59,6 +61,7 @@ inline const char* ToDrawString(ActionMode m) {
         case ActionMode::START_POINT: return "Action Mode : START_POINT";
         case ActionMode::END_POINT: return "Action Mode : END_POINT";
         case ActionMode::TRIANGLE: return "Action Mode : TRIANGLE";
+        case ActionMode::NONE: return "Action Mode : NONE";
         default:                 return "Action Mode : Unknown";
         
     }

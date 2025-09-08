@@ -53,6 +53,8 @@ void HandleInput(){
         break;
     }
 
+    if (state.actionMode == ActionMode::NONE) return;
+
     Vector2 mouse_pos = GetMousePosition();
     int gx = (int)mouse_pos.x / CELL_SIZE;
     int gy = (int)mouse_pos.y / CELL_SIZE;
@@ -117,8 +119,6 @@ void HandleInput(){
 //TODO: make connected tiles into one bigger
 //TODO: load prexisting editor
 //TODO: add info label
-//TODO: make clear ask before removing
-//
 
 int main(void)
 {
@@ -138,6 +138,7 @@ int main(void)
             state.grid.ShowSelectedCell();
             state.debugMenu.Draw();
             state.infoScreen.Draw(state.actionMode, state.triangleMode);
+
         EndDrawing();
 
     }

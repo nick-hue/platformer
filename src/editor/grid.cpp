@@ -157,13 +157,13 @@ void Grid::MakeCustomTriangle(int gx, int gy, TriangleMode mode){
     // Vector2 pos = {(float)gx * CELL_SIZE, (float) gy * CELL_SIZE};
     // if (TriangleExistsAt(pos)) return;
 
-    if (TriangleExistsAt((Vector2) {(float)gx, (float)gy})) return;
-    
+    if (TriangleExistsAt(Vector2{ static_cast<float>(gx), static_cast<float>(gy) })) return;
+
     // printf("%d\n", mode);
     // printf("Placing triangle at: %d-%d\n", gx, gy);
     // printf("Placing triangle at: %f-%f\n", pos.x, pos.y)
     triangles.emplace_back(MyTriangle(gx, gy, BLUE, mode));
-    triangleSpots.emplace_back((Vector2){(float)gx,(float)gy});
+    triangleSpots.emplace_back(Vector2{ static_cast<float>(gx), static_cast<float>(gy) });
     printf("triangles size: %ld\n", triangles.size());
 
 }

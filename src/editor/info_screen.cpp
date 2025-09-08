@@ -6,6 +6,8 @@ InfoScreen::InfoScreen(ActionMode& actionModeRef, TriangleMode& triangleModeRef,
     mainColor = LIGHTGRAY;
     outlineColor = MAROON;
     currentColor = mainColor;
+    showMessageBox = false;
+    messageBox = { 85, 70, 250, 100 };
 
     MakeButtons();
 }
@@ -49,7 +51,8 @@ void InfoScreen::MakeButtons(){
 
     height_placement+=BUTTON_TOP_PADDING;
     clearButton = { EDITOR_WIDTH + SIDE_OFFSET, height_placement, BUTTON_WIDTH, NON_TEXT_BUTTON_HEIGHT, "Clear", "#24#", ""};
-    clearButton.onClick = [&]{ grid.Clear(); };
+    // clearButton.onClick = [&]{ grid.Clear(); showMessageBox = true;};
+    clearButton.onClick = [&]{ showMessageBox = true; actionMode = ActionMode::NONE; };
     buttons.push_back(clearButton);
 
     height_placement+=BUTTON_TOP_PADDING;
@@ -99,4 +102,21 @@ void InfoScreen::DrawWidgets(){
 void InfoScreen::Draw(ActionMode mode, TriangleMode triMode) {
     DrawBase(mode, triMode);
     DrawWidgets();
+
+
+    if (showMessageBox){
+        int result = GuiMessageBox(messageBox, "#191#Clear Grid", "Are you sure you want to clear the grid?", "No;Yes");
+
+        printf("result = %d\n", result);
+        if (result == 1) {
+            printf("Abort clearing screen\n");
+            showMessageBox = false;
+            return;
+        } else if (result == 2) {
+            printf("Clearing screen...\n");
+            grid.Clear();
+            showMessageBox = false;
+        }
+        
+    }
 }

@@ -45,6 +45,8 @@ void Player::Jump() {
 void Player::Update(float dt, const std::vector<Tile>& world, int world_width, int world_height) {
     HandleInput(dt);
 
+    
+
     // Gravity
     velocity.y += GRAVITY * dt;
 

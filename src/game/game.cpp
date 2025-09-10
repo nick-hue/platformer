@@ -3,6 +3,9 @@
 // TODO: load sprite
 // TODO: add reset level 
 // TODO: add pause 
+// TODO: gravity change button
+// TODO: add moving platforms
+
 
 void GameState::CheckWin()
 {

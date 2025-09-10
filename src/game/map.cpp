@@ -38,10 +38,17 @@ void Map::LoadMap(const char *filename){
     printf("Width=%d Height=%d Cell=%d  Start=(%d,%d) End=(%d,%d)\n",
            fileW, fileH, fileCell, startX, startY, endX, endY);
 
-    MAP_WIDTH   = fileW;
-    MAP_HEIGHT  = fileH;
+    MAP_TILE_WIDTH   = fileW;
+    MAP_TILE_HEIGHT  = fileH;
     TILE_HEIGHT = fileCell;
     TILE_WIDTH  = fileCell;
+
+    MAP_WIDTH   = MAP_TILE_WIDTH * TILE_WIDTH;
+    MAP_HEIGHT  = MAP_TILE_HEIGHT * TILE_HEIGHT;
+    
+    printf("Tile Size: %dx%d\n", TILE_WIDTH, TILE_HEIGHT);
+    printf("Map Tile Size: %dx%d\n", MAP_TILE_WIDTH, MAP_TILE_HEIGHT);
+    printf("Map Size: %dx%d\n", MAP_WIDTH, MAP_HEIGHT);
 
     grid.Clear();
 

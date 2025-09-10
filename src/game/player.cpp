@@ -42,7 +42,7 @@ void Player::Jump() {
 }
 
     // Move and collide with world
-void Player::Update(float dt, const std::vector<Tile>& world) {
+void Player::Update(float dt, const std::vector<Tile>& world, int world_width, int world_height) {
     HandleInput(dt);
 
     // Gravity
@@ -56,10 +56,12 @@ void Player::Update(float dt, const std::vector<Tile>& world) {
     // --- Y axis move & collide ---
     position.y += velocity.y * dt;
     SyncRect();
-
+    
     bool wasOnGround = onGround;
     onGround = false;
     ResolveCollisionsY(world); // will set onGround and zero vy if landing
+
+    ClampToScreen(world_width, world_height);
 
     // Start coyote time when just left the ground
     if (wasOnGround && !onGround) {
@@ -70,6 +72,14 @@ void Player::Update(float dt, const std::vector<Tile>& world) {
 void Player::Draw() const { DrawRectangleRec(rect, color); }
 
 void Player::SyncRect() { rect = { position.x, position.y, width, height }; }
+
+void Player::ClampToScreen(int world_width, int world_height) {
+    if (position.x < 0) position.x = 0;
+    if (position.x + width > world_width) position.x = world_width - width;
+    if (position.y < 0) position.y = 0;
+    if (position.y + height > world_height) position.y = world_height - height;
+    SyncRect();
+}
 
 void Player::ResolveCollisionsX(const std::vector<Tile>& world) {
     for (const auto& p : world) {
@@ -94,6 +104,8 @@ void Player::ResolveCollisionsX(const std::vector<Tile>& world) {
             position.x = rect.x;
         }
     }
+
+
 }
 
 void Player::ResolveCollisionsY(const std::vector<Tile>& world) {

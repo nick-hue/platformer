@@ -2,7 +2,8 @@
 #include "raylib.h"
 #include "tile.h"
 #include <vector>
-#include <algorithm> 
+#include <algorithm>
+#include "game_world_config.h"
 
 constexpr float GRAVITY          = 2000.0f;   // px/s^2
 constexpr float JUMP_VELOCITY    = -700.0f;   // px/s
@@ -16,7 +17,7 @@ public:
     Vector2 position{0,0};
     Vector2 velocity{0,0};
     float width{50}, height{50};
-    Rectangle rect{};
+    Rectangle rect{position.x, position.y, width, height};
     Color color{MAROON};
 
     bool onGround{false};
@@ -30,10 +31,11 @@ public:
     void Jump();
 
     // Move and collide with world
-    void Update(float dt, const std::vector<Tile>& world);
+    void Update(float dt, const std::vector<Tile>& world, int world_width, int world_height);
 
     void Draw() const;
     void SyncRect();
+    void ClampToScreen(int world_width, int world_height);
 
 private:
     void ResolveCollisionsX(const std::vector<Tile>& world);

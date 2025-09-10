@@ -4,7 +4,6 @@
 // TODO: add reset level 
 // TODO: add pause 
 
-
 void GameState::CheckWin()
 {
     if (CheckCollisionRecs(player.rect, {GameState::map.grid.endingPoint.x, GameState::map.grid.endingPoint.y, (float)map.TILE_WIDTH, (float)map.TILE_HEIGHT})) {
@@ -27,8 +26,9 @@ int main(void) {
     DrawFPS(GAME_SCREEN_WIDTH - 100, 10);
 
     GameState gameState;    
-    SetWindowSize(gameState.map.MAP_WIDTH * gameState.map.TILE_WIDTH, 
-                  gameState.map.MAP_HEIGHT * gameState.map.TILE_HEIGHT);
+    // printf("Map Size: %dx%d\n", gameState.map.MAP_WIDTH * gameState.map.TILE_WIDTH, gameState.map.MAP_HEIGHT * gameState.map.TILE_HEIGHT);
+
+    SetWindowSize(gameState.map.MAP_WIDTH, gameState.map.MAP_HEIGHT);
     gameState.player.position = gameState.map.grid.startingPoint;
 
     bool debug_show = true;
@@ -36,8 +36,8 @@ int main(void) {
     while (!WindowShouldClose()) {
         if (IsKeyPressed(KEY_TAB)) debug_show = !debug_show;
         float dt = GetFrameTime();
-        
-        gameState.player.Update(dt, gameState.map.tiles);
+
+        gameState.player.Update(dt, gameState.map.tiles, gameState.map.MAP_WIDTH, gameState.map.MAP_HEIGHT);
         gameState.CheckWin();
 
         BeginDrawing();

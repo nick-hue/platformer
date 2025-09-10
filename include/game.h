@@ -9,9 +9,7 @@
 #include <vector>
 #include <string>
 #include <algorithm>
-
-constexpr int GAME_SCREEN_WIDTH  = 1024;
-constexpr int GAME_SCREEN_HEIGHT  = 512;
+#include "game_world_config.h"
 
 class GameState {
     public:
@@ -20,7 +18,6 @@ class GameState {
         int levelIndex{1};
         std::string currLevelFilename = "exported_map_1.txt";
 
-    // GameState() : player(), map(currLevelFilename.c_str()) {}
     GameState() : player(), map(currLevelFilename.c_str()) {}
 
     void CheckWin();

@@ -18,10 +18,10 @@ class GameState {
         Player player;
         Map map;
         int levelIndex{1};
-        std::string currLevelFilename{"assets/maps/exported_map_1.txt"};
+        std::string currLevelFilename = "exported_map_1.txt";
 
     // GameState() : player(), map(currLevelFilename.c_str()) {}
-    GameState() : player(), map("assets/maps/exported_map_1.txt") {}
+    GameState() : player(), map(currLevelFilename.c_str()) {}
 
     void CheckWin();
 };

@@ -2,58 +2,97 @@
 
 Map::Map(){
     printf("Default Constructor\n");
+    // LoadMap("exported_map_1.txt");
+    LoadMap("exported_map_1.txt");
 }
 
 Map::Map(const char *filename){
-    LoadMap(filename);
+    LoadMap("exported_map_1.txt");
+    // LoadMap(filename);
 }
 
 void Map::LoadMap(const char *filename){
-    std::ifstream in(filename);
+    std::string fullpath = grid.baseMapFilePath + filename;
+
+    printf("Loading map from %s\n", fullpath.c_str());
+    
+    std::ifstream in(fullpath);
     if (!in) {
-        TraceLog(LOG_WARNING, "Map::LoadMap: could not open file: %s", filename);
+        TraceLog(LOG_WARNING, "Map::LoadMap: could not open file: %s", fullpath.c_str());
         return;
     }
-    
+
     std::string line;
-    int mapWidth, mapHeight, cellSize, startPosX, startPosY, endPosX, endPosY;
+    int fileW=0, fileH=0, fileCell=0, startX=0, startY=0, endX=0, endY=0;
 
     if (!std::getline(in, line)) {
         TraceLog(LOG_WARNING, "Map::LoadMap: missing header line");
         return;
     }
 
-    printf("Reading map dimensions\n");
+    // Header: "W, H, CELL, startX, startY, endX, endY"
     std::replace(line.begin(), line.end(), ',', ' ');
     std::istringstream iss(line);
-    iss >> mapWidth >> mapHeight >> cellSize >> startPosX >> startPosY >> endPosX >> endPosY;
-    std::cout << "Width=" << mapWidth << " Height=" << mapHeight << " CellSize=" << cellSize << 
-                " StartPosX=" << startPosX << " StartPosY=" << startPosY << 
-                " EndPosX=" << endPosX << " EndPosY=" << endPosY << "\n";
+    iss >> fileW >> fileH >> fileCell >> startX >> startY >> endX >> endY;
 
-    MAP_WIDTH = mapWidth;
-    MAP_HEIGHT = mapHeight;
-    TILE_WIDTH = cellSize;
-    TILE_HEIGHT = cellSize;
-    // startingPoint = { (float)(startPosX * cellSize), (float)(startPosY * cellSize) };
-    // -1 to go one up
-    startingPoint = { (float)(startPosX * cellSize), (float)((startPosY - 1) * cellSize) };
-    endingPoint = { (float)(endPosX * cellSize), (float)((endPosY - 1) * cellSize) };
+    printf("Width=%d Height=%d Cell=%d  Start=(%d,%d) End=(%d,%d)\n",
+           fileW, fileH, fileCell, startX, startY, endX, endY);
 
-    printf("%f-%f\n", endingPoint.x, endingPoint.y);
+    MAP_WIDTH   = fileW;
+    MAP_HEIGHT  = fileH;
+    TILE_HEIGHT = fileCell;
+    TILE_WIDTH  = fileCell;
 
-    matrix.assign(MAP_HEIGHT, std::vector<Cell>(MAP_WIDTH));
+    grid.Clear();
 
-    for (int y = 0; y < MAP_HEIGHT; ++y) {
-        if (!std::getline(in, line)) {
-            printf("Unexpected end of file at row %d\n", y);
-            break;
-        }
+    if (startX >= 0 && startX < GRID_WIDTH && startY >= 0 && startY < GRID_HEIGHT) {
+        grid.startingPoint = { (float)startX * TILE_WIDTH, (float)startY * TILE_HEIGHT };
+    } else {
+        grid.startingPoint = { -1.0f, -1.0f };
+    }
+
+    if (endX >= 0 && endX < GRID_WIDTH && endY >= 0 && endY < GRID_HEIGHT) {
+        grid.endingPoint = { (float)endX * TILE_WIDTH, (float)endY * TILE_HEIGHT };
+    } else {
+        grid.endingPoint = { -1.0f, -1.0f };
+    }
+
+    for (int y = 0; y < fileH && y < GRID_HEIGHT; ++y) {
+        if (!std::getline(in, line)) break;
         std::stringstream ss(line);
         std::string token;
-        for (int x = 0; x < MAP_WIDTH && std::getline(ss, token, ','); ++x) {
-            int v = std::stoi(token);
-            matrix[y][x] = Cell(x, y, TILE_WIDTH, (v == 1));
+
+        for (int x = 0; x < fileW && x < GRID_WIDTH && std::getline(ss, token, ','); ++x) {
+            int v = 0;
+            try { v = std::stoi(token); } catch (...) { v = 0; }
+
+            switch (v) {
+                case 0: // EMPTY
+                    grid.matrix[x][y].isOccupied = false;
+                    break;
+                case 1: // FILLED
+                    grid.matrix[x][y].isOccupied = true;
+                    break;
+                case 2: // TRI_UP
+                    grid.matrix[x][y].isOccupied = false;
+                    grid.MakeCustomTriangle(x, y, TriangleMode::UP);
+                    break;
+                case 3: // TRI_DOWN
+                    grid.matrix[x][y].isOccupied = false;
+                    grid.MakeCustomTriangle(x, y, TriangleMode::DOWN);
+                    break;
+                case 4: // TRI_LEFT
+                    grid.matrix[x][y].isOccupied = false;
+                    grid.MakeCustomTriangle(x, y, TriangleMode::LEFT);
+                    break;
+                case 5: // TRI_RIGHT
+                    grid.matrix[x][y].isOccupied = false;
+                    grid.MakeCustomTriangle(x, y, TriangleMode::RIGHT);
+                    break;
+                default:
+                    grid.matrix[x][y].isOccupied = false;
+                    break;
+            }
         }
     }
 
@@ -62,7 +101,7 @@ void Map::LoadMap(const char *filename){
 
 void Map::CellToTiles() {
     tiles.clear();
-    for (const auto& row : matrix) {
+    for (const auto& row : grid.matrix) {
         for (const Cell& cell : row) {
             if (cell.isOccupied) {
                 tiles.emplace_back(cell.position.x, cell.position.y, cell.cellSize, cell.cellSize, DARKGRAY);
@@ -72,6 +111,16 @@ void Map::CellToTiles() {
 }
 
 void Map::DrawEndPoint() {
-    DrawRectangleV(endingPoint, {(float)TILE_WIDTH, (float)TILE_HEIGHT}, GREEN);
-    DrawRectangleLinesEx({endingPoint.x, endingPoint.y, (float)TILE_WIDTH, (float)TILE_HEIGHT}, 2.0f, BLACK);
+    DrawRectangleV(grid.endingPoint, {(float)TILE_WIDTH, (float)TILE_HEIGHT}, GREEN);
+    DrawRectangleLinesEx({grid.endingPoint.x, grid.endingPoint.y, (float)TILE_WIDTH, (float)TILE_HEIGHT}, 2.0f, BLACK);
+}
+
+void Map::Draw() {
+    for (const auto& tile : tiles) {
+        tile.Draw();
+    }
+
+    for (MyTriangle tri : grid.triangles) {
+        tri.Draw();
+    }
 }

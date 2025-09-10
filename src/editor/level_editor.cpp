@@ -27,18 +27,24 @@ void HandleInput(){
     if (IsKeyDown(KEY_LEFT_CONTROL) && IsKeyPressed(KEY_E)) {
         printf("Exporting...\n");
         state.infoScreen.showExportMessageBox = true;
+        state.actionMode = ActionMode::NONE;
+        state.triangleMode = TriangleMode::NONE;
         // state.grid.ExportMap(state.exportedMapName.c_str());
     }
 
     if (IsKeyDown(KEY_LEFT_CONTROL) && IsKeyPressed(KEY_I)) {
         printf("Importing...\n");
         state.infoScreen.showImportMessageBox = true;
+        state.actionMode = ActionMode::NONE;
+        state.triangleMode = TriangleMode::NONE;
         // state.grid.ImportMap(state.importedMapName.c_str());
     }
 
     if (IsKeyDown(KEY_LEFT_CONTROL) && IsKeyPressed(KEY_C)) {
         printf("Clearing...\n");
         state.infoScreen.showClearGridMessageBox = true;
+        state.actionMode = ActionMode::NONE;
+        state.triangleMode = TriangleMode::NONE;
         // state.grid.ImportMap(state.importedMapName.c_str());
     }
     

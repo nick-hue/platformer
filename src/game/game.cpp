@@ -7,16 +7,16 @@
 
 void GameState::CheckWin()
 {
-    if (CheckCollisionRecs(player.rect, {GameState::map.endingPoint.x, GameState::map.endingPoint.y, (float)map.TILE_WIDTH, (float)map.TILE_HEIGHT})) {
+    if (CheckCollisionRecs(player.rect, {GameState::map.grid.endingPoint.x, GameState::map.grid.endingPoint.y, (float)map.TILE_WIDTH, (float)map.TILE_HEIGHT})) {
         // Reset player position to starting point
         // Reload the map
         printf("Congratulations! You've completed the level!\n");
         levelIndex++;
         
-        currLevelFilename = "assets/maps/exported_map_" + std::to_string(levelIndex) + ".txt";
+        std::string currLevelFilename = "exported_map_" + std::to_string(levelIndex) + ".txt";
         printf("Loading next level: %s\n", currLevelFilename.c_str());
         map.LoadMap(currLevelFilename.c_str());
-        player.position = map.startingPoint;
+        player.position = map.grid.startingPoint;
     }
 }
 
@@ -29,7 +29,7 @@ int main(void) {
     GameState gameState;    
     SetWindowSize(gameState.map.MAP_WIDTH * gameState.map.TILE_WIDTH, 
                   gameState.map.MAP_HEIGHT * gameState.map.TILE_HEIGHT);
-    gameState.player.position = gameState.map.startingPoint;
+    gameState.player.position = gameState.map.grid.startingPoint;
 
     bool debug_show = true;
 
@@ -37,8 +37,6 @@ int main(void) {
         if (IsKeyPressed(KEY_TAB)) debug_show = !debug_show;
         float dt = GetFrameTime();
         
-        // printf("%f %f\n", gameState.player.position.x, gameState.player.position.y);
-        // printf("%f %f\n", gameState.map.endingPoint.x, gameState.map.endingPoint.y);
         gameState.player.Update(dt, gameState.map.tiles);
         gameState.CheckWin();
 
@@ -50,6 +48,7 @@ int main(void) {
             }
             // Draw player
             gameState.player.Draw();
+            gameState.map.Draw();
             // Draw end point
             gameState.map.DrawEndPoint();
 

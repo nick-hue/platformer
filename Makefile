@@ -20,6 +20,8 @@ SRCS_GAME   := 	src/game/game.cpp \
 				src/game/player.cpp \
 				src/game/tile.cpp \
 				src/game/map.cpp \
+				src/editor/grid.cpp \
+				src/editor/my_triangle.cpp \
 				src/editor/cell.cpp
 
 OBJS_EDITOR := $(SRCS_EDITOR:.cpp=.o)

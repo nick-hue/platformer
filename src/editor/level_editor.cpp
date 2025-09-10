@@ -35,7 +35,14 @@ void HandleInput(){
         state.infoScreen.showImportMessageBox = true;
         // state.grid.ImportMap(state.importedMapName.c_str());
     }
+
+    if (IsKeyDown(KEY_LEFT_CONTROL) && IsKeyPressed(KEY_C)) {
+        printf("Clearing...\n");
+        state.infoScreen.showClearGridMessageBox = true;
+        // state.grid.ImportMap(state.importedMapName.c_str());
+    }
     
+
     int pressedKey = GetKeyPressed();
     switch (pressedKey)
     {
@@ -147,11 +154,13 @@ void HandleInput(){
 //TODO: make connected tiles into one bigger
 //TODO: add info label
 //TODO: drag n drop level file
-//TODO: make check before import or exporting.
 
 int main(void)
 {
     InitWindow(EDITOR_SCREEN_WIDTH, EDITOR_SCREEN_HEIGHT, "Level Editor");
+    const char *monitor_name = GetMonitorName(0);
+
+    printf("Monitor Name: %s\n", monitor_name);
     SetWindowPosition(300, 100);
     SetTargetFPS(60);              
 

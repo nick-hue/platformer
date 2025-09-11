@@ -30,6 +30,7 @@ int main(void) {
 
     GameState gameState;    
     // printf("Map Size: %dx%d\n", gameState.map.MAP_WIDTH * gameState.map.TILE_WIDTH, gameState.map.MAP_HEIGHT * gameState.map.TILE_HEIGHT);
+    printf("Map Size: %dx%d\n", gameState.map.MAP_WIDTH, gameState.map.MAP_HEIGHT);
 
     SetWindowSize(gameState.map.MAP_WIDTH, gameState.map.MAP_HEIGHT);
     gameState.player.position = gameState.map.grid.startingPoint;
@@ -40,7 +41,7 @@ int main(void) {
         if (IsKeyPressed(KEY_TAB)) debug_show = !debug_show;
         float dt = GetFrameTime();
 
-        gameState.player.Update(dt, gameState.map.tiles, gameState.map.MAP_WIDTH, gameState.map.MAP_HEIGHT);
+        gameState.player.Update(dt, gameState);
         gameState.CheckWin();
 
         BeginDrawing();

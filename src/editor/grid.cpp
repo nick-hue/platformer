@@ -164,7 +164,7 @@ void Grid::MakeCustomTriangle(int gx, int gy, TriangleMode mode){
 
     triangles.emplace_back(MyTriangle(gx, gy, BLUE, mode));
     triangleSpots.emplace_back(Vector2{ static_cast<float>(gx), static_cast<float>(gy) });
-    printf("triangles size: %ld\n", triangles.size());
+    // printf("triangles size: %ld\n", triangles.size());
 
 }
 

@@ -8,6 +8,7 @@ public:
     int gridPosX{-1};
     int gridPosY{-1};
     Vector2 position{-1.0f, -1.0f};
+    Vector2 tip{-1.0f, -1.0f};
     Color   color{YELLOW};
     TriangleMode mode{TriangleMode::UP};    
 

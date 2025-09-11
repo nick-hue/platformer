@@ -46,9 +46,9 @@ void Map::LoadMap(const char *filename){
     MAP_WIDTH   = MAP_TILE_WIDTH * TILE_WIDTH;
     MAP_HEIGHT  = MAP_TILE_HEIGHT * TILE_HEIGHT;
     
-    printf("Tile Size: %dx%d\n", TILE_WIDTH, TILE_HEIGHT);
-    printf("Map Tile Size: %dx%d\n", MAP_TILE_WIDTH, MAP_TILE_HEIGHT);
-    printf("Map Size: %dx%d\n", MAP_WIDTH, MAP_HEIGHT);
+    // printf("Tile Size: %dx%d\n", TILE_WIDTH, TILE_HEIGHT);
+    // printf("Map Tile Size: %dx%d\n", MAP_TILE_WIDTH, MAP_TILE_HEIGHT);
+    // printf("Map Size: %dx%d\n", MAP_WIDTH, MAP_HEIGHT);
 
     grid.Clear();
 

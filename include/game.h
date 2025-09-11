@@ -10,15 +10,3 @@
 #include <string>
 #include <algorithm>
 #include "game_world_config.h"
-
-class GameState {
-    public:
-        Player player;
-        Map map;
-        int levelIndex{1};
-        std::string currLevelFilename = "exported_map_1.txt";
-
-    GameState() : player(), map(currLevelFilename.c_str()) {}
-
-    void CheckWin();
-};

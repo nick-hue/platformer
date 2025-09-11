@@ -3,7 +3,6 @@
 #include "tile.h"
 #include <vector>
 #include <algorithm>
-#include "game_world_config.h"
 
 constexpr float GRAVITY          = 2000.0f;   // px/s^2
 constexpr float JUMP_VELOCITY    = -700.0f;   // px/s
@@ -11,6 +10,8 @@ constexpr float JUMP_CUT_MULT    = 0.45f;     // jump cut when releasing early
 constexpr float MOVE_SPEED       = 300.0f;    // px/s
 constexpr float COYOTE_TIME      = 0.08f;     // seconds after leaving ground
 constexpr float JUMP_BUFFER_TIME = 0.10f;     // seconds before landing
+
+class GameState;       // ← forward declaration
 
 class Player {
 public:
@@ -31,7 +32,7 @@ public:
     void Jump();
 
     // Move and collide with world
-    void Update(float dt, const std::vector<Tile>& world, int world_width, int world_height);
+    void Update(float dt, GameState& gameState);
 
     void Draw() const;
     void SyncRect();
@@ -40,4 +41,6 @@ public:
 private:
     void ResolveCollisionsX(const std::vector<Tile>& world);
     void ResolveCollisionsY(const std::vector<Tile>& world);
+    void CheckWorldCollisions(GameState& gameState);
+    void CheckTriangleCollisions(GameState& gameState);
 };

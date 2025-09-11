@@ -1,4 +1,5 @@
 #include "player.h"
+#include "game.h"
 
 Player::Player(float x, float y, float w, float h, Color c) {
     position = { x, y };
@@ -41,11 +42,27 @@ void Player::Jump() {
     coyoteTimer = 0.0f;
 }
 
+void Player::CheckTriangleCollisions(GameState& gameState) {
+    for (const auto& tri : gameState.map.grid.triangles) {
+        if (CheckCollisionPointRec(tri.tip, rect)) {
+            // Simple response: reset player to starting point
+            position = gameState.map.grid.startingPoint;
+            velocity = {0.0f, 0.0f};
+            SyncRect();
+            return;
+        }
+    }
+}
+
+void Player::CheckWorldCollisions(GameState& gameState) {
+    CheckTriangleCollisions(gameState);
+}
+
     // Move and collide with world
-void Player::Update(float dt, const std::vector<Tile>& world, int world_width, int world_height) {
+void Player::Update(float dt, GameState& gameState) {
     HandleInput(dt);
 
-    
+    CheckWorldCollisions(gameState);
 
     // Gravity
     velocity.y += GRAVITY * dt;
@@ -53,7 +70,7 @@ void Player::Update(float dt, const std::vector<Tile>& world, int world_width, i
     // --- X axis move & collide ---
     position.x += velocity.x * dt;
     SyncRect();
-    ResolveCollisionsX(world);
+    ResolveCollisionsX(gameState.map.tiles);
 
     // --- Y axis move & collide ---
     position.y += velocity.y * dt;
@@ -61,9 +78,9 @@ void Player::Update(float dt, const std::vector<Tile>& world, int world_width, i
     
     bool wasOnGround = onGround;
     onGround = false;
-    ResolveCollisionsY(world); // will set onGround and zero vy if landing
+    ResolveCollisionsY(gameState.map.tiles); // will set onGround and zero vy if landing
 
-    ClampToScreen(world_width, world_height);
+    ClampToScreen(gameState.map.MAP_WIDTH, gameState.map.MAP_HEIGHT);
 
     // Start coyote time when just left the ground
     if (wasOnGround && !onGround) {

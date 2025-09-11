@@ -1,4 +1,5 @@
 #include "grid.h"
+#include "game_world_config.h"   // or whichever header DEFINES GameState
 
 Grid::Grid() {
     Clear();
@@ -315,6 +316,13 @@ int Grid::GetTriangleIndex(int gx, int gy) const {
     return -1;  // Not found
 }
 
+void Grid::RemoveTriangleByIndex(int index) {
+    if (index == -1) return;
+
+    triangles.erase(triangles.begin() + index);
+    triangleSpots.erase(triangleSpots.begin() + index);
+}
+
 std::vector<MyTriangle> Grid::GetMovingTriangles(std::vector<MyTriangle>& triangles, TriangleMode mode){
     std::vector<MyTriangle> movingTriangles;
     for (const auto& t : triangles) {
@@ -326,8 +334,54 @@ std::vector<MyTriangle> Grid::GetMovingTriangles(std::vector<MyTriangle>& triang
     return movingTriangles;
 }
 
-void Grid::Update(float dt) {
-    std::vector<MyTriangle> movingTriangles = GetMovingTriangles(triangles, TriangleMode::DOWN);
+bool IsPlayerBelowDownSpike(const Rectangle& player, const MyTriangle& tri) {
+    return ((player.x < tri.position.x + CELL_SIZE) && (player.x + player.width > tri.position.x)) 
+    && (player.y > tri.position.y);
+}
+
+void Grid::HandleSpikes(GameState& gameState, std::vector<MyTriangle> movingTriangles){
+
+    for (MyTriangle& tri : gameState.map.grid.triangles) {
+        if (tri.position.y >= gameState.map.MAP_HEIGHT) {
+            // remove triangle from list went out of bounds
+            int index = GetTriangleIndex(tri.gridPosX, tri.gridPosY);
+            RemoveTriangleByIndex(index);
+            printf("Triangle at (%d, %d) fell out of bounds and was removed.\n", tri.gridPosX, tri.gridPosY);
+            continue;
+        }
+    }
+
+    for (MyTriangle& tri : movingTriangles){
+        // Check if player is below the spike
+        if (IsPlayerBelowDownSpike(gameState.player.rect, tri)) {
+            tri.falling = true;
+            printf("Player below by spike at (%f, %f)!\n", tri.position.x, tri.position.y);
+        } else {
+            tri.falling = false;
+            tri.velocityY = 0.0f;
+        }
+    }
+
+}
+
+void Grid::Update(float dt, GameState& gameState) {
+    std::vector<MyTriangle> movingTriangles = GetMovingTriangles(triangles, gameState.movingSpikeMode);
+
+    HandleSpikes(gameState, movingTriangles);
+
+    for (MyTriangle& tri : movingTriangles) {
+        // tri.ToString();
+        // printf("%s\n", ToString(tri.mode));
+        if (tri.falling) {
+            tri.velocityY += GRAVITY * dt;                  
+            tri.position.y += tri.velocityY * dt;
+            tri.UpdateGeometry();
+        }
+    }
+
+
 
     
+
+
 }

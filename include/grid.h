@@ -2,8 +2,9 @@
 #include "raylib.h"
 #include "level_editor_defs.h"  
 #include "cell.h"               
-#include <vector>
 #include "my_triangle.h"
+
+#include <vector>
 #include <fstream>
 #include <algorithm>
 #include <string>
@@ -11,6 +12,8 @@
 #include <sstream>
 #include <algorithm>
 #include <iostream>
+
+class GameState;       // ← forward declaration
 
 class Grid {
 public:
@@ -35,6 +38,9 @@ public:
     bool TriangleExistsAt(Vector2 pos);
     void MakeCustomTriangle(int gx, int gy, TriangleMode mode);
     bool IsInbounds(int gx, int gy);
+    int GetTriangleIndex(int gx, int gy) const;    
+    void RemoveTriangleByIndex(int index);
+    void HandleSpikes(GameState& gameState, std::vector<MyTriangle> movingTriangles); // check if spikes hit the floor or fell out of bounds
     
     // For edit mode
     void ImportMap(const char *filename);
@@ -48,10 +54,9 @@ public:
     void MoveFrom(int gx, int gy);
     int GetAdjacentCells(int gx, int gy, std::vector<Cell>& outCells);
     void ShowSelectedCell();
-    int GetTriangleIndex(int gx, int gy) const;    
     
     // For game mode 
-    void Update(float dt);
+    void Update(float dt, GameState& gameState);
     std::vector<MyTriangle> GetMovingTriangles(std::vector<MyTriangle>& triangles, TriangleMode mode);
     
     StoreItem ClassifyCell(int x, int y) const;

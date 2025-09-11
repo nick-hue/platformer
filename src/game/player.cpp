@@ -148,8 +148,6 @@ void Player::ResolveCollisionsX(const std::vector<Tile>& world) {
             position.x = rect.x;
         }
     }
-
-
 }
 
 void Player::ResolveCollisionsY(const std::vector<Tile>& world) {

@@ -4,7 +4,6 @@
 #include <iostream>
 #include <array>
 
-constexpr float TRIANGLE_EPS = 1.0f;
 
 
 class MyTriangle {
@@ -12,8 +11,10 @@ public:
     int gridPosX{-1};
     int gridPosY{-1};
     Vector2 position{-1.0f, -1.0f};
+    float velocityY{0.0f};
     Color   color{YELLOW};
     TriangleMode mode{TriangleMode::NONE};    
+    bool falling{false};
     
     std::array<Vector2,3> vertices{ Vector2{0,0}, Vector2{0,0}, Vector2{0,0} };
     

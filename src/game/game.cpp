@@ -1,10 +1,25 @@
 #include "game.h"
 
 // TODO: load sprite
-// TODO: add reset level 
 // TODO: add pause 
 // TODO: gravity change button
 // TODO: add moving platforms
+
+void PauseGame(GameState& gameState) {
+    // simple pause screen
+    gameState.gamePaused = true;
+    while (gameState.gamePaused && !WindowShouldClose()) {
+        if (IsKeyPressed(KEY_ESCAPE)) {
+            gameState.gamePaused = false;
+        }
+
+        BeginDrawing();
+            ClearBackground(DARKGRAY);
+            DrawText("Game Paused", 20, 20, 40, LIGHTGRAY);
+            DrawText("Press ESC to resume", 20, 80, 20, LIGHTGRAY);
+        EndDrawing();
+    }
+}
 
 int main(void) {
     InitWindow(GAME_SCREEN_WIDTH, GAME_SCREEN_HEIGHT, "Platformer");
@@ -21,7 +36,10 @@ int main(void) {
     bool debug_show = true;
 
     while (!WindowShouldClose()) {
+        if (IsKeyPressed(KEY_P)) PauseGame(gameState);
+
         if (IsKeyPressed(KEY_TAB)) debug_show = !debug_show;
+        
         // make this somewhere else
         if (IsKeyDown(KEY_LEFT_CONTROL) && IsKeyPressed(KEY_R)) {
             printf("Reloading level: %s\n", gameState.currLevelFilename.c_str());
@@ -33,7 +51,7 @@ int main(void) {
 
         // Update player and map
         gameState.player.Update(dt, gameState);
-        gameState.map.grid.Update(dt);
+        gameState.map.grid.Update(dt, gameState);
 
         BeginDrawing();
             ClearBackground(RAYWHITE);

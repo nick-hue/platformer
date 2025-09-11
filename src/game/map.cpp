@@ -8,7 +8,8 @@ Map::Map(){
 
 Map::Map(const char *filename){
     // LoadMap("exported_map_1.txt");
-    LoadMap("test.txt");
+    LoadMap("spikes.txt");
+    // LoadMap("test.txt");
     // LoadMap(filename);
 }
 

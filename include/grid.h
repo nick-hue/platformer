@@ -21,6 +21,8 @@ public:
     
     std::vector<MyTriangle> triangles;
     std::vector<Vector2> triangleSpots;
+    std::vector<const MyTriangle*> downs;
+
 
     Vector2 startingPoint{-1.0f,-1.0f};
     Vector2 endingPoint{-1.0f,-1.0f};
@@ -28,23 +30,30 @@ public:
     Grid();
     void Draw();
     void Clear();
-    void ShowSelectedCell();
+    
+    // General 
+    bool TriangleExistsAt(Vector2 pos);
+    void MakeCustomTriangle(int gx, int gy, TriangleMode mode);
     bool IsInbounds(int gx, int gy);
+    
+    // For edit mode
+    void ImportMap(const char *filename);
+    void ExportMap(const char *filename);
+    void DrawStartingPoint();
+    void DrawEndingPoint();
+    void SetStartPoint(int gx, int gy);
+    void SetEndPoint(int gx, int gy);
     void BucketFill(int gx, int gy);
     void BucketHelper(int gx, int gy);
     void MoveFrom(int gx, int gy);
     int GetAdjacentCells(int gx, int gy, std::vector<Cell>& outCells);
-    void SetStartPoint(int gx, int gy);
-    void SetEndPoint(int gx, int gy);
-    void DrawStartingPoint();
-    void DrawEndingPoint();
-    void MakeCustomTriangle(int gx, int gy, TriangleMode mode);
-    bool TriangleExistsAt(Vector2 pos);
-    void ImportMap(const char *filename);
-    void ExportMap(const char *filename);
-  
-    int GetTriangleIndex(int gx, int gy) const;
-
+    void ShowSelectedCell();
+    int GetTriangleIndex(int gx, int gy) const;    
+    
+    // For game mode 
+    void Update(float dt);
+    std::vector<MyTriangle> GetMovingTriangles(std::vector<MyTriangle>& triangles, TriangleMode mode);
+    
     StoreItem ClassifyCell(int x, int y) const;
     char GetOutputChar(int x, int y) const;
 };

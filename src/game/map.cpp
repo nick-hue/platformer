@@ -7,7 +7,8 @@ Map::Map(){
 }
 
 Map::Map(const char *filename){
-    LoadMap("exported_map_1.txt");
+    // LoadMap("exported_map_1.txt");
+    LoadMap("test.txt");
     // LoadMap(filename);
 }
 
@@ -72,7 +73,6 @@ void Map::LoadMap(const char *filename){
         for (int x = 0; x < fileW && x < GRID_WIDTH && std::getline(ss, token, ','); ++x) {
             int v = 0;
             try { v = std::stoi(token); } catch (...) { v = 0; }
-
             switch (v) {
                 case 0: // EMPTY
                     grid.matrix[x][y].isOccupied = false;
@@ -102,6 +102,11 @@ void Map::LoadMap(const char *filename){
             }
         }
     }
+
+    // for (MyTriangle tri : grid.triangles){
+    //     tri.ToString();
+    //     printf("Triangle %s\n", ToString(tri.mode));
+    // }
 
     CellToTiles();
 }

@@ -2,21 +2,28 @@
 #include "raylib.h"
 #include "level_editor_defs.h" // for CELL_SIZE
 #include <iostream>
+#include <array>
+
+constexpr float TRIANGLE_EPS = 1.0f;
+
 
 class MyTriangle {
 public:
     int gridPosX{-1};
     int gridPosY{-1};
     Vector2 position{-1.0f, -1.0f};
-    Vector2 tip{-1.0f, -1.0f};
     Color   color{YELLOW};
-    TriangleMode mode{TriangleMode::UP};    
-
-    // MyTriangle() = default;
-    // MyTriangle(Vector2 pos, gridPosXint gridPosY;, Color c, TriangleMode mode);
+    TriangleMode mode{TriangleMode::NONE};    
+    
+    std::array<Vector2,3> vertices{ Vector2{0,0}, Vector2{0,0}, Vector2{0,0} };
+    
     MyTriangle(int gridPosX,int gridPosY, Color c, TriangleMode mode);
     
     // Draw Cell
     void Draw();
     void ToString();
+    void UpdateGeometry();
+    const std::array<Vector2,3>& Points() const { return vertices; }
+
+    
 };

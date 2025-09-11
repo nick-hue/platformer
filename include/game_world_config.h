@@ -10,10 +10,9 @@ class GameState {
     public:
         Player player;
         Map map;
+        TriangleMode movingSpikeMode{TriangleMode::NONE};
         int levelIndex{1};
         std::string currLevelFilename = "exported_map_1.txt";
 
     GameState() : player(), map(currLevelFilename.c_str()) {}
-
-    void CheckWin();
 };

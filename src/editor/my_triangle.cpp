@@ -3,73 +3,55 @@
 MyTriangle::MyTriangle(int gx, int gy, Color c, TriangleMode m) {
     gridPosX = gx;
     gridPosY = gy;
-    position.x = gx * CELL_SIZE;
-    position.y = gy * CELL_SIZE;
+    position = {gx * (float) CELL_SIZE, gy * (float) CELL_SIZE};
     color    = c;
     mode     = m;
+    UpdateGeometry();
+}
+
+
+
+void MyTriangle::UpdateGeometry() {
+    const float x = position.x;
+    const float y = position.y;
+    const float s = static_cast<float>(CELL_SIZE);
 
     switch (mode) {
         case TriangleMode::UP:
-            tip = (Vector2) { position.x + (float)CELL_SIZE * 0.5f, position.y };            // center of top edge
+            // tip (top edge center), base-left, base-right
+            vertices = { Vector2{ x + s*0.5f, y },
+                         Vector2{ x,           y + s },
+                         Vector2{ x + s,       y + s } };
             break;
-        case TriangleMode::DOWN:  // pointing down
-            tip = (Vector2) { position.x + (float)CELL_SIZE * 0.5f, position.y + (float)CELL_SIZE };        // center of bottom edge
+
+        case TriangleMode::DOWN:
+            vertices = { Vector2{ x,           y },
+                         Vector2{ x + s*0.5f, y + s },
+                         Vector2{ x + s,       y } };
             break;
-        case TriangleMode::LEFT:  // pointing left
-            tip = (Vector2) { position.x,            position.y + (float)CELL_SIZE * 0.5f }; // center of left edge
+
+        case TriangleMode::LEFT:
+            vertices = { Vector2{ x + s,       y + s },
+                         Vector2{ x + s,       y },
+                         Vector2{ x,           y + s*0.5f }};
             break;
-        case TriangleMode::RIGHT: // pointing right
-            tip = (Vector2) { position.x + (float)CELL_SIZE,        position.y + (float)CELL_SIZE * 0.5f }; // center of right edge
+
+        case TriangleMode::RIGHT:
+            vertices = { Vector2{ x + s,       y + s*0.5f },
+                         Vector2{ x,           y },
+                         Vector2{ x,           y + s } };
             break;
-        default:
-            tip = (Vector2) { position.x + (float)CELL_SIZE * 0.5f, position.y + (float)CELL_SIZE * 0.5f }; // fallback: cell center
     }
 }
 
 void MyTriangle::Draw() {
-    switch (mode) {
-        case TriangleMode::UP:
-            DrawTriangle(
-                Vector2{ position.x + (float)CELL_SIZE * 0.5f, position.y },                 // top-center
-                Vector2{ position.x,                           position.y + (float)CELL_SIZE }, // bottom-left
-                Vector2{ position.x + (float)CELL_SIZE,        position.y + (float)CELL_SIZE }, // bottom-right
-                color
-            );
-            break;
+    // UpdateGeometry();
+    DrawTriangle(vertices[0], vertices[1], vertices[2], color);
+    DrawTriangleLines(vertices[0], vertices[1], vertices[2], BLACK);
 
-        case TriangleMode::DOWN:
-            DrawTriangle(
-                Vector2{ position.x,                           position.y },                   // top-left
-                Vector2{ position.x + (float)CELL_SIZE * 0.5f, position.y + (float)CELL_SIZE },// bottom-center
-                Vector2{ position.x + (float)CELL_SIZE,        position.y },                   // top-right
-                color
-            );
-            break;
-
-        case TriangleMode::LEFT:
-            DrawTriangle(
-                Vector2{ position.x,                           position.y + (float)CELL_SIZE * 0.5f }, // center-left (apex)
-                Vector2{ position.x + (float)CELL_SIZE,        position.y + (float)CELL_SIZE },        // bottom-right
-                Vector2{ position.x + (float)CELL_SIZE,        position.y },                           // top-right
-                color
-            );
-            break;
-
-        case TriangleMode::RIGHT:
-            DrawTriangle(
-                Vector2{ position.x,                           position.y },                           // top-left
-                Vector2{ position.x,                           position.y + (float)CELL_SIZE },        // bottom-left
-                Vector2{ position.x + (float)CELL_SIZE,        position.y + (float)CELL_SIZE * 0.5f }, // center-right (apex)
-                color
-            );
-            break;
-
-        default:
-            // NONE: draw nothing
-            break;
-    }
-
-    // DrawRectangle(tip.x - 3, tip.y - 3, 6, 6, RED); // draw tip for debugging
+    DrawRectangle(vertices[0].x - 3, vertices[0].y - 3, 6, 6, RED); // draw tip for debugging
+    DrawRectangle(vertices[1].x - 3, vertices[1].y - 3, 6, 6, RED); // draw base-left for debugging
+    DrawRectangle(vertices[2].x - 3, vertices[2].y - 3, 6, 6, RED); // draw base-right for debugging
 }
 
 void MyTriangle::ToString() {

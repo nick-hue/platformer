@@ -314,3 +314,20 @@ int Grid::GetTriangleIndex(int gx, int gy) const {
     }
     return -1;  // Not found
 }
+
+std::vector<MyTriangle> Grid::GetMovingTriangles(std::vector<MyTriangle>& triangles, TriangleMode mode){
+    std::vector<MyTriangle> movingTriangles;
+    for (const auto& t : triangles) {
+        if (t.mode == mode) {
+            movingTriangles.push_back(t);
+        }
+    }
+
+    return movingTriangles;
+}
+
+void Grid::Update(float dt) {
+    std::vector<MyTriangle> movingTriangles = GetMovingTriangles(triangles, TriangleMode::DOWN);
+
+    
+}

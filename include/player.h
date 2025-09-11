@@ -11,6 +11,7 @@ constexpr float MOVE_SPEED       = 300.0f;    // px/s
 constexpr float COYOTE_TIME      = 0.08f;     // seconds after leaving ground
 constexpr float JUMP_BUFFER_TIME = 0.10f;     // seconds before landing
 
+
 class GameState;       // ← forward declaration
 
 class Player {
@@ -33,6 +34,8 @@ public:
 
     // Move and collide with world
     void Update(float dt, GameState& gameState);
+
+    void CheckWin(GameState& gameState);
 
     void Draw() const;
     void SyncRect();

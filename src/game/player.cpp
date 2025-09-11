@@ -42,14 +42,38 @@ void Player::Jump() {
     coyoteTimer = 0.0f;
 }
 
+void LoadNextLevel(GameState& gameState){
+    printf("Congratulations! You've completed the level!\n");
+    gameState.levelIndex++;
+    gameState.currLevelFilename = "exported_map_" + std::to_string(gameState.levelIndex) + ".txt";
+    printf("Loading next level: %s\n", gameState.currLevelFilename.c_str());
+    gameState.map.LoadMap(gameState.currLevelFilename.c_str());
+    gameState.player.position = gameState.map.grid.startingPoint;
+}
+
+void Player::CheckWin(GameState& gameState)
+{
+    if (CheckCollisionRecs(rect, {gameState.map.grid.endingPoint.x, gameState.map.grid.endingPoint.y, (float)gameState.map.TILE_WIDTH, (float)gameState.map.TILE_HEIGHT})) {
+        // Player reached end point load next level
+        LoadNextLevel(gameState);       
+    }
+}
+
+inline bool PointInRectInclusive(Vector2 p, const Rectangle& r) {
+    return (p.x >= r.x) && (p.x <= r.x + r.width) &&
+           (p.y >= r.y) && (p.y <= r.y + r.height);
+}
+
 void Player::CheckTriangleCollisions(GameState& gameState) {
-    for (const auto& tri : gameState.map.grid.triangles) {
-        if (CheckCollisionPointRec(tri.tip, rect)) {
-            // Simple response: reset player to starting point
-            position = gameState.map.grid.startingPoint;
-            velocity = {0.0f, 0.0f};
-            SyncRect();
-            return;
+    
+    for (MyTriangle tri : gameState.map.grid.triangles){
+        for (Vector2 vert : tri.vertices){
+            if (PointInRectInclusive(vert, rect)) {
+                position = gameState.map.grid.startingPoint;
+                velocity = {0.0f, 0.0f};
+                SyncRect();
+               return;
+            }
         }
     }
 }
@@ -62,6 +86,7 @@ void Player::CheckWorldCollisions(GameState& gameState) {
 void Player::Update(float dt, GameState& gameState) {
     HandleInput(dt);
 
+    CheckWin(gameState);
     CheckWorldCollisions(gameState);
 
     // Gravity

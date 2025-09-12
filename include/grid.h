@@ -57,7 +57,6 @@ public:
     
     // For game mode 
     void Update(float dt, GameState& gameState);
-    std::vector<MyTriangle> GetMovingTriangles(std::vector<MyTriangle>& triangles, TriangleMode mode);
     
     StoreItem ClassifyCell(int x, int y) const;
     char GetOutputChar(int x, int y) const;

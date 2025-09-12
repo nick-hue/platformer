@@ -323,17 +323,6 @@ void Grid::RemoveTriangleByIndex(int index) {
     triangleSpots.erase(triangleSpots.begin() + index);
 }
 
-std::vector<MyTriangle> Grid::GetMovingTriangles(std::vector<MyTriangle>& triangles, TriangleMode mode){
-    std::vector<MyTriangle> movingTriangles;
-    for (const auto& t : triangles) {
-        if (t.mode == mode) {
-            movingTriangles.push_back(t);
-        }
-    }
-
-    return movingTriangles;
-}
-
 bool IsPlayerBelowDownSpike(const Rectangle& player, const MyTriangle& tri) {
     return ((player.x < tri.position.x + CELL_SIZE) && (player.x + player.width > tri.position.x)) 
     && (player.y > tri.position.y);
@@ -355,33 +344,41 @@ void Grid::HandleSpikes(GameState& gameState, std::vector<MyTriangle> movingTria
         // Check if player is below the spike
         if (IsPlayerBelowDownSpike(gameState.player.rect, tri)) {
             tri.falling = true;
-            printf("Player below by spike at (%f, %f)!\n", tri.position.x, tri.position.y);
-        } else {
-            tri.falling = false;
-            tri.velocityY = 0.0f;
+            // printf("Player below by spike at (%f, %f)!\n", tri.position.x, tri.position.y);
         }
     }
 
 }
 
 void Grid::Update(float dt, GameState& gameState) {
-    std::vector<MyTriangle> movingTriangles = GetMovingTriangles(triangles, gameState.movingSpikeMode);
-
-    HandleSpikes(gameState, movingTriangles);
-
-    for (MyTriangle& tri : movingTriangles) {
-        // tri.ToString();
-        // printf("%s\n", ToString(tri.mode));
-        if (tri.falling) {
-            tri.velocityY += GRAVITY * dt;                  
-            tri.position.y += tri.velocityY * dt;
-            tri.UpdateGeometry();
+    // move spikes that are falling
+    for (auto& tri : triangles) {
+        if (tri.mode == gameState.movingSpikeMode) {
+            if (!tri.falling && IsPlayerBelowDownSpike(gameState.player.rect, tri)) {
+                tri.falling = true;
+                tri.velocityY = 0.0f;
+            }
+            if (tri.falling) {
+                tri.velocityY += GRAVITY * dt;
+                tri.position.y += tri.velocityY * dt;
+                tri.UpdateGeometry();
+            }
         }
     }
 
+    for (int i = (int)triangles.size()-1; i >= 0; --i) {
+        float triBottom = std::max({triangles[i].vertices[0].y,
+                                    triangles[i].vertices[1].y,
+                                    triangles[i].vertices[2].y});
+        if (triBottom >= gameState.map.MAP_HEIGHT) RemoveTriangleByIndex(i);
+        
+        for (const Tile& tile : gameState.map.tiles) {
+            if (triangles[i].falling && CheckCollisionPointRec({triangles[i].position.x + CELL_SIZE/2, triBottom}, tile.rect)) {
+                RemoveTriangleByIndex(i);
+                break;  // Exit the inner loop since the triangle is removed
+            }
+        }
+    }
 
-
-    
-
-
+    printf("size %d\n", (int)triangles.size());
 }

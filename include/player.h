@@ -11,8 +11,8 @@ constexpr float MOVE_SPEED       = 300.0f;    // px/s
 constexpr float COYOTE_TIME      = 0.08f;     // seconds after leaving ground
 constexpr float JUMP_BUFFER_TIME = 0.10f;     // seconds before landing
 
+class GameState;
 
-class GameState;       // ← forward declaration
 
 class Player {
 public:
@@ -46,4 +46,28 @@ private:
     void ResolveCollisionsY(const std::vector<Tile>& world);
     void CheckWorldCollisions(GameState& gameState);
     void CheckTriangleCollisions(GameState& gameState);
+};
+
+
+class MySprite {
+public:
+    Texture2D sprite{};
+    int cols{1};
+    int rows{1};
+    int frameWidth{sprite.width/cols};  // frame width
+    int frameHeight{sprite.height/rows}; // frame height
+    int frame{0};   
+    int animRowIdle{0};     // change these to match your sheet rows
+    int animRowRun{1};
+    int animRowJump{2};
+    float animTimer{0.0f};
+    float animFPS{12.0f};
+    bool facingRight{true};
+
+    void SetSprite(Texture2D tex, int cols_, int rows_, int rowIdle, int rowRun, int rowJump);
+    void UpdateAnimation(float dt, Player& player);
+    MySprite() = default;
+
+    void Draw(Player& player) const;
+    void Update();
 };

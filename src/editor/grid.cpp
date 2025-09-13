@@ -379,6 +379,4 @@ void Grid::Update(float dt, GameState& gameState) {
             }
         }
     }
-
-    printf("size %d\n", (int)triangles.size());
 }

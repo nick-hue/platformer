@@ -1,11 +1,14 @@
 #include "game.h"
 
 // TODO: load sprite
-// TODO: add pause 
 // TODO: gravity change button
 // TODO: add moving platforms
+// TODO: put lives mechanic
+// TODO: make pause menu betterd
+GameState gameState;    
 
-void PauseGame(GameState& gameState) {
+
+void PauseGame() {
     // simple pause screen
     gameState.gamePaused = true;
     while (gameState.gamePaused && !WindowShouldClose()) {
@@ -27,7 +30,10 @@ int main(void) {
     SetTargetFPS(60);
     DrawFPS(GAME_SCREEN_WIDTH - 100, 10);
 
-    GameState gameState;    
+    
+    Texture2D playerTexture = LoadTexture("assets/sprites/characters/Soldier/Soldier/Soldier.png");
+    gameState.playerSprite.SetSprite(playerTexture, 9, 7, 0, 1, 2);
+    
     printf("Map Size: %dx%d\n", gameState.map.MAP_WIDTH, gameState.map.MAP_HEIGHT);
 
     SetWindowSize(gameState.map.MAP_WIDTH, gameState.map.MAP_HEIGHT);
@@ -36,7 +42,7 @@ int main(void) {
     bool debug_show = true;
 
     while (!WindowShouldClose()) {
-        if (IsKeyPressed(KEY_P)) PauseGame(gameState);
+        if (IsKeyPressed(KEY_P)) PauseGame();
 
         if (IsKeyPressed(KEY_TAB)) debug_show = !debug_show;
         
@@ -52,6 +58,7 @@ int main(void) {
         // Update player and map
         gameState.player.Update(dt, gameState);
         gameState.map.grid.Update(dt, gameState);
+        gameState.playerSprite.UpdateAnimation(dt, gameState.player);
 
         BeginDrawing();
             ClearBackground(RAYWHITE);
@@ -62,6 +69,7 @@ int main(void) {
             // Draw player
             gameState.player.Draw();
             gameState.map.Draw();
+            gameState.playerSprite.Draw(gameState.player);
             // Draw end point
             gameState.map.DrawEndPoint();
 
@@ -69,6 +77,7 @@ int main(void) {
         EndDrawing();
     }
 
+    UnloadTexture(playerTexture);
     CloseWindow();
     return 0;
 }

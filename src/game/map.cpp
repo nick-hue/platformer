@@ -2,15 +2,10 @@
 
 Map::Map(){
     printf("Default Constructor\n");
-    // LoadMap("exported_map_1.txt");
-    LoadMap("exported_map_1.txt");
 }
 
 Map::Map(const char *filename){
-    // LoadMap("exported_map_1.txt");
-    LoadMap("spikes.txt");
-    // LoadMap("test.txt");
-    // LoadMap(filename);
+    LoadMap(filename);
 }
 
 void Map::LoadMap(const char *filename){

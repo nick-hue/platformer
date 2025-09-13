@@ -69,10 +69,9 @@ void Player::CheckTriangleCollisions(GameState& gameState) {
     for (MyTriangle tri : gameState.map.grid.triangles){
         for (Vector2 vert : tri.vertices){
             if (PointInRectInclusive(vert, rect)) {
+                gameState.map.LoadMap(gameState.currLevelFilename.c_str());
                 position = gameState.map.grid.startingPoint;
-                velocity = {0.0f, 0.0f};
-                SyncRect();
-               return;
+                return;
             }
         }
     }
@@ -175,4 +174,72 @@ void Player::ResolveCollisionsY(const std::vector<Tile>& world) {
             }
         }
     }
+}
+
+// Sprite code moved to sprite.cpp
+void MySprite::SetSprite(Texture2D tex, int cols_, int rows_, int rowIdle, int rowRun, int rowJump) {
+    sprite = tex;    // copy is fine (Texture2D is small handle)
+    cols = cols_;
+    rows = rows_;
+    frameWidth = sprite.width  / cols;
+    frameHeight = sprite.height / rows;
+    animRowIdle = rowIdle;
+    animRowRun  = rowRun;
+    animRowJump = rowJump;
+    frame = 0;
+    animTimer = 0.0f;
+}
+
+void MySprite::UpdateAnimation(float dt, Player& player) {
+    int row = animRowIdle;
+    if (!player.onGround) row = animRowJump;
+    else if (std::abs(player.velocity.x) > 1.0f) row = animRowRun;
+
+    // face
+    if (player.velocity.x >  1.0f) facingRight = true;
+    if (player.velocity.x < -1.0f) facingRight = false;
+
+    // advance frames
+    animTimer += dt;
+    const float spf = 1.0f / animFPS;   // seconds per frame
+    while (animTimer >= spf) {
+        animTimer -= spf;
+        frame = (frame + 1) % cols;
+    }
+
+    // set rects from frame/row when drawing (below)
+    player.rect.x = player.position.x;
+    player.rect.y = player.position.y;
+    player.rect.width = frameWidth;
+    player.rect.height = frameHeight;
+
+}
+
+void MySprite::Draw(Player& player) const {
+    if (sprite.id == 0) {                 // fallback if no texture yet
+        DrawRectangleRec(player.rect, player.color);
+        return;
+    }
+
+    // Source frame (flip by setting width negative when facing left)
+    Rectangle src{(float)(frame * frameWidth),
+        (float)(/* row chosen in UpdateAnimation */ 0),
+        (float)frameWidth,
+        (float)frameHeight
+    };
+
+    int row = animRowIdle;
+    if (!player.onGround) row = animRowJump;
+    else if (std::abs(player.velocity.x) > 1.0f) row = animRowRun;
+    src.y = (float)(row * frameHeight);
+
+    if (!facingRight) {
+        src.x += src.width;   // move to right edge of the frame
+        src.width = -src.width; // negative width flips horizontally
+    }
+
+    // Destination: fit sprite into your player AABB
+    Rectangle dst{ player.rect.x, player.rect.y, player.rect.width, player.rect.height };
+
+    DrawTexture(sprite, src.x, src.y, WHITE);
 }

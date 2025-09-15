@@ -127,7 +127,6 @@ void Map::Draw() {
     for (MyTriangle tri : grid.triangles) {
         tri.Draw();
     }
-
 }
 
 void Map::ReloadMap(GameState& gameState) {

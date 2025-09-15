@@ -41,6 +41,9 @@ void MyTriangle::UpdateGeometry() {
                          Vector2{ x,           y },
                          Vector2{ x,           y + s } };
             break;
+        default:
+            vertices = { Vector2{0,0}, Vector2{0,0}, Vector2{0,0} };
+            break;
     }
 }
 

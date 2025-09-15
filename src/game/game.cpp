@@ -8,10 +8,10 @@
 GameState gameState;    
 
 void PauseGame() {
-    gameState.gamePaused = true;
-    while (gameState.gamePaused && !WindowShouldClose()) {
+    gameState.isGamePaused = true;
+    while (gameState.isGamePaused && !WindowShouldClose()) {
         if (IsKeyPressed(KEY_ESCAPE)) {
-            gameState.gamePaused = false;
+            gameState.isGamePaused = false;
         }
 
         BeginDrawing();
@@ -24,13 +24,29 @@ void PauseGame() {
 
 void LoadTextures(){    
     Texture2D playerTexture = LoadTexture("assets/sprites/characters/Soldier/Soldier/Soldier.png");
+    if (playerTexture.id == 0) { TraceLog(LOG_ERROR, "Failed to load player texture"); }
+
     gameState.playerSprite.SetSprite(playerTexture, 9, 7);
     gameState.playerSprite.idle = Anim{0, 0, 4, 8.f};   // row 0, cols [0..3]
     gameState.playerSprite.walk = Anim{1, 0, 9, 12.f};  // row 1, cols [0..8]
 
     Texture2D keyGoalTexture = LoadTexture("assets/sprites/items/key/goal_key.png");
+    if (keyGoalTexture.id == 0) { TraceLog(LOG_ERROR, "Failed to load key goal texture"); }
+
     gameState.keyGoalSprite.SetSprite(keyGoalTexture, gameState.map.grid.endingPoint, 24, 1);
     gameState.keyGoalSprite.idle = Anim{0, 0, 24, 12.f};  
+
+    Texture2D heartTexture = LoadTexture("assets/sprites/ui/heart/heart_32x32.png");
+    if (heartTexture.id == 0) { TraceLog(LOG_ERROR, "Failed to load heart texture"); }
+    printf("heart pos : %.fx%.f\n", gameState.gameUI.heartPosition.x, gameState.gameUI.heartPosition.y);
+
+    for (int i = 0; i < gameState.maxLives; ++i) {
+        gameState.gameUI.hearts[i].sprite.SetSprite(heartTexture
+                                    , Vector2{(i+1) * gameState.gameUI.heartPosition.x, gameState.gameUI.heartPosition.y},
+                                    3, 1);
+        gameState.gameUI.hearts[i].sprite.idle = Anim{0, 0, 1, 12.f};
+    }
+
 }
 
 void UnloadTextures(){
@@ -42,7 +58,6 @@ int main(void) {
     InitWindow(GAME_SCREEN_WIDTH, GAME_SCREEN_HEIGHT, "Platformer");
     SetWindowPosition(300, 200);
     SetTargetFPS(60);
-    DrawFPS(GAME_SCREEN_WIDTH - 100, 10);
 
     LoadTextures();
     printf("Map Size: %dx%d\n", gameState.map.MAP_WIDTH, gameState.map.MAP_HEIGHT);
@@ -53,6 +68,8 @@ int main(void) {
     bool debug_show = true;
 
     while (!WindowShouldClose()) {
+        DrawFPS(gameState.map.MAP_WIDTH - 100, 10);
+
         if (IsKeyPressed(KEY_P)) PauseGame();
 
         if (IsKeyPressed(KEY_TAB)) debug_show = !debug_show;
@@ -63,6 +80,12 @@ int main(void) {
             gameState.map.ReloadMap(gameState);
         }
 
+        if (gameState.currentLives <= 0) {
+            printf("Game Over! You've run out of lives.\n");
+            // go to losing screen
+            break;  // Exit the game loop
+        }
+
         float dt = GetFrameTime();
 
         // Update player and map
@@ -70,6 +93,7 @@ int main(void) {
         gameState.playerSprite.UpdateAnimation(dt, gameState.player);
         gameState.keyGoalSprite.UpdateAnimation(dt);
         gameState.map.grid.Update(dt, gameState);
+        gameState.gameUI.Update(gameState.currentLives);
 
         BeginDrawing();
             ClearBackground(RAYWHITE);
@@ -79,6 +103,7 @@ int main(void) {
             gameState.map.Draw();
             gameState.playerSprite.Draw(gameState.player);
             gameState.keyGoalSprite.Draw();
+            gameState.gameUI.Draw(gameState);
         EndDrawing();
     }
 

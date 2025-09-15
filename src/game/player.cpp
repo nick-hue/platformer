@@ -71,8 +71,8 @@ void Player::CheckTriangleCollisions(GameState& gameState) {
     for (MyTriangle tri : gameState.map.grid.triangles){
         for (Vector2 vert : tri.vertices){
             if (PointInRectInclusive(vert, rect)) {
-                gameState.map.LoadMap(gameState.currLevelFilename.c_str());
-                position = gameState.map.grid.startingPoint;
+                gameState.map.ReloadMap(gameState);
+                gameState.currentLives--;
                 return;
             }
         }
@@ -82,6 +82,8 @@ void Player::CheckTriangleCollisions(GameState& gameState) {
 void Player::CheckOutOfMap(GameState& gameState){
     if (position.y > gameState.map.MAP_HEIGHT) {
         gameState.map.ReloadMap(gameState);
+        gameState.currentLives--;
+        return;
     }
 }
 
@@ -93,6 +95,8 @@ void Player::CheckWorldDeath(GameState& gameState) {
     // Move and collide with world
 void Player::Update(float dt, GameState& gameState) {
     HandleInput(dt);
+
+    printf("lives : %d\n", gameState.currentLives);
 
     CheckWin(gameState);
     CheckWorldDeath(gameState);

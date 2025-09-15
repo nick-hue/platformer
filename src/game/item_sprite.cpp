@@ -9,6 +9,7 @@ void ItemSprite::SetSprite(Texture2D tex, Vector2 pos,int cols_, int rows_) {
     frameHeight = sprite.height / rows;
     currentFrame = 0;
     animTimer = 0.0f;
+    scale = 1.0f;    
 }
 
 void ItemSprite::UpdateAnimation(float dt) {

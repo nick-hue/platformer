@@ -22,6 +22,5 @@ public:
     ItemSprite() = default;
     void SetSprite(Texture2D tex, Vector2 pos, int cols_, int rows_);
     void UpdateAnimation(float dt);
-
     void Draw() const;
 };

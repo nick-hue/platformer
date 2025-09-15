@@ -328,31 +328,9 @@ bool IsPlayerBelowDownSpike(const Rectangle& player, const MyTriangle& tri) {
     && (player.y > tri.position.y);
 }
 
-void Grid::HandleSpikes(GameState& gameState, std::vector<MyTriangle> movingTriangles){
-
-    for (MyTriangle& tri : gameState.map.grid.triangles) {
-        if (tri.position.y >= gameState.map.MAP_HEIGHT) {
-            // remove triangle from list went out of bounds
-            int index = GetTriangleIndex(tri.gridPosX, tri.gridPosY);
-            RemoveTriangleByIndex(index);
-            printf("Triangle at (%d, %d) fell out of bounds and was removed.\n", tri.gridPosX, tri.gridPosY);
-            continue;
-        }
-    }
-
-    for (MyTriangle& tri : movingTriangles){
-        // Check if player is below the spike
-        if (IsPlayerBelowDownSpike(gameState.player.rect, tri)) {
-            tri.falling = true;
-            // printf("Player below by spike at (%f, %f)!\n", tri.position.x, tri.position.y);
-        }
-    }
-
-}
-
 void Grid::Update(float dt, GameState& gameState) {
     // move spikes that are falling
-    for (auto& tri : triangles) {
+    for (MyTriangle& tri : triangles) {
         if (tri.mode == gameState.movingSpikeMode) {
             if (!tri.falling && IsPlayerBelowDownSpike(gameState.player.rect, tri)) {
                 tri.falling = true;

@@ -51,8 +51,7 @@ int main(void) {
         // make this somewhere else
         if (IsKeyDown(KEY_LEFT_CONTROL) && IsKeyPressed(KEY_R)) {
             printf("Reloading level: %s\n", gameState.currLevelFilename.c_str());
-            gameState.map.LoadMap(gameState.currLevelFilename.c_str());
-            gameState.player.position = gameState.map.grid.startingPoint;
+            gameState.map.ReloadMap(gameState);
         }
 
         float dt = GetFrameTime();

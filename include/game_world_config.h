@@ -9,9 +9,9 @@ inline constexpr int GAME_SCREEN_HEIGHT = 720;
 
 class GameState {
     public:
-        std::string currLevelFilename{"exported_map_1.txt"};
         Player player;
         MySprite playerSprite;
+        std::string currLevelFilename{"exported_map_1.txt"};
         Map map;
         TriangleMode movingSpikeMode{TriangleMode::DOWN};
         bool gamePaused{false};

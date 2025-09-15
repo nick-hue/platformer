@@ -77,8 +77,15 @@ void Player::CheckTriangleCollisions(GameState& gameState) {
     }
 }
 
-void Player::CheckWorldCollisions(GameState& gameState) {
+void Player::CheckOutOfMap(GameState& gameState){
+    if (position.y > gameState.map.MAP_HEIGHT) {
+        gameState.map.ReloadMap(gameState);
+    }
+}
+
+void Player::CheckWorldDeath(GameState& gameState) {
     CheckTriangleCollisions(gameState);
+    CheckOutOfMap(gameState);
 }
 
     // Move and collide with world
@@ -86,7 +93,7 @@ void Player::Update(float dt, GameState& gameState) {
     HandleInput(dt);
 
     CheckWin(gameState);
-    CheckWorldCollisions(gameState);
+    CheckWorldDeath(gameState);
 
     // Gravity
     velocity.y += GRAVITY * dt;
@@ -104,7 +111,8 @@ void Player::Update(float dt, GameState& gameState) {
     onGround = false;
     ResolveCollisionsY(gameState.map.tiles); // will set onGround and zero vy if landing
 
-    ClampToScreen(gameState.map.MAP_WIDTH, gameState.map.MAP_HEIGHT);
+    
+    ClampToScreenHorizontal(gameState.map.MAP_WIDTH);
 
     // Start coyote time when just left the ground
     if (wasOnGround && !onGround) {
@@ -116,11 +124,11 @@ void Player::Draw() const { DrawRectangleRec(rect, color); }
 
 void Player::SyncRect() { rect = { position.x, position.y, width, height }; }
 
-void Player::ClampToScreen(int world_width, int world_height) {
+void Player::ClampToScreenHorizontal(int world_width) {
     if (position.x < 0) position.x = 0;
     if (position.x + width > world_width) position.x = world_width - width;
-    if (position.y < 0) position.y = 0;
-    if (position.y + height > world_height) position.y = world_height - height;
+    // if (position.y < 0) position.y = 0;
+    // if (position.y + height > world_height) position.y = world_height - height;
     SyncRect();
 }
 

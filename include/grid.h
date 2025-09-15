@@ -40,7 +40,6 @@ public:
     bool IsInbounds(int gx, int gy);
     int GetTriangleIndex(int gx, int gy) const;    
     void RemoveTriangleByIndex(int index);
-    void HandleSpikes(GameState& gameState, std::vector<MyTriangle> movingTriangles); // check if spikes hit the floor or fell out of bounds
     
     // For edit mode
     void ImportMap(const char *filename);

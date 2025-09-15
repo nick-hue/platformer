@@ -33,5 +33,5 @@ class Map {
         void CellToTiles();
         void DrawEndPoint();
         void Draw();
-        void ReloadMap(const char *filename);
+        void ReloadMap(GameState& gameState);
 };

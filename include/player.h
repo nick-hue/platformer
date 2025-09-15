@@ -31,7 +31,7 @@ class Player {
 public:
     Vector2 position{0,0};
     Vector2 velocity{0,0};
-    float width{40}, height{40};
+    float width{30}, height{40};
     Rectangle rect{position.x, position.y, width, height};
     Color color{MAROON};
 
@@ -52,13 +52,14 @@ public:
 
     void Draw() const;
     void SyncRect();
-    void ClampToScreen(int world_width, int world_height);
+    void ClampToScreenHorizontal(int world_width);
 
 private:
     void ResolveCollisionsX(const std::vector<Tile>& world);
     void ResolveCollisionsY(const std::vector<Tile>& world);
-    void CheckWorldCollisions(GameState& gameState);
+    void CheckWorldDeath(GameState& gameState);
     void CheckTriangleCollisions(GameState& gameState);
+    void CheckOutOfMap(GameState& gameState);
 };
 
 

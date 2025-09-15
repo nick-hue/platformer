@@ -134,3 +134,8 @@ void Map::Draw() {
 
     DrawEndPoint();
 }
+
+void Map::ReloadMap(GameState& gameState) {
+    LoadMap(gameState.currLevelFilename.c_str());
+    gameState.player.position = grid.startingPoint;
+}

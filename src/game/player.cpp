@@ -177,42 +177,35 @@ void Player::ResolveCollisionsY(const std::vector<Tile>& world) {
 }
 
 // Sprite code moved to sprite.cpp
-void MySprite::SetSprite(Texture2D tex, int cols_, int rows_, int rowIdle, int rowRun, int rowJump) {
+void MySprite::SetSprite(Texture2D tex, int cols_, int rows_) {
     sprite = tex;    // copy is fine (Texture2D is small handle)
     cols = cols_;
     rows = rows_;
     frameWidth = sprite.width  / cols;
     frameHeight = sprite.height / rows;
-    animRowIdle = rowIdle;
-    animRowRun  = rowRun;
-    animRowJump = rowJump;
-    frame = 0;
+    currentFrame = 0;
     animTimer = 0.0f;
 }
 
+Anim& MySprite::CurrentAnim() {
+    return (state == AnimState::WALK) ? walk : idle;
+}
+
 void MySprite::UpdateAnimation(float dt, Player& player) {
-    int row = animRowIdle;
-    if (!player.onGround) row = animRowJump;
-    else if (std::abs(player.velocity.x) > 1.0f) row = animRowRun;
+
+    state = (std::abs(player.velocity.x) > 2.0f) ? AnimState::WALK : AnimState::IDLE;
 
     // face
-    if (player.velocity.x >  1.0f) facingRight = true;
+    if (player.velocity.x > 1.0f) facingRight = true;
     if (player.velocity.x < -1.0f) facingRight = false;
 
-    // advance frames
+    Anim& anim = CurrentAnim();
     animTimer += dt;
     const float spf = 1.0f / animFPS;   // seconds per frame
     while (animTimer >= spf) {
         animTimer -= spf;
-        frame = (frame + 1) % cols;
+        currentFrame = (currentFrame + 1) % anim.frames;
     }
-
-    // set rects from frame/row when drawing (below)
-    player.rect.x = player.position.x;
-    player.rect.y = player.position.y;
-    player.rect.width = frameWidth;
-    player.rect.height = frameHeight;
-
 }
 
 void MySprite::Draw(Player& player) const {
@@ -221,25 +214,29 @@ void MySprite::Draw(Player& player) const {
         return;
     }
 
-    // Source frame (flip by setting width negative when facing left)
-    Rectangle src{(float)(frame * frameWidth),
-        (float)(/* row chosen in UpdateAnimation */ 0),
+    // Determine which row to use based on state
+    int row = (std::abs(player.velocity.x) > 2.0f) ? walk.row : idle.row;
+    
+    // Get the rectangle to draw from the sprite sheet
+    Rectangle src{
+        (float)(currentFrame * frameWidth),
+        (float)(row   * frameHeight),
         (float)frameWidth,
         (float)frameHeight
     };
-
-    int row = animRowIdle;
-    if (!player.onGround) row = animRowJump;
-    else if (std::abs(player.velocity.x) > 1.0f) row = animRowRun;
-    src.y = (float)(row * frameHeight);
-
+    
+    // Source frame (flip by setting width negative when facing left)
     if (!facingRight) {
-        src.x += src.width;   // move to right edge of the frame
-        src.width = -src.width; // negative width flips horizontally
+        src.x += src.width;   
+        src.width = -src.width; 
     }
 
-    // Destination: fit sprite into your player AABB
-    Rectangle dst{ player.rect.x, player.rect.y, player.rect.width, player.rect.height };
 
-    DrawTexture(sprite, src.x, src.y, WHITE);
+    // draw rectangle 
+    Rectangle dst = { player.position.x, player.position.y, frameWidth * scale, frameHeight * scale };
+    dst.x = player.rect.x - (dst.width  - player.rect.width)  * 0.5f;
+    dst.y = player.rect.y - (dst.height - player.rect.height) * 0.47f;
+
+    Vector2 origin = { 0, 0 };
+    DrawTexturePro(sprite, src, dst, origin, 0.0f, WHITE);
 }

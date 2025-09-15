@@ -14,11 +14,24 @@ constexpr float JUMP_BUFFER_TIME = 0.10f;     // seconds before landing
 class GameState;
 
 
+enum class AnimState {
+    IDLE,
+    WALK,
+    UNKNOWN
+};
+
+struct Anim {
+    int row;        // which row in the sheet
+    int startCol;   // first column index of this anim
+    int frames;     // how many frames this anim has
+    float fps;      // playback speed
+};
+
 class Player {
 public:
     Vector2 position{0,0};
     Vector2 velocity{0,0};
-    float width{50}, height{50};
+    float width{40}, height{40};
     Rectangle rect{position.x, position.y, width, height};
     Color color{MAROON};
 
@@ -52,21 +65,28 @@ private:
 class MySprite {
 public:
     Texture2D sprite{};
-    int cols{1};
-    int rows{1};
+    int cols{9};
+    int rows{7};
     int frameWidth{sprite.width/cols};  // frame width
     int frameHeight{sprite.height/rows}; // frame height
-    int frame{0};   
-    int animRowIdle{0};     // change these to match your sheet rows
-    int animRowRun{1};
-    int animRowJump{2};
-    float animTimer{0.0f};
     float animFPS{12.0f};
+    float scale = 2.25f;
+
+
+    
+    int currentFrame{0};   
+    float animTimer{0.0f};
     bool facingRight{true};
 
-    void SetSprite(Texture2D tex, int cols_, int rows_, int rowIdle, int rowRun, int rowJump);
+    Anim idle{ 0, 0, 6, 8.f };  
+    Anim walk{ 1, 0, 8, 12.f }; 
+    AnimState state{AnimState::IDLE};
+
+    void SetSprite(Texture2D tex, int cols_, int rows_);
     void UpdateAnimation(float dt, Player& player);
     MySprite() = default;
+
+    Anim& CurrentAnim();
 
     void Draw(Player& player) const;
     void Update();

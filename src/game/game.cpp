@@ -32,8 +32,10 @@ int main(void) {
 
     
     Texture2D playerTexture = LoadTexture("assets/sprites/characters/Soldier/Soldier/Soldier.png");
-    gameState.playerSprite.SetSprite(playerTexture, 9, 7, 0, 1, 2);
-    
+    gameState.playerSprite.SetSprite(playerTexture, 9, 7);
+    gameState.playerSprite.idle = Anim{0, 0, 4, 8.f};   // row 0, cols [0..3]
+    gameState.playerSprite.walk = Anim{1, 0, 9, 12.f};  // row 1, cols [0..8]
+
     printf("Map Size: %dx%d\n", gameState.map.MAP_WIDTH, gameState.map.MAP_HEIGHT);
 
     SetWindowSize(gameState.map.MAP_WIDTH, gameState.map.MAP_HEIGHT);
@@ -57,23 +59,18 @@ int main(void) {
 
         // Update player and map
         gameState.player.Update(dt, gameState);
-        gameState.map.grid.Update(dt, gameState);
         gameState.playerSprite.UpdateAnimation(dt, gameState.player);
+        gameState.map.grid.Update(dt, gameState);
 
         BeginDrawing();
             ClearBackground(RAYWHITE);
-            // Draw obstacles
-            for (const auto& tile : gameState.map.tiles) {
-                tile.Draw();
-            }
-            // Draw player
-            gameState.player.Draw();
+            
+            if (debug_show) ShowDebug(gameState);
+            
             gameState.map.Draw();
             gameState.playerSprite.Draw(gameState.player);
-            // Draw end point
-            gameState.map.DrawEndPoint();
 
-            if (debug_show) ShowDebug(gameState.player);
+
         EndDrawing();
     }
 

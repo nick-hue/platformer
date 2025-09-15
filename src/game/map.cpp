@@ -131,4 +131,6 @@ void Map::Draw() {
     for (MyTriangle tri : grid.triangles) {
         tri.Draw();
     }
+
+    DrawEndPoint();
 }

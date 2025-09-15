@@ -13,7 +13,6 @@ constexpr float JUMP_BUFFER_TIME = 0.10f;     // seconds before landing
 
 class GameState;
 
-
 enum class AnimState {
     IDLE,
     WALK,
@@ -63,7 +62,7 @@ private:
 };
 
 
-class MySprite {
+class PlayerSprite {
 public:
     Texture2D sprite{};
     int cols{9};
@@ -72,23 +71,20 @@ public:
     int frameHeight{sprite.height/rows}; // frame height
     float animFPS{12.0f};
     float scale = 2.25f;
-
-
     
     int currentFrame{0};   
     float animTimer{0.0f};
     bool facingRight{true};
 
-    Anim idle{ 0, 0, 6, 8.f };  
-    Anim walk{ 1, 0, 8, 12.f }; 
+    Anim idle{ 0, 0, 0, 0.0f };  
+    Anim walk{ 0, 0, 0, 0.0f }; 
     AnimState state{AnimState::IDLE};
 
+    PlayerSprite() = default;
     void SetSprite(Texture2D tex, int cols_, int rows_);
     void UpdateAnimation(float dt, Player& player);
-    MySprite() = default;
 
     Anim& CurrentAnim();
 
     void Draw(Player& player) const;
-    void Update();
 };

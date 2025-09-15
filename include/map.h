@@ -10,6 +10,8 @@
 #include <algorithm>
 #include <iostream>
 
+class GameState;  // forward declaration
+
 class Map {
     public:
         int MAP_WIDTH{0};

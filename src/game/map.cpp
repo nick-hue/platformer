@@ -1,4 +1,5 @@
 #include "map.h"
+#include "game_world_config.h"
 
 Map::Map(){
     printf("Default Constructor\n");
@@ -99,11 +100,6 @@ void Map::LoadMap(const char *filename){
         }
     }
 
-    // for (MyTriangle tri : grid.triangles){
-    //     tri.ToString();
-    //     printf("Triangle %s\n", ToString(tri.mode));
-    // }
-
     CellToTiles();
 }
 
@@ -132,10 +128,10 @@ void Map::Draw() {
         tri.Draw();
     }
 
-    DrawEndPoint();
 }
 
 void Map::ReloadMap(GameState& gameState) {
     LoadMap(gameState.currLevelFilename.c_str());
     gameState.player.position = grid.startingPoint;
+    gameState.keyGoalSprite.position = grid.endingPoint;
 }

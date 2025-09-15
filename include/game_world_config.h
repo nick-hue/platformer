@@ -3,6 +3,7 @@
 #include "player.h"
 #include "grid.h"
 #include "map.h"
+#include "item_sprite.h"
 
 inline constexpr int GAME_SCREEN_WIDTH  = 1280;
 inline constexpr int GAME_SCREEN_HEIGHT = 720;
@@ -10,7 +11,8 @@ inline constexpr int GAME_SCREEN_HEIGHT = 720;
 class GameState {
     public:
         Player player;
-        MySprite playerSprite;
+        PlayerSprite playerSprite;
+        ItemSprite keyGoalSprite;
         std::string currLevelFilename{"exported_map_1.txt"};
         Map map;
         TriangleMode movingSpikeMode{TriangleMode::DOWN};

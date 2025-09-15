@@ -49,6 +49,8 @@ void LoadNextLevel(GameState& gameState){
     printf("Loading next level: %s\n", gameState.currLevelFilename.c_str());
     gameState.map.LoadMap(gameState.currLevelFilename.c_str());
     gameState.player.position = gameState.map.grid.startingPoint;
+    gameState.keyGoalSprite.position = gameState.map.grid.endingPoint;
+
 }
 
 void Player::CheckWin(GameState& gameState)
@@ -111,7 +113,6 @@ void Player::Update(float dt, GameState& gameState) {
     onGround = false;
     ResolveCollisionsY(gameState.map.tiles); // will set onGround and zero vy if landing
 
-    
     ClampToScreenHorizontal(gameState.map.MAP_WIDTH);
 
     // Start coyote time when just left the ground
@@ -185,7 +186,7 @@ void Player::ResolveCollisionsY(const std::vector<Tile>& world) {
 }
 
 // Sprite code moved to sprite.cpp
-void MySprite::SetSprite(Texture2D tex, int cols_, int rows_) {
+void PlayerSprite::SetSprite(Texture2D tex, int cols_, int rows_) {
     sprite = tex;    // copy is fine (Texture2D is small handle)
     cols = cols_;
     rows = rows_;
@@ -195,12 +196,11 @@ void MySprite::SetSprite(Texture2D tex, int cols_, int rows_) {
     animTimer = 0.0f;
 }
 
-Anim& MySprite::CurrentAnim() {
+Anim& PlayerSprite::CurrentAnim() {
     return (state == AnimState::WALK) ? walk : idle;
 }
 
-void MySprite::UpdateAnimation(float dt, Player& player) {
-
+void PlayerSprite::UpdateAnimation(float dt, Player& player) {
     state = (std::abs(player.velocity.x) > 2.0f) ? AnimState::WALK : AnimState::IDLE;
 
     // face
@@ -216,7 +216,7 @@ void MySprite::UpdateAnimation(float dt, Player& player) {
     }
 }
 
-void MySprite::Draw(Player& player) const {
+void PlayerSprite::Draw(Player& player) const {
     if (sprite.id == 0) {                 // fallback if no texture yet
         DrawRectangleRec(player.rect, player.color);
         return;
@@ -239,10 +239,9 @@ void MySprite::Draw(Player& player) const {
         src.width = -src.width; 
     }
 
-
     // draw rectangle 
     Rectangle dst = { player.position.x, player.position.y, frameWidth * scale, frameHeight * scale };
-    dst.x = player.rect.x - (dst.width  - player.rect.width)  * 0.5f;
+    dst.x = player.rect.x - (dst.width - player.rect.width) * 0.5f;
     dst.y = player.rect.y - (dst.height - player.rect.height) * 0.47f;
 
     Vector2 origin = { 0, 0 };

@@ -11,4 +11,7 @@ void ShowDebug(GameState& gameState) {
         tri.DrawVertices();
     }
 
+    gameState.map.DrawEndPoint();
+
+
 }

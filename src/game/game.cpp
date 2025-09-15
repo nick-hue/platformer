@@ -1,15 +1,13 @@
 #include "game.h"
 
-// TODO: load sprite
 // TODO: gravity change button
 // TODO: add moving platforms
 // TODO: put lives mechanic
-// TODO: make pause menu betterd
+// TODO: make pause menu better
+
 GameState gameState;    
 
-
 void PauseGame() {
-    // simple pause screen
     gameState.gamePaused = true;
     while (gameState.gamePaused && !WindowShouldClose()) {
         if (IsKeyPressed(KEY_ESCAPE)) {
@@ -24,18 +22,29 @@ void PauseGame() {
     }
 }
 
+void LoadTextures(){    
+    Texture2D playerTexture = LoadTexture("assets/sprites/characters/Soldier/Soldier/Soldier.png");
+    gameState.playerSprite.SetSprite(playerTexture, 9, 7);
+    gameState.playerSprite.idle = Anim{0, 0, 4, 8.f};   // row 0, cols [0..3]
+    gameState.playerSprite.walk = Anim{1, 0, 9, 12.f};  // row 1, cols [0..8]
+
+    Texture2D keyGoalTexture = LoadTexture("assets/sprites/items/key/goal_key.png");
+    gameState.keyGoalSprite.SetSprite(keyGoalTexture, gameState.map.grid.endingPoint, 24, 1);
+    gameState.keyGoalSprite.idle = Anim{0, 0, 24, 12.f};  
+}
+
+void UnloadTextures(){
+    UnloadTexture(gameState.playerSprite.sprite);
+    UnloadTexture(gameState.keyGoalSprite.sprite);
+}
+
 int main(void) {
     InitWindow(GAME_SCREEN_WIDTH, GAME_SCREEN_HEIGHT, "Platformer");
     SetWindowPosition(300, 200);
     SetTargetFPS(60);
     DrawFPS(GAME_SCREEN_WIDTH - 100, 10);
 
-    
-    Texture2D playerTexture = LoadTexture("assets/sprites/characters/Soldier/Soldier/Soldier.png");
-    gameState.playerSprite.SetSprite(playerTexture, 9, 7);
-    gameState.playerSprite.idle = Anim{0, 0, 4, 8.f};   // row 0, cols [0..3]
-    gameState.playerSprite.walk = Anim{1, 0, 9, 12.f};  // row 1, cols [0..8]
-
+    LoadTextures();
     printf("Map Size: %dx%d\n", gameState.map.MAP_WIDTH, gameState.map.MAP_HEIGHT);
 
     SetWindowSize(gameState.map.MAP_WIDTH, gameState.map.MAP_HEIGHT);
@@ -59,6 +68,7 @@ int main(void) {
         // Update player and map
         gameState.player.Update(dt, gameState);
         gameState.playerSprite.UpdateAnimation(dt, gameState.player);
+        gameState.keyGoalSprite.UpdateAnimation(dt);
         gameState.map.grid.Update(dt, gameState);
 
         BeginDrawing();
@@ -68,12 +78,11 @@ int main(void) {
             
             gameState.map.Draw();
             gameState.playerSprite.Draw(gameState.player);
-
-
+            gameState.keyGoalSprite.Draw();
         EndDrawing();
     }
 
-    UnloadTexture(playerTexture);
+    UnloadTextures();
     CloseWindow();
     return 0;
 }

@@ -26,7 +26,7 @@ void Heart::DrawEmpty() const {
     }
 
     Rectangle src{
-        (float)( (sprite.currentFrame + 1) * sprite.frameWidth),  // assuming empty heart is the next frame
+        (float)( (sprite.currentFrame + 2) * sprite.frameWidth),  // assuming empty heart is the next frame
         (float)(sprite.idle.row * sprite.frameHeight),
         (float)sprite.frameWidth,
         (float)sprite.frameHeight

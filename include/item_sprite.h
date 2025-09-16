@@ -6,8 +6,8 @@ class ItemSprite {
 public:
     Texture2D sprite{};
     Vector2 position{0.0f, 0.0f}; // Example position
-    int cols{0};
-    int rows{0};
+    int cols{1};
+    int rows{1};
     int frameWidth{sprite.width/cols};  // frame width
     int frameHeight{sprite.height/rows}; // frame height
     float animFPS{12.0f};

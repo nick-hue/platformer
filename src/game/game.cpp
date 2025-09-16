@@ -41,8 +41,9 @@ void LoadTextures(){
     printf("heart pos : %.fx%.f\n", gameState.gameUI.heartPosition.x, gameState.gameUI.heartPosition.y);
 
     for (int i = 0; i < gameState.maxLives; ++i) {
+        gameState.gameUI.hearts[i].position = Vector2{(i+1) * gameState.gameUI.heartPosition.x, gameState.gameUI.heartPosition.y};
         gameState.gameUI.hearts[i].sprite.SetSprite(heartTexture
-                                    , Vector2{(i+1) * gameState.gameUI.heartPosition.x, gameState.gameUI.heartPosition.y},
+                                    , gameState.gameUI.hearts[i].position,
                                     3, 1);
         gameState.gameUI.hearts[i].sprite.idle = Anim{0, 0, 1, 12.f};
     }
@@ -68,8 +69,6 @@ int main(void) {
     bool debug_show = true;
 
     while (!WindowShouldClose()) {
-        DrawFPS(gameState.map.MAP_WIDTH - 100, 10);
-
         if (IsKeyPressed(KEY_P)) PauseGame();
 
         if (IsKeyPressed(KEY_TAB)) debug_show = !debug_show;

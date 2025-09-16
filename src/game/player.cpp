@@ -96,8 +96,6 @@ void Player::CheckWorldDeath(GameState& gameState) {
 void Player::Update(float dt, GameState& gameState) {
     HandleInput(dt);
 
-    printf("lives : %d\n", gameState.currentLives);
-
     CheckWin(gameState);
     CheckWorldDeath(gameState);
 

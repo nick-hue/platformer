@@ -4,7 +4,7 @@
 
 class Heart {
 public:
-    Vector2 position{0.0f, 0.0f}; 
+    Vector2 position{10.0f, 10.0f}; 
     ItemSprite sprite{};
 
     Heart() = default;

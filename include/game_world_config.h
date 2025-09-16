@@ -8,7 +8,7 @@
 
 inline constexpr int GAME_SCREEN_WIDTH  = 1280;
 inline constexpr int GAME_SCREEN_HEIGHT = 720;
-#define MAX_LIVES 3
+inline constexpr int MAX_LIVES = 3;
 
 class GameState {
 public:
@@ -17,9 +17,9 @@ public:
     ItemSprite   keyGoalSprite;
     int          currentLives{MAX_LIVES};
     int          maxLives{MAX_LIVES};
-    GameUI       gameUI;                  // declared BEFORE map
+    GameUI       gameUI;                 
     std::string  currLevelFilename{"exported_map_1.txt"};
-    Map          map;                     // declared AFTER gameUI
+    Map          map;
     TriangleMode movingSpikeMode{TriangleMode::DOWN};
     bool         isGamePaused{false};
     int          levelIndex{1};
@@ -30,9 +30,9 @@ public:
     , keyGoalSprite()
     , currentLives(MAX_LIVES)
     , maxLives(MAX_LIVES)
-    , gameUI(Vector2{100.0f, 100.0f}, maxLives)     // gameUI comes before map
+    , gameUI(Vector2{35.0f, 25.0f}, maxLives)     
     , currLevelFilename("exported_map_1.txt")
-    , map(currLevelFilename.c_str())                // map comes after gameUI
+    , map(currLevelFilename.c_str())
     , movingSpikeMode(TriangleMode::DOWN)
     , isGamePaused(false)
     , levelIndex(1)

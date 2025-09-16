@@ -10,7 +10,6 @@ GameUI::GameUI(Vector2 position, int maxLives) {
 
 void GameUI::DrawHearts(GameState& gameState) {
     for (int i = 0; i < gameState.maxLives; ++i) {
-        printf("Drawing heart %d at pos %.fx%.f\n", i, hearts[i].sprite.position.x, hearts[i].sprite.position.y);
         if (i < gameState.currentLives) {
             hearts[i].DrawFilled();
         } else {

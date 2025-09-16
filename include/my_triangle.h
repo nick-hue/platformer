@@ -1,6 +1,7 @@
 #pragma once
 #include "raylib.h"
 #include "level_editor_defs.h" // for CELL_SIZE
+#include "item_sprite.h"
 #include <iostream>
 #include <array>
 
@@ -15,6 +16,8 @@ public:
     Color   color{YELLOW};
     TriangleMode mode{TriangleMode::NONE};    
     bool falling{false};
+    ItemSprite sprite;
+    int spriteCol = 0;
     
     std::array<Vector2,3> vertices{ Vector2{0,0}, Vector2{0,0}, Vector2{0,0} };
     

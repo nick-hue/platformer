@@ -1,6 +1,7 @@
 #pragma once
 #include "raylib.h"
 #include "player.h"
+#include <cstdio>
 
 class ItemSprite {
 public:
@@ -23,4 +24,5 @@ public:
     void SetSprite(Texture2D tex, Vector2 pos, int cols_, int rows_);
     void UpdateAnimation(float dt);
     void Draw() const;
+    void Draw(int col) const;
 };

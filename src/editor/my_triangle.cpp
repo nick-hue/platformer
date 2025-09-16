@@ -51,7 +51,12 @@ void MyTriangle::Draw() {
     // UpdateGeometry();
     DrawTriangle(vertices[0], vertices[1], vertices[2], color);
     DrawTriangleLines(vertices[0], vertices[1], vertices[2], BLACK);
+
+    // printf("Drawing triangle at %f - %f\n", position.x, position.y);
+    sprite.Draw(spriteCol);
 }
+
+
 
 void MyTriangle::DrawVertices() {
     DrawRectangle(vertices[0].x - 3, vertices[0].y - 3, 6, 6, RED);

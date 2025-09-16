@@ -12,9 +12,10 @@ inline constexpr int MAX_LIVES = 3;
 
 class GameState {
 public:
-    Player      player;
+    Player       player;
     PlayerSprite playerSprite;
     ItemSprite   keyGoalSprite;
+    ItemSprite   spikeSprite;
     int          currentLives{MAX_LIVES};
     int          maxLives{MAX_LIVES};
     GameUI       gameUI;                 

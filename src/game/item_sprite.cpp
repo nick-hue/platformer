@@ -39,3 +39,23 @@ void ItemSprite::Draw() const {
     Vector2 origin = {0.0f, 0.0f};       // Top-left origin
     DrawTexturePro(sprite, src, dst, origin, 0.0f, WHITE);
 }
+
+void ItemSprite::Draw(int col) const {
+    if (sprite.id == 0) {  // fallback if no texture yet
+        DrawRectangle(position.x, position.y, 100, 50, RED);
+        printf("HERE %d-%d\n", position.x, position.y);
+        return;
+    }
+
+    Rectangle src{
+        (float)((currentFrame + col) * frameWidth),
+        (float)(idle.row * frameHeight),
+        (float)frameWidth,
+        (float)frameHeight
+    };
+
+    Rectangle dst = { position.x, position.y, frameWidth * scale, frameHeight * scale };
+    
+    Vector2 origin = {0.0f, 0.0f};       // Top-left origin
+    DrawTexturePro(sprite, src, dst, origin, 0.0f, WHITE);
+}

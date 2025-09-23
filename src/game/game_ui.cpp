@@ -22,6 +22,6 @@ void GameUI::Draw(GameState& gameState) {
     DrawHearts(gameState);
 }
 
-void GameUI::Update(int lives) {
-    printf("lives  : %d\n", lives);
-}
+// void GameUI::Update(int lives) {
+//     // printf("lives  : %d\n", lives);
+// }

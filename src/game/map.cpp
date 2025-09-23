@@ -133,4 +133,6 @@ void Map::ReloadMap(GameState& gameState) {
     LoadMap(gameState.currLevelFilename.c_str());
     gameState.player.position = grid.startingPoint;
     gameState.keyGoalSprite.position = grid.endingPoint;
+    gameState.textureHandler.SetupTextures(gameState);  
+
 }

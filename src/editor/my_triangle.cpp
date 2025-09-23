@@ -45,12 +45,15 @@ void MyTriangle::UpdateGeometry() {
             vertices = { Vector2{0,0}, Vector2{0,0}, Vector2{0,0} };
             break;
     }
+
+    // update sprite position
+    sprite.position = position;
 }
 
 void MyTriangle::Draw() {
     // UpdateGeometry();
-    DrawTriangle(vertices[0], vertices[1], vertices[2], color);
-    DrawTriangleLines(vertices[0], vertices[1], vertices[2], BLACK);
+    // DrawTriangle(vertices[0], vertices[1], vertices[2], color);
+    // DrawTriangleLines(vertices[0], vertices[1], vertices[2], BLACK);
 
     // printf("Drawing triangle at %f - %f\n", position.x, position.y);
     sprite.Draw(spriteCol);

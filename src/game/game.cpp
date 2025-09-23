@@ -21,75 +21,18 @@ void PauseGame() {
     }
 }
 
-void LoadTextures(){    
-    // load player texture 
-    Texture2D playerTexture = LoadTexture("assets/sprites/characters/Soldier/Soldier/Soldier.png");
-    if (playerTexture.id == 0) { TraceLog(LOG_ERROR, "Failed to load player texture"); }
-    gameState.playerSprite.SetSprite(playerTexture, 9, 7);
-    gameState.playerSprite.idle = Anim{0, 0, 4, 12.f};   // row 0, cols [0..3]
-    gameState.playerSprite.walk = Anim{1, 0, 9, 12.f};  // row 1, cols [0..8]
-
-    // load key goal texture
-    Texture2D keyGoalTexture = LoadTexture("assets/sprites/items/key/goal_key.png");
-    if (keyGoalTexture.id == 0) { TraceLog(LOG_ERROR, "Failed to load key goal texture"); }
-    gameState.keyGoalSprite.SetSprite(keyGoalTexture, gameState.map.grid.endingPoint, 24, 1);
-    gameState.keyGoalSprite.idle = Anim{0, 0, 24, 12.f};  
-
-    // load ui heart texture and setup hearts
-    Texture2D heartTexture = LoadTexture("assets/sprites/ui/heart/heart_32x32.png");
-    if (heartTexture.id == 0) { TraceLog(LOG_ERROR, "Failed to load heart texture"); }
-    for (int i = 0; i < gameState.maxLives; ++i) {
-        gameState.gameUI.hearts[i].position = Vector2{(i+1) * gameState.gameUI.heartPosition.x, gameState.gameUI.heartPosition.y};
-        gameState.gameUI.hearts[i].sprite.SetSprite(heartTexture
-                                    , gameState.gameUI.hearts[i].position,
-                                    3, 1);
-        gameState.gameUI.hearts[i].sprite.idle = Anim{0, 0, 1, 12.f};
-    }
-
-    // load spike texture 
-    Texture2D spikeTexture = LoadTexture("assets/sprites/items/spike/spikes.png");
-    if (spikeTexture.id == 0) { TraceLog(LOG_ERROR, "Failed to load spike texture"); }
-    for (MyTriangle tri : gameState.map.grid.triangles) {
-        tri.sprite.SetSprite(spikeTexture, tri.position, 4, 1);
-        tri.sprite.idle = Anim{0, 0, 4, 12.f};
-        switch (tri.mode)
-        {
-        case TriangleMode::UP:
-            tri.spriteCol = 0;
-            break;
-        case TriangleMode::RIGHT:
-            tri.spriteCol = 1;
-            break;
-        case TriangleMode::DOWN:
-            tri.spriteCol = 2;
-            break;
-        case TriangleMode::LEFT:
-            tri.spriteCol = 3;
-            break;
-        default:
-            break;
-        }
-    }
-    gameState.spikeSprite.SetSprite(spikeTexture, Vector2{0.0f, 0.0f}, 4, 1);
-
-}
-
-void UnloadTextures(){
-    UnloadTexture(gameState.playerSprite.sprite);
-    UnloadTexture(gameState.keyGoalSprite.sprite);
-    UnloadTexture(gameState.spikeSprite.sprite);
-}
 
 int main(void) {
     InitWindow(GAME_SCREEN_WIDTH, GAME_SCREEN_HEIGHT, "Platformer");
     SetWindowPosition(300, 200);
     SetTargetFPS(60);
 
-    LoadTextures();
     printf("Map Size: %dx%d\n", gameState.map.MAP_WIDTH, gameState.map.MAP_HEIGHT);
 
     SetWindowSize(gameState.map.MAP_WIDTH, gameState.map.MAP_HEIGHT);
     gameState.player.position = gameState.map.grid.startingPoint;
+    gameState.textureHandler.LoadTextures();
+    gameState.textureHandler.SetupTextures(gameState);
 
     bool debug_show = true;
 
@@ -117,7 +60,7 @@ int main(void) {
         gameState.playerSprite.UpdateAnimation(dt, gameState.player);
         gameState.keyGoalSprite.UpdateAnimation(dt);
         gameState.map.grid.Update(dt, gameState);
-        gameState.gameUI.Update(gameState.currentLives);
+        // gameState.gameUI.Update(gameState.currentLives);
 
         BeginDrawing();
             ClearBackground(RAYWHITE);
@@ -131,7 +74,7 @@ int main(void) {
         EndDrawing();
     }
 
-    UnloadTextures();
+    gameState.textureHandler.UnloadTextures();
     CloseWindow();
     return 0;
 }

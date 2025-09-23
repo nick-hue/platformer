@@ -1,6 +1,6 @@
 #include "item_sprite.h"
 
-void ItemSprite::SetSprite(Texture2D tex, Vector2 pos,int cols_, int rows_) {
+void ItemSprite::SetSprite(Texture2D tex, Vector2 pos, int cols_, int rows_) {
     sprite = tex;
     position = pos;
     cols = cols_;
@@ -43,7 +43,6 @@ void ItemSprite::Draw() const {
 void ItemSprite::Draw(int col) const {
     if (sprite.id == 0) {  // fallback if no texture yet
         DrawRectangle(position.x, position.y, 100, 50, RED);
-        printf("HERE %d-%d\n", position.x, position.y);
         return;
     }
 

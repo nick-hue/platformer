@@ -22,10 +22,12 @@ SRCS_GAME   := 	src/game/game.cpp \
 				src/game/heart.cpp \
 				src/game/player.cpp \
 				src/game/tile.cpp \
+				src/game/texture.cpp \
 				src/game/map.cpp \
 				src/editor/grid.cpp \
 				src/editor/my_triangle.cpp \
 				src/editor/cell.cpp \
+
 
 OBJS_EDITOR := $(SRCS_EDITOR:.cpp=.o)
 OBJS_GAME   := $(SRCS_GAME:.cpp=.o)

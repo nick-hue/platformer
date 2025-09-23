@@ -5,6 +5,7 @@
 #include "map.h"
 #include "item_sprite.h"
 #include "game_ui.h"
+#include "texture.h"
 
 inline constexpr int GAME_SCREEN_WIDTH  = 1280;
 inline constexpr int GAME_SCREEN_HEIGHT = 720;
@@ -14,6 +15,7 @@ class GameState {
 public:
     Player       player;
     PlayerSprite playerSprite;
+    TextureHandler textureHandler;
     ItemSprite   keyGoalSprite;
     ItemSprite   spikeSprite;
     int          currentLives{MAX_LIVES};
@@ -28,6 +30,7 @@ public:
     GameState()
     : player()
     , playerSprite()
+    , textureHandler()
     , keyGoalSprite()
     , currentLives(MAX_LIVES)
     , maxLives(MAX_LIVES)

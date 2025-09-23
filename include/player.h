@@ -3,6 +3,7 @@
 #include "tile.h"
 #include <vector>
 #include <algorithm>
+#include "anim.h"
 
 constexpr float GRAVITY          = 2000.0f;   // px/s^2
 constexpr float JUMP_VELOCITY    = -700.0f;   // px/s
@@ -13,18 +14,6 @@ constexpr float JUMP_BUFFER_TIME = 0.10f;     // seconds before landing
 
 class GameState;
 
-enum class AnimState {
-    IDLE,
-    WALK,
-    UNKNOWN
-};
-
-struct Anim {
-    int row;        // which row in the sheet
-    int startCol;   // first column index of this anim
-    int frames;     // how many frames this anim has
-    float fps;      // playback speed
-};
 
 class Player {
 public:

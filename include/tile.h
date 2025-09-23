@@ -1,6 +1,7 @@
 #pragma once
 #include "raylib.h"
 #include <vector>
+#include "item_sprite.h"
 
 // Simple solid object (floor, wall, ceiling, platform)
 struct Tile {
@@ -9,13 +10,17 @@ struct Tile {
     float height{};
     Rectangle rect{};
     Color color{};
+    ItemSprite sprite;
 
     Tile(float x, float y, float w, float h, Color c)
-        : position{ x, y }, width{ w }, height{ h }, rect{ x, y, w, h }, color{ c } {}
+        : position{ x, y }, width{ w }, height{ h }, rect{ x, y, w, h }, color{ c }{}
 
     void Sync() { rect = { position.x, position.y, width, height }; }
 
-    void Draw() const { DrawRectangleRec(rect, color); }
+    void Draw() { sprite.Draw(); }
+
+    void DrawOutline() { DrawRectangleLinesEx(rect, 1.0f, RED); }
+    // void Draw() { DrawRectangleRec(rect, color); }
 };
 
 // Global container for tiles/platforms in your level

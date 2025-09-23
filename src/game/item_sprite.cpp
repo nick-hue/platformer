@@ -23,7 +23,7 @@ void ItemSprite::UpdateAnimation(float dt) {
 
 void ItemSprite::Draw() const {
     if (sprite.id == 0) {  // fallback if no texture yet
-        DrawRectangle(100, 100, 50, 50, GRAY);
+        DrawRectangle(100, 100, 50, 50, BLUE);
         return;
     }
 

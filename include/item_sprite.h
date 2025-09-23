@@ -1,6 +1,6 @@
 #pragma once
 #include "raylib.h"
-#include "player.h"
+#include "anim.h"
 #include <cstdio>
 
 class ItemSprite {

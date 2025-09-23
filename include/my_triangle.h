@@ -6,7 +6,6 @@
 #include <array>
 
 
-
 class MyTriangle {
 public:
     int gridPosX{-1};

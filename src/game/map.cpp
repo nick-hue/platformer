@@ -127,7 +127,7 @@ void Map::DrawBackground(GameState& gameState){
 void Map::Draw(GameState& gameState){
     DrawBackground(gameState);
 
-    for (const auto& tile : tiles) {
+    for (auto& tile : tiles) {
         tile.Draw();
     }
 

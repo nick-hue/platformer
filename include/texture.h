@@ -9,15 +9,16 @@ public:
     Texture2D keyGoal;
     Texture2D heart;
     Texture2D spike;
+    Texture2D floor;
 
     TextureHandler() = default;
     void LoadTextures();
     void UnloadTextures();
-    void SetupBackgroundTexture(GameState& gameState);
+    void SetupTextures(GameState& gameState);
+
     void SetupPlayerTexture(GameState& gameState);
     void SetupKeyGoalTexture(GameState& gameState);
     void SetupHeartTextures(GameState& gameState);
     void SetupSpikeTextures(GameState& gameState);
-    void SetupTextures(GameState& gameState);
-
+    void SetupFloorTileTexture(GameState& gameState);
 };

@@ -13,6 +13,10 @@ void ShowDebug(GameState& gameState) {
 
     gameState.player.Draw();
 
+    for (Tile& tile : gameState.map.tiles){
+        tile.DrawOutline();
+    }
+
     for (MyTriangle& tri : gameState.map.grid.triangles) {
         tri.DrawVertices();
     }

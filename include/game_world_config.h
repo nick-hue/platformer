@@ -18,6 +18,7 @@ public:
     TextureHandler textureHandler;
     ItemSprite   keyGoalSprite;
     ItemSprite   spikeSprite;
+    ItemSprite   floorTileSprite;
     int          currentLives{MAX_LIVES};
     int          maxLives{MAX_LIVES};
     GameUI       gameUI;                 

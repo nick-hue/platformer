@@ -22,8 +22,7 @@ class Map {
         int TILE_HEIGHT{0};
 
         Grid grid;
-
-        // obstacles
+        // obstacles (floor, walls, ceillings)
         std::vector<Tile> tiles;
 
         Map();

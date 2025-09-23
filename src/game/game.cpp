@@ -70,7 +70,6 @@ int main(void) {
             gameState.map.Draw(gameState);
             
             if (debug_show) ShowDebug(gameState);
-            
             gameState.playerSprite.Draw(gameState.player);
             gameState.keyGoalSprite.Draw();
             gameState.gameUI.Draw(gameState);

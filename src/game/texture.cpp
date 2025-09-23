@@ -3,10 +3,6 @@
 #include "my_triangle.h"
 #include "game_world_config.h"
 
-// TextureHandler::TextureHandler() {
-//     LoadTextures();
-// }
-
 void TextureHandler::LoadTextures() {
     background = LoadTexture("assets/resources/background.png");
     if (background.id == 0) { TraceLog(LOG_ERROR, "Failed to load background texture"); }
@@ -23,7 +19,8 @@ void TextureHandler::LoadTextures() {
     spike = LoadTexture("assets/sprites/items/spike/spikes.png");
     if (spike.id == 0) { TraceLog(LOG_ERROR, "Failed to load spike texture"); }
 
-
+    floor = LoadTexture("assets/resources/floor_tiles/cobblestone_3.png");
+    if (floor.id == 0) { TraceLog(LOG_ERROR, "Failed to load floor cobble texture"); }
 }
 
 void TextureHandler::SetupTextures(GameState& gameState) {
@@ -31,6 +28,7 @@ void TextureHandler::SetupTextures(GameState& gameState) {
     SetupKeyGoalTexture(gameState);
     SetupHeartTextures(gameState);
     SetupSpikeTextures(gameState);
+    SetupFloorTileTexture(gameState);
 }
 
 void TextureHandler::UnloadTextures() {
@@ -39,7 +37,7 @@ void TextureHandler::UnloadTextures() {
     if (keyGoal.id != 0) UnloadTexture(keyGoal);
     if (heart.id != 0) UnloadTexture(heart);
     if (spike.id != 0) UnloadTexture(spike);
-
+    if (floor.id != 0) UnloadTexture(floor);
 }
 
 void TextureHandler::SetupPlayerTexture(GameState& gameState){
@@ -77,5 +75,12 @@ void TextureHandler::SetupSpikeTextures(GameState& gameState) {
             case TriangleMode::LEFT:    tri.spriteCol = 3; break;
             default: break;
         }
+    }
+}
+
+void TextureHandler::SetupFloorTileTexture(GameState& gameState){
+    for (auto& tile : gameState.map.tiles){
+        tile.sprite.SetSprite(floor, tile.position, 1, 1);
+        tile.sprite.scale = 0.031f;
     }
 }

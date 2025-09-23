@@ -50,6 +50,7 @@ void LoadNextLevel(GameState& gameState){
     gameState.map.LoadMap(gameState.currLevelFilename.c_str());
     gameState.player.position = gameState.map.grid.startingPoint;
     gameState.keyGoalSprite.position = gameState.map.grid.endingPoint;
+    gameState.textureHandler.SetupTextures(gameState);  
 
 }
 

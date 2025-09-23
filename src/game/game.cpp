@@ -56,7 +56,6 @@ int main(void) {
 
         float dt = GetFrameTime();
 
-        
         // Update player and map
         gameState.player.Update(dt, gameState);
         gameState.playerSprite.UpdateAnimation(dt, gameState.player);

@@ -3,6 +3,7 @@
 // TODO: gravity change button
 // TODO: add moving platforms
 // TODO: make pause menu better
+// TODO: floor sprite
 
 GameState gameState;    
 
@@ -35,7 +36,7 @@ int main(void) {
     gameState.textureHandler.SetupTextures(gameState);
 
     bool debug_show = true;
-
+    
     while (!WindowShouldClose()) {
         if (IsKeyPressed(KEY_P)) PauseGame();
 
@@ -55,19 +56,21 @@ int main(void) {
 
         float dt = GetFrameTime();
 
+        
         // Update player and map
         gameState.player.Update(dt, gameState);
         gameState.playerSprite.UpdateAnimation(dt, gameState.player);
         gameState.keyGoalSprite.UpdateAnimation(dt);
         gameState.map.grid.Update(dt, gameState);
-        // gameState.gameUI.Update(gameState.currentLives);
+        gameState.gameUI.Update(gameState);
 
         BeginDrawing();
             ClearBackground(RAYWHITE);
             
+            gameState.map.Draw(gameState);
+            
             if (debug_show) ShowDebug(gameState);
             
-            gameState.map.Draw();
             gameState.playerSprite.Draw(gameState.player);
             gameState.keyGoalSprite.Draw();
             gameState.gameUI.Draw(gameState);
@@ -75,6 +78,7 @@ int main(void) {
     }
 
     gameState.textureHandler.UnloadTextures();
+
     CloseWindow();
     return 0;
 }

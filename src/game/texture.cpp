@@ -8,6 +8,9 @@
 // }
 
 void TextureHandler::LoadTextures() {
+    background = LoadTexture("assets/resources/background.png");
+    if (background.id == 0) { TraceLog(LOG_ERROR, "Failed to load background texture"); }
+
     player = LoadTexture("assets/sprites/characters/Soldier/Soldier/Soldier.png");
     if (player.id == 0) { TraceLog(LOG_ERROR, "Failed to load player texture"); }
 
@@ -19,6 +22,8 @@ void TextureHandler::LoadTextures() {
 
     spike = LoadTexture("assets/sprites/items/spike/spikes.png");
     if (spike.id == 0) { TraceLog(LOG_ERROR, "Failed to load spike texture"); }
+
+
 }
 
 void TextureHandler::SetupTextures(GameState& gameState) {
@@ -29,10 +34,12 @@ void TextureHandler::SetupTextures(GameState& gameState) {
 }
 
 void TextureHandler::UnloadTextures() {
+    if (background.id != 0) UnloadTexture(background);
     if (player.id != 0) UnloadTexture(player);
     if (keyGoal.id != 0) UnloadTexture(keyGoal);
     if (heart.id != 0) UnloadTexture(heart);
     if (spike.id != 0) UnloadTexture(spike);
+
 }
 
 void TextureHandler::SetupPlayerTexture(GameState& gameState){

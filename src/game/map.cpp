@@ -119,7 +119,14 @@ void Map::DrawEndPoint() {
     DrawRectangleLinesEx({grid.endingPoint.x, grid.endingPoint.y, (float)TILE_WIDTH, (float)TILE_HEIGHT}, 2.0f, BLACK);
 }
 
-void Map::Draw() {
+void Map::DrawBackground(GameState& gameState){
+    DrawTextureEx(gameState.textureHandler.background, Vector2{ gameState.gameUI.scrollBack, gameState.gameUI.yOffset }, 0.0f, gameState.gameUI.bgScale, WHITE);
+    DrawTextureEx(gameState.textureHandler.background, Vector2{ gameState.gameUI.scrollBack + gameState.gameUI.wrapW, gameState.gameUI.yOffset }, 0.0f, gameState.gameUI.bgScale, WHITE);
+}
+
+void Map::Draw(GameState& gameState){
+    DrawBackground(gameState);
+
     for (const auto& tile : tiles) {
         tile.Draw();
     }

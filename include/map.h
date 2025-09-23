@@ -34,6 +34,7 @@ class Map {
         // makes the cells that were occupied (from the file) into tiles for the game
         void CellToTiles();
         void DrawEndPoint();
-        void Draw();
+        void Draw(GameState& gameState);
+        void DrawBackground(GameState& gameState);
         void ReloadMap(GameState& gameState);
 };

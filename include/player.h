@@ -29,6 +29,7 @@ struct Anim {
 class Player {
 public:
     Vector2 position{0,0};
+    Vector2 previousPosition{0, 0};
     Vector2 velocity{0,0};
     float width{30}, height{40};
     Rectangle rect{position.x, position.y, width, height};

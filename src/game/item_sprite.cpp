@@ -58,3 +58,22 @@ void ItemSprite::Draw(int col) const {
     Vector2 origin = {0.0f, 0.0f};       // Top-left origin
     DrawTexturePro(sprite, src, dst, origin, 0.0f, WHITE);
 }
+
+void ItemSprite::Draw(std::pair<int,int> location) const{
+    if (sprite.id == 0) {  // fallback if no texture yet
+        DrawRectangle(position.x, position.y, 100, 50, BLUE);
+        return;
+    }
+
+    Rectangle src{
+        (float)((location.second) * frameWidth),
+        (float)(location.first * frameHeight),
+        (float)frameWidth,
+        (float)frameHeight
+    };
+
+    Rectangle dst = { position.x, position.y, frameWidth * scale, frameHeight * scale };
+    
+    Vector2 origin = {0.0f, 0.0f};       // Top-left origin
+    DrawTexturePro(sprite, src, dst, origin, 0.0f, WHITE);
+}

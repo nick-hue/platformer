@@ -2,6 +2,7 @@
 #include "raylib.h"
 #include "anim.h"
 #include <cstdio>
+#include <utility>
 
 class ItemSprite {
 public:
@@ -25,4 +26,5 @@ public:
     void UpdateAnimation(float dt);
     void Draw() const;
     void Draw(int col) const;
+    void Draw(std::pair<int,int> location) const;
 };

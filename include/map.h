@@ -9,6 +9,8 @@
 #include <sstream>
 #include <algorithm>
 #include <iostream>
+#include <cstdlib> 
+#include <ctime>   
 
 class GameState;  // forward declaration
 
@@ -36,4 +38,6 @@ class Map {
         void Draw(GameState& gameState);
         void DrawBackground(GameState& gameState);
         void ReloadMap(GameState& gameState);
+        TileType GetTypeForTile(int i, int j);
+
 };

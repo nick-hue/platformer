@@ -18,7 +18,7 @@ public:
     TextureHandler textureHandler;
     ItemSprite   keyGoalSprite;
     ItemSprite   spikeSprite;
-    ItemSprite   floorTileSprite;
+    std::vector<ItemSprite>   floorTileSprites;
     int          currentLives{MAX_LIVES};
     int          maxLives{MAX_LIVES};
     GameUI       gameUI;                 

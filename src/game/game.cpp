@@ -3,7 +3,6 @@
 // TODO: gravity change button
 // TODO: add moving platforms
 // TODO: make pause menu better
-// TODO: floor sprite
 
 GameState gameState;    
 

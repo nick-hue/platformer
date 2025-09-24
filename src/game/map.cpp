@@ -103,12 +103,31 @@ void Map::LoadMap(const char *filename){
     CellToTiles();
 }
 
+TileType Map::GetTypeForTile(int i, int j){
+    if (j-1 < 0) return TileType::GROUND;
+    Cell cellAbove = grid.matrix[i][j-1];
+    
+    if (!cellAbove.isOccupied){
+        return TileType::GRASS;
+    } else {
+        // one out of 10 times return broken
+        int r = rand() % 10;  
+        return (r != 0) ? TileType::GROUND : TileType::BROKEN;
+    }
+
+}
+
 void Map::CellToTiles() {
     tiles.clear();
-    for (const auto& row : grid.matrix) {
-        for (const Cell& cell : row) {
+    for (int i = 0; i < grid.width; i++){
+        for (int j = 0; j < grid.height; j++){
+            Cell cell = grid.matrix[i][j];
             if (cell.isOccupied) {
-                tiles.emplace_back(cell.position.x, cell.position.y, cell.cellSize, cell.cellSize, DARKGRAY);
+                TileType type = GetTypeForTile(i, j);
+                printf("%d-%d -> ", i ,j);
+                TileTypeToString(type);
+                tiles.emplace_back(cell.position.x, cell.position.y, cell.cellSize, cell.cellSize, DARKGRAY, type);
+                // printf("%d-%d\n", tiles[1].gridPos.first ,tiles[1].gridPos.second);
             }
         }
     }
@@ -141,5 +160,4 @@ void Map::ReloadMap(GameState& gameState) {
     gameState.player.position = grid.startingPoint;
     gameState.keyGoalSprite.position = grid.endingPoint;
     gameState.textureHandler.SetupTextures(gameState);  
-
 }

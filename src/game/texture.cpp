@@ -19,8 +19,11 @@ void TextureHandler::LoadTextures() {
     spike = LoadTexture("assets/sprites/items/spike/spikes.png");
     if (spike.id == 0) { TraceLog(LOG_ERROR, "Failed to load spike texture"); }
 
-    floor = LoadTexture("assets/resources/floor_tiles/cobblestone_3.png");
-    if (floor.id == 0) { TraceLog(LOG_ERROR, "Failed to load floor cobble texture"); }
+    // floor = LoadTexture("assets/resources/floor_tiles/cobblestone_3.png");
+    // if (floor.id == 0) { TraceLog(LOG_ERROR, "Failed to load floor cobble texture"); }
+    floor = LoadTexture("assets/resources/world_tileset.png");
+    if (floor.id == 0) { TraceLog(LOG_ERROR, "Failed to load floor texture"); }
+
 }
 
 void TextureHandler::SetupTextures(GameState& gameState) {
@@ -28,7 +31,7 @@ void TextureHandler::SetupTextures(GameState& gameState) {
     SetupKeyGoalTexture(gameState);
     SetupHeartTextures(gameState);
     SetupSpikeTextures(gameState);
-    SetupFloorTileTexture(gameState);
+    SetupFloorTileTextures(gameState);
 }
 
 void TextureHandler::UnloadTextures() {
@@ -78,9 +81,20 @@ void TextureHandler::SetupSpikeTextures(GameState& gameState) {
     }
 }
 
-void TextureHandler::SetupFloorTileTexture(GameState& gameState){
+std::pair<int, int> GetSpriteLocation(TileType type){
+    switch (type)
+    {
+        case TileType::GRASS: return {0,0};
+        case TileType::GROUND: return {1,0};
+        case TileType::BROKEN: return {0,1};
+        default: return {-1, -1};
+    }
+}
+
+void TextureHandler::SetupFloorTileTextures(GameState& gameState){
     for (auto& tile : gameState.map.tiles){
-        tile.sprite.SetSprite(floor, tile.position, 1, 1);
-        tile.sprite.scale = 0.031f;
+        tile.sprite.SetSprite(floor, tile.position, 16, 16);
+        tile.sprite.scale = 2.0f;
+        tile.spriteSheetLocation = GetSpriteLocation(tile.type);
     }
 }

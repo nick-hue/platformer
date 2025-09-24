@@ -20,5 +20,5 @@ public:
     void SetupKeyGoalTexture(GameState& gameState);
     void SetupHeartTextures(GameState& gameState);
     void SetupSpikeTextures(GameState& gameState);
-    void SetupFloorTileTexture(GameState& gameState);
+    void SetupFloorTileTextures(GameState& gameState);
 };

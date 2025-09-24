@@ -44,14 +44,11 @@ void Player::Jump() {
 
 void LoadNextLevel(GameState& gameState){
     printf("Congratulations! You've completed the level!\n");
-    gameState.levelIndex++;
-    gameState.currLevelFilename = "exported_map_" + std::to_string(gameState.levelIndex) + ".txt";
-    printf("Loading next level: %s\n", gameState.currLevelFilename.c_str());
+    gameState.currLevelFilename = "exported_map_" + std::to_string(++gameState.levelIndex) + ".txt";
     gameState.map.LoadMap(gameState.currLevelFilename.c_str());
     gameState.player.position = gameState.map.grid.startingPoint;
     gameState.keyGoalSprite.position = gameState.map.grid.endingPoint;
     gameState.textureHandler.SetupTextures(gameState);  
-
 }
 
 void Player::CheckWin(GameState& gameState)

@@ -6,6 +6,7 @@
 #include "item_sprite.h"
 #include "game_ui.h"
 #include "texture.h"
+#include "sound_manager.h"
 
 inline constexpr int GAME_SCREEN_WIDTH  = 1280;
 inline constexpr int GAME_SCREEN_HEIGHT = 720;
@@ -16,6 +17,7 @@ public:
     Player       player;
     PlayerSprite playerSprite;
     TextureHandler textureHandler;
+    SoundManager soundManager;
     ItemSprite   keyGoalSprite;
     ItemSprite   spikeSprite;
     std::vector<ItemSprite>   floorTileSprites;
@@ -32,6 +34,7 @@ public:
     : player()
     , playerSprite()
     , textureHandler()
+    , soundManager()
     , keyGoalSprite()
     , currentLives(MAX_LIVES)
     , maxLives(MAX_LIVES)

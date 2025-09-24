@@ -19,15 +19,17 @@ SRCS_EDITOR := src/editor/level_editor.cpp \
 SRCS_GAME   := 	src/game/game.cpp \
 				src/game/game_debug.cpp \
 				src/game/game_ui.cpp \
-				src/common/item_sprite.cpp \
 				src/game/heart.cpp \
 				src/game/player.cpp \
 				src/game/tile.cpp \
 				src/game/texture.cpp \
 				src/game/map.cpp \
+				src/game/sound_manager.cpp \
+				src/common/item_sprite.cpp \
 				src/common/grid.cpp \
 				src/common/my_triangle.cpp \
 				src/common/cell.cpp \
+
 
 
 OBJS_EDITOR := $(SRCS_EDITOR:.cpp=.o)

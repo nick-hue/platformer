@@ -31,7 +31,7 @@ public:
     Player() = default;
     Player(float x, float y, float w, float h, Color c);
 
-    void HandleInput(float dt);
+    void HandleInput(float dt, GameState& gameState);
     void Jump();
 
     // Move and collide with world

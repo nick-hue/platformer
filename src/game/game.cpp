@@ -29,12 +29,15 @@ int main(void) {
     SetWindowPosition(300, 200);
     SetTargetFPS(60);
 
+    InitAudioDevice();
+
     printf("Map Size: %dx%d\n", gameState.map.MAP_WIDTH, gameState.map.MAP_HEIGHT);
 
     SetWindowSize(gameState.map.MAP_WIDTH, gameState.map.MAP_HEIGHT);
     gameState.player.position = gameState.map.grid.startingPoint;
     gameState.textureHandler.LoadTextures();
     gameState.textureHandler.SetupTextures(gameState);
+    gameState.soundManager.LoadSounds();
 
     bool debug_show = false;
     
@@ -77,7 +80,9 @@ int main(void) {
     }
 
     gameState.textureHandler.UnloadTextures();
-
+    gameState.soundManager.UnloadSounds();   
+    
+    CloseAudioDevice();     // Close audio device
     CloseWindow();
     return 0;
 }

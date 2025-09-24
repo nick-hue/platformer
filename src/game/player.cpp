@@ -8,7 +8,7 @@ Player::Player(float x, float y, float w, float h, Color c) {
     color = c;
 }
 
-void Player::HandleInput(float dt) {
+void Player::HandleInput(float dt, GameState& gameState) {
     // Horizontal
     float dir = 0.0f;
     if (IsKeyDown(KEY_D)) dir += 1.0f;
@@ -32,6 +32,7 @@ void Player::HandleInput(float dt) {
     // Try to consume buffered jump when allowed
     if (jumpBufferTimer > 0.0f && (onGround || coyoteTimer > 0.0f)) {
         Jump();
+        PlaySound(gameState.soundManager.jump);
         jumpBufferTimer = 0.0f;
     }
 }
@@ -92,7 +93,7 @@ void Player::CheckWorldDeath(GameState& gameState) {
 
     // Move and collide with world
 void Player::Update(float dt, GameState& gameState) {
-    HandleInput(dt);
+    HandleInput(dt, gameState);
 
     CheckWin(gameState);
     CheckWorldDeath(gameState);

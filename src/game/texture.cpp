@@ -65,7 +65,6 @@ void TextureHandler::SetupHeartTextures(GameState& gameState) {
 }
 
 void TextureHandler::SetupSpikeTextures(GameState& gameState) {
-    // spikes
     for (MyTriangle& tri : gameState.map.grid.triangles) {
         tri.sprite.SetSprite(spike, tri.position, 4, 1);
         tri.sprite.idle = Anim{0, 0, 1, 12.f};

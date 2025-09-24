@@ -23,8 +23,8 @@ public:
     MyTriangle(int gridPosX,int gridPosY, Color c, TriangleMode mode);
     
     // Draw Cell
-    void Draw();
-    void DrawVertices();
+    void Draw() const ;
+    void DrawVertices() const ;
     void ToString();
     void UpdateGeometry();
     const std::array<Vector2,3>& Points() const { return vertices; }

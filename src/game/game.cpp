@@ -23,6 +23,8 @@ void PauseGame() {
 
 
 int main(void) {
+    srand(static_cast<unsigned>(time(nullptr))); // seed once
+
     InitWindow(GAME_SCREEN_WIDTH, GAME_SCREEN_HEIGHT, "Platformer");
     SetWindowPosition(300, 200);
     SetTargetFPS(60);
@@ -34,7 +36,7 @@ int main(void) {
     gameState.textureHandler.LoadTextures();
     gameState.textureHandler.SetupTextures(gameState);
 
-    bool debug_show = true;
+    bool debug_show = false;
     
     while (!WindowShouldClose()) {
         if (IsKeyPressed(KEY_P)) PauseGame();

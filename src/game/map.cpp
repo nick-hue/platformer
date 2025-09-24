@@ -124,10 +124,8 @@ void Map::CellToTiles() {
             Cell cell = grid.matrix[i][j];
             if (cell.isOccupied) {
                 TileType type = GetTypeForTile(i, j);
-                printf("%d-%d -> ", i ,j);
-                TileTypeToString(type);
+                // printf("%d-%d -> ", i ,j); TileTypeToString(type);
                 tiles.emplace_back(cell.position.x, cell.position.y, cell.cellSize, cell.cellSize, DARKGRAY, type);
-                // printf("%d-%d\n", tiles[1].gridPos.first ,tiles[1].gridPos.second);
             }
         }
     }

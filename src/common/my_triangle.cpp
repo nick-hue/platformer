@@ -50,7 +50,7 @@ void MyTriangle::UpdateGeometry() {
     sprite.position = position;
 }
 
-void MyTriangle::Draw() {
+void MyTriangle::Draw() const {
     // UpdateGeometry();
     // DrawTriangle(vertices[0], vertices[1], vertices[2], color);
     // DrawTriangleLines(vertices[0], vertices[1], vertices[2], BLACK);
@@ -60,8 +60,7 @@ void MyTriangle::Draw() {
 }
 
 
-
-void MyTriangle::DrawVertices() {
+void MyTriangle::DrawVertices() const {
     DrawRectangle(vertices[0].x - 3, vertices[0].y - 3, 6, 6, RED);
     DrawRectangle(vertices[1].x - 3, vertices[1].y - 3, 6, 6, RED);
     DrawRectangle(vertices[2].x - 3, vertices[2].y - 3, 6, 6, RED);

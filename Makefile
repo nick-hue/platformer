@@ -7,26 +7,27 @@ LDLIBS   := -lraylib -lGL -lm -lpthread -ldl -lrt -lX11
 
 # -------- Sources --------
 SRCS_EDITOR := src/editor/level_editor.cpp \
-               src/editor/grid.cpp \
-               src/editor/cell.cpp \
+               src/common/grid.cpp \
+               src/common/cell.cpp \
                src/editor/debug_menu.cpp \
+			   src/common/my_triangle.cpp \
                src/editor/info_screen.cpp \
 			   src/editor/my_button.cpp \
 			   src/third_party/raygui_impl.cpp \
-			   src/editor/my_triangle.cpp
+			   src/common/item_sprite.cpp \
 
 SRCS_GAME   := 	src/game/game.cpp \
 				src/game/game_debug.cpp \
 				src/game/game_ui.cpp \
-				src/game/item_sprite.cpp \
+				src/common/item_sprite.cpp \
 				src/game/heart.cpp \
 				src/game/player.cpp \
 				src/game/tile.cpp \
 				src/game/texture.cpp \
 				src/game/map.cpp \
-				src/editor/grid.cpp \
-				src/editor/my_triangle.cpp \
-				src/editor/cell.cpp \
+				src/common/grid.cpp \
+				src/common/my_triangle.cpp \
+				src/common/cell.cpp \
 
 
 OBJS_EDITOR := $(SRCS_EDITOR:.cpp=.o)

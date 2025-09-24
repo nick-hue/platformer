@@ -5,9 +5,10 @@ class GameState;
 
 class SoundManager {
 public:
-    Sound background;
+    Music background;
     Sound jump;
     Sound victory;
+    Sound spike_break;
 
     SoundManager() = default;
     void LoadSounds();

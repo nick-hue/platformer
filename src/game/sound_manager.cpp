@@ -1,15 +1,18 @@
 #include "sound_manager.h"
 
 void SoundManager::LoadSounds() {
-    background = LoadSound("assets/resources/background_sound.wav");         
+    background = LoadMusicStream("assets/resources/background_sound.wav");
     jump = LoadSound("assets/resources/jump.wav");         
     victory = LoadSound("assets/resources/victory.wav");   
+    spike_break = LoadSound("assets/resources/spike_break.wav");
 
-    SetSoundVolume(jump, 0.5f); 
+    SetMusicVolume(background, 0.1f);
+    SetSoundVolume(jump, 0.25f); 
 }
 
 void SoundManager::UnloadSounds(){
-    UnloadSound(background);
+    UnloadMusicStream(background);
     UnloadSound(victory);   
     UnloadSound(jump);  
+    UnloadSound(spike_break);
 }

@@ -154,8 +154,8 @@ void Map::Draw(GameState& gameState){
 }
 
 void Map::ReloadMap(GameState& gameState) {
-    LoadMap(gameState.currLevelFilename.c_str());
     gameState.player.position = grid.startingPoint;
+    LoadMap(gameState.currLevelFilename.c_str());
     gameState.keyGoalSprite.position = grid.endingPoint;
     gameState.textureHandler.SetupTextures(gameState);  
 }

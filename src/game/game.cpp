@@ -2,7 +2,9 @@
 
 // TODO: gravity change button
 // TODO: add moving platforms
-// TODO: make pause menu better
+// TODO: make pause menu better (audio menu)
+// TODO: pitch variety to jumps
+
 
 GameState gameState;    
 
@@ -39,11 +41,13 @@ int main(void) {
     gameState.textureHandler.SetupTextures(gameState);
     gameState.soundManager.LoadSounds();
 
+    // PlayMusicStream(gameState.soundManager.background);
+
     bool debug_show = true;
     
     while (!WindowShouldClose()) {
+        UpdateMusicStream(gameState.soundManager.background); 
         if (IsKeyPressed(KEY_P)) PauseGame();
-        
         if (IsKeyPressed(KEY_TAB)) debug_show = !debug_show;
         
         // make this somewhere else

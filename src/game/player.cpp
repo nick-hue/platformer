@@ -57,6 +57,7 @@ void Player::CheckWin(GameState& gameState)
     if (CheckCollisionRecs(rect, {gameState.map.grid.endingPoint.x, gameState.map.grid.endingPoint.y, (float)gameState.map.TILE_WIDTH, (float)gameState.map.TILE_HEIGHT})) {
         // Player reached end point load next level
         LoadNextLevel(gameState);       
+        PlaySound(gameState.soundManager.victory);
     }
 }
 
@@ -95,9 +96,6 @@ void Player::CheckWorldDeath(GameState& gameState) {
 void Player::Update(float dt, GameState& gameState) {
     HandleInput(dt, gameState);
 
-    CheckWin(gameState);
-    CheckWorldDeath(gameState);
-
     // Gravity
     velocity.y += GRAVITY * dt;
 
@@ -120,6 +118,9 @@ void Player::Update(float dt, GameState& gameState) {
     if (wasOnGround && !onGround) {
         coyoteTimer = COYOTE_TIME;
     }
+
+    CheckWin(gameState);
+    CheckWorldDeath(gameState);
 }
 
 void Player::Draw() const { DrawRectangleRec(rect, color); }

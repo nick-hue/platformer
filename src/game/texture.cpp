@@ -19,8 +19,6 @@ void TextureHandler::LoadTextures() {
     spike = LoadTexture("assets/sprites/items/spike/spikes.png");
     if (spike.id == 0) { TraceLog(LOG_ERROR, "Failed to load spike texture"); }
 
-    // floor = LoadTexture("assets/resources/floor_tiles/cobblestone_3.png");
-    // if (floor.id == 0) { TraceLog(LOG_ERROR, "Failed to load floor cobble texture"); }
     floor = LoadTexture("assets/resources/world_tileset.png");
     if (floor.id == 0) { TraceLog(LOG_ERROR, "Failed to load floor texture"); }
 

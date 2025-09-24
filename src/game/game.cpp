@@ -39,11 +39,11 @@ int main(void) {
     gameState.textureHandler.SetupTextures(gameState);
     gameState.soundManager.LoadSounds();
 
-    bool debug_show = false;
+    bool debug_show = true;
     
     while (!WindowShouldClose()) {
         if (IsKeyPressed(KEY_P)) PauseGame();
-
+        
         if (IsKeyPressed(KEY_TAB)) debug_show = !debug_show;
         
         // make this somewhere else
@@ -59,6 +59,7 @@ int main(void) {
         }
 
         float dt = GetFrameTime();
+        if (dt > 0.033f) dt = 0.033f;
 
         // Update player and map
         gameState.player.Update(dt, gameState);
@@ -66,6 +67,7 @@ int main(void) {
         gameState.keyGoalSprite.UpdateAnimation(dt);
         gameState.map.grid.Update(dt, gameState);
         gameState.gameUI.Update(gameState);
+
 
         BeginDrawing();
             ClearBackground(RAYWHITE);
@@ -81,9 +83,9 @@ int main(void) {
 
     gameState.textureHandler.UnloadTextures();
     gameState.soundManager.UnloadSounds();   
-    
-    CloseAudioDevice();     // Close audio device
+    CloseAudioDevice();     
     CloseWindow();
+
     return 0;
 }
 

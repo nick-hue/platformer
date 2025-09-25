@@ -62,7 +62,7 @@ void Game::Run(){
             
             gameState.map.Draw(gameState);
             
-            // if (debug_show) ShowDebug(gameState);
+            if (debug_show) debugMenu.Show(gameState);
             gameState.playerSprite.Draw(gameState.player);
             gameState.keyGoalSprite.Draw();
             gameState.gameUI.Draw(gameState);
@@ -103,4 +103,42 @@ void PauseMenu::PauseGame() {
             DrawText("Press ESC to resume", 20, 80, 20, LIGHTGRAY);
         EndDrawing();
     }
+}
+
+DebugMenu::DebugMenu() {
+    box = { 0.0f, 0.0f, 200.0f, 100.0f };
+    mainColor = SKYBLUE;
+    outlineColor = BLUE;
+    currentColor = mainColor;
+}
+
+void DebugMenu::GetMenuColor() {
+    Vector2 mouse_pos = GetMousePosition();
+    if (CheckCollisionPointRec(mouse_pos, box))
+        currentColor = Fade(mainColor, 0.5f);
+    else
+        currentColor = mainColor;
+}
+
+void DebugMenu::Draw() {
+    if (!active) return;
+
+    GetMenuColor();
+    DrawRectangleRec(box, currentColor);
+    DrawRectangleLinesEx(box, 1.0f, outlineColor);
+    DrawText("Debug Mode: ON", 10, 10, 20, RED);
+}
+
+void DebugMenu::Show(GameState& gameState){
+    GetMenuColor();
+    box.x = gameState.map.MAP_WIDTH - box.width;
+    box.y = 20;
+
+    DrawRectangleRec(box, currentColor);
+    DrawRectangleLinesEx(box, 1.0f, outlineColor);
+    
+    DrawText((std::string("Player position : ") + std::to_string(gameState.player.position.x) 
+        + "-" + std::to_string(gameState.player.position.y) + "}").c_str(), box.x, box.y + 10, 12, DARKGRAY);
+    DrawText((std::string("Player velocity : {") + std::to_string(gameState.player.velocity.x) 
+        + "-" + std::to_string(gameState.player.velocity.y) + "}").c_str(), box.x, box.y + 40, 12, DARKGRAY);
 }

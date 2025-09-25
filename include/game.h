@@ -8,12 +8,10 @@
 #include "sound_manager.h"
 #include "raylib.h"
 #include "tile.h"
-#include "game_debug.h"
 #include <string>
 #include <cstdio>
 #include <vector>
 #include <algorithm>
-
 
 inline constexpr int GAME_SCREEN_WIDTH  = 1280;
 inline constexpr int GAME_SCREEN_HEIGHT = 720;
@@ -62,11 +60,26 @@ public:
     void PauseGame();
 };
 
+class DebugMenu {
+public:
+    bool active = false;
+    Rectangle box{};
+    Color currentColor{};
+    Color mainColor{};
+    Color outlineColor{};
+
+    DebugMenu();
+
+    void GetMenuColor();
+    void Draw();
+    void Show(GameState& gameState);
+};
+
 class Game{
 public:
     PauseMenu pauseMenu;
     GameState gameState;
-    // DebugMenu 
+    DebugMenu debugMenu;
 
     Game();
     void Run();

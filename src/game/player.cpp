@@ -8,6 +8,10 @@ Player::Player(float x, float y, float w, float h, Color c) {
     color = c;
 }
 
+float GetRandomFloat(float min, float max) {
+    return min + static_cast<float>(rand()) / RAND_MAX * (max - min);
+}
+
 void Player::HandleInput(float dt, GameState& gameState) {
     // Horizontal
     float dir = 0.0f;
@@ -32,6 +36,7 @@ void Player::HandleInput(float dt, GameState& gameState) {
     // Try to consume buffered jump when allowed
     if (jumpBufferTimer > 0.0f && (onGround || coyoteTimer > 0.0f)) {
         Jump();
+        SetSoundPitch(gameState.soundManager.jump, GetRandomFloat(0.7f, 1.1f));
         PlaySound(gameState.soundManager.jump);
         jumpBufferTimer = 0.0f;
     }

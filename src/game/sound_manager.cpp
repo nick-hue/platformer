@@ -8,6 +8,7 @@ void SoundManager::LoadSounds() {
 
     SetMusicVolume(background, 0.1f);
     SetSoundVolume(jump, 0.25f); 
+
 }
 
 void SoundManager::UnloadSounds(){

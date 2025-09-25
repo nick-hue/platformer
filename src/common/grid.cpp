@@ -1,5 +1,5 @@
 #include "grid.h"
-#include "game_world_config.h"   // or whichever header DEFINES GameState
+#include "game.h"   // or whichever header DEFINES GameState
 
 Grid::Grid() {
     Clear();

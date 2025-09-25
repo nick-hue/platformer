@@ -1,5 +1,5 @@
 #include "game_ui.h"
-#include "game_world_config.h"
+#include "game.h"
 
 GameUI::GameUI(Vector2 position, int maxLives) {
     heartPosition = position;

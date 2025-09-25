@@ -3,28 +3,12 @@
 // TODO: gravity change button
 // TODO: add moving platforms
 // TODO: make pause menu better (audio menu)
-// TODO: pitch variety to jumps
+// TODO: fix show debug
 
-
-GameState gameState;    
-
-void PauseGame() {
-    gameState.isGamePaused = true;
-    while (gameState.isGamePaused && !WindowShouldClose()) {
-        if (IsKeyPressed(KEY_ESCAPE)) {
-            gameState.isGamePaused = false;
-        }
-
-        BeginDrawing();
-            ClearBackground(DARKGRAY);
-            DrawText("Game Paused", 20, 20, 40, LIGHTGRAY);
-            DrawText("Press ESC to resume", 20, 80, 20, LIGHTGRAY);
-        EndDrawing();
-    }
+Game::Game(){
 }
 
-
-int main(void) {
+void Game::Run(){
     srand(static_cast<unsigned>(time(nullptr))); // seed once
 
     InitWindow(GAME_SCREEN_WIDTH, GAME_SCREEN_HEIGHT, "Platformer");
@@ -47,7 +31,7 @@ int main(void) {
     
     while (!WindowShouldClose()) {
         UpdateMusicStream(gameState.soundManager.background); 
-        if (IsKeyPressed(KEY_P)) PauseGame();
+        if (IsKeyPressed(KEY_P)) pauseMenu.PauseGame();
         if (IsKeyPressed(KEY_TAB)) debug_show = !debug_show;
         
         // make this somewhere else
@@ -78,7 +62,7 @@ int main(void) {
             
             gameState.map.Draw(gameState);
             
-            if (debug_show) ShowDebug(gameState);
+            // if (debug_show) ShowDebug(gameState);
             gameState.playerSprite.Draw(gameState.player);
             gameState.keyGoalSprite.Draw();
             gameState.gameUI.Draw(gameState);
@@ -89,7 +73,34 @@ int main(void) {
     gameState.soundManager.UnloadSounds();   
     CloseAudioDevice();     
     CloseWindow();
-
-    return 0;
 }
 
+void Game::Initialize(){
+
+}
+
+void Game::Shutdown(){
+    
+}
+
+void PauseMenu::Show(){
+
+}
+
+void PauseMenu::PauseGame() {
+    isGamePaused = true;
+
+    while (isGamePaused && !WindowShouldClose()) {
+        if (IsKeyPressed(KEY_ESCAPE)) {
+            isGamePaused = false;
+        }
+
+        BeginDrawing();
+            ClearBackground(DARKGRAY);
+
+            Show();
+            DrawText("Game Paused", 20, 20, 40, LIGHTGRAY);
+            DrawText("Press ESC to resume", 20, 80, 20, LIGHTGRAY);
+        EndDrawing();
+    }
+}

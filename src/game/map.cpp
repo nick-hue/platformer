@@ -1,5 +1,5 @@
 #include "map.h"
-#include "game_world_config.h"
+#include "game.h"
 
 Map::Map(){
     printf("Default Constructor\n");

@@ -1,7 +1,7 @@
 #include "texture.h"
 #include "item_sprite.h"
 #include "my_triangle.h"
-#include "game_world_config.h"
+#include "game.h"
 
 void TextureHandler::LoadTextures() {
     background = LoadTexture("assets/resources/background.png");

@@ -16,7 +16,8 @@ SRCS_EDITOR := src/editor/level_editor.cpp \
 			   src/third_party/raygui_impl.cpp \
 			   src/common/item_sprite.cpp \
 
-SRCS_GAME   := 	src/game/game.cpp \
+SRCS_GAME   := 	src/game/main.cpp \
+				src/game/game.cpp \
 				src/game/game_debug.cpp \
 				src/game/game_ui.cpp \
 				src/game/heart.cpp \

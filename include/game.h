@@ -60,7 +60,7 @@ public:
     void PauseGame();
 };
 
-class DebugMenu {
+class DebugManager {
 public:
     bool active = false;
     Rectangle box{};
@@ -68,18 +68,19 @@ public:
     Color mainColor{};
     Color outlineColor{};
 
-    DebugMenu();
+    DebugManager();
 
     void GetMenuColor();
     void Draw();
-    void Show(GameState& gameState);
+    void ShowMenu(GameState& gameState);
+    void ShowHitboxes(GameState& gameState);
 };
 
 class Game{
 public:
     PauseMenu pauseMenu;
     GameState gameState;
-    DebugMenu debugMenu;
+    DebugManager debugMenu;
 
     Game();
     void Run();

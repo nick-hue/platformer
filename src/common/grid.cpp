@@ -353,7 +353,7 @@ void Grid::Update(float dt, GameState& gameState) {
         for (const Tile& tile : gameState.map.tiles) {
             if (triangles[i].falling && CheckCollisionPointRec({triangles[i].position.x + CELL_SIZE/2, triBottom}, tile.rect)) {
                 RemoveTriangleByIndex(i);
-                PlaySound(gameState.soundManager.spike_break);
+                PlaySound(gameState.soundManager.spikeBreak);
                 break;  // Exit the inner loop since the triangle is removed
             }
         }

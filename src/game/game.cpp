@@ -62,7 +62,10 @@ void Game::Run(){
             
             gameState.map.Draw(gameState);
             
-            if (debug_show) debugMenu.Show(gameState);
+            if (debug_show) {
+                debugMenu.ShowMenu(gameState);
+
+            }
             gameState.playerSprite.Draw(gameState.player);
             gameState.keyGoalSprite.Draw();
             gameState.gameUI.Draw(gameState);
@@ -105,14 +108,14 @@ void PauseMenu::PauseGame() {
     }
 }
 
-DebugMenu::DebugMenu() {
+DebugManager::DebugManager() {
     box = { 0.0f, 0.0f, 200.0f, 100.0f };
     mainColor = SKYBLUE;
     outlineColor = BLUE;
     currentColor = mainColor;
 }
 
-void DebugMenu::GetMenuColor() {
+void DebugManager::GetMenuColor() {
     Vector2 mouse_pos = GetMousePosition();
     if (CheckCollisionPointRec(mouse_pos, box))
         currentColor = Fade(mainColor, 0.5f);
@@ -120,7 +123,7 @@ void DebugMenu::GetMenuColor() {
         currentColor = mainColor;
 }
 
-void DebugMenu::Draw() {
+void DebugManager::Draw() {
     if (!active) return;
 
     GetMenuColor();
@@ -129,7 +132,7 @@ void DebugMenu::Draw() {
     DrawText("Debug Mode: ON", 10, 10, 20, RED);
 }
 
-void DebugMenu::Show(GameState& gameState){
+void DebugManager::ShowMenu(GameState& gameState){
     GetMenuColor();
     box.x = gameState.map.MAP_WIDTH - box.width;
     box.y = 20;
@@ -142,3 +145,8 @@ void DebugMenu::Show(GameState& gameState){
     DrawText((std::string("Player velocity : {") + std::to_string(gameState.player.velocity.x) 
         + "-" + std::to_string(gameState.player.velocity.y) + "}").c_str(), box.x, box.y + 40, 12, DARKGRAY);
 }
+
+void DebugManager::ShowHitboxes(GameState& gameState){
+    
+}
+

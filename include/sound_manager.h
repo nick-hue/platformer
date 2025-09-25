@@ -8,7 +8,7 @@ public:
     Music background;
     Sound jump;
     Sound victory;
-    Sound spike_break;
+    Sound spikeBreak;
 
     SoundManager() = default;
     void LoadSounds();

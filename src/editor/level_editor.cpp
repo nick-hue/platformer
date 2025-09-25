@@ -9,7 +9,7 @@
 class State {
     public:
         Grid grid;
-        DebugMenu debugMenu;
+        DebugManager debugMenu;
         ActionMode actionMode{ActionMode::NONE};
         TriangleMode triangleMode{TriangleMode::NONE};
         std::string exportedMapName{"exported_map_1.txt"};

@@ -128,7 +128,7 @@ void Player::Update(float dt, GameState& gameState) {
     CheckWorldDeath(gameState);
 }
 
-void Player::Draw() const { DrawRectangleRec(rect, color); }
+void Player::DrawHitBox() const { DrawRectangleRec(rect, color); DrawRectangleLinesEx(rect, 1.0f, BLACK);}
 
 void Player::SyncRect() { rect = { position.x, position.y, width, height }; }
 

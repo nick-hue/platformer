@@ -12,10 +12,9 @@ public:
     std::string iconId{};
     std::string selectLetter{};
     std::string displayText{};
-
+    int fontSize{32};
 
     MyButton();
     MyButton(float x, float y, float width, float height, const char* text, const char* iconId, const char* selectLetter);
     int Draw();
-
 };

@@ -39,7 +39,7 @@ public:
 
     void CheckWin(GameState& gameState);
 
-    void Draw() const;
+    void DrawHitBox() const;
     void SyncRect();
     void ClampToScreenHorizontal(int world_width);
 

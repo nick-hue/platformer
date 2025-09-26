@@ -58,6 +58,8 @@ void Map::LoadMap(const char *filename){
 
     if (endX >= 0 && endX < GRID_WIDTH && endY >= 0 && endY < GRID_HEIGHT) {
         grid.endingPoint = { (float)endX * TILE_WIDTH, (float)endY * TILE_HEIGHT };
+        grid.endingPointRect.x = (float)endX * TILE_WIDTH;
+        grid.endingPointRect.y = (float)endY * TILE_HEIGHT;
     } else {
         grid.endingPoint = { -1.0f, -1.0f };
     }

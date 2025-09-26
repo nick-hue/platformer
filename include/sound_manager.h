@@ -1,5 +1,6 @@
 #pragma once
 #include "raylib.h"
+#include <cstdio>
 
 class GameState;
 
@@ -10,7 +11,13 @@ public:
     Sound victory;
     Sound spikeBreak;
 
+    float musicVolume{0.3f};
+    float soundEffectsVolume{0.3f};
+
     SoundManager() = default;
     void LoadSounds();
     void UnloadSounds();
+    
+    void EditVolume(Music music, float& oldMusicVolume, float editValue);
+    void EditVolume(Sound sound, float& oldSoundVolume, float editValue);
 };

@@ -7,13 +7,13 @@ LDLIBS   := -lraylib -lGL -lm -lpthread -ldl -lrt -lX11
 
 # -------- Sources --------
 SRCS_EDITOR := src/editor/level_editor.cpp \
+               src/editor/info_screen.cpp \
+			   src/common/my_button.cpp \
                src/common/grid.cpp \
                src/common/cell.cpp \
 			   src/common/my_triangle.cpp \
-               src/editor/info_screen.cpp \
-			   src/editor/my_button.cpp \
-			   src/third_party/raygui_impl.cpp \
 			   src/common/item_sprite.cpp \
+			   src/third_party/raygui_impl.cpp \
 
 SRCS_GAME   := 	src/game/main.cpp \
 				src/game/game.cpp \
@@ -28,6 +28,9 @@ SRCS_GAME   := 	src/game/main.cpp \
 				src/common/grid.cpp \
 				src/common/my_triangle.cpp \
 				src/common/cell.cpp \
+				src/common/my_button.cpp \
+				src/third_party/raygui_impl.cpp \
+
 
 
 

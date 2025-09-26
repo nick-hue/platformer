@@ -7,7 +7,9 @@
 #include "texture.h"
 #include "sound_manager.h"
 #include "raylib.h"
+#include "raygui.h"
 #include "tile.h"
+#include "my_button.h"
 #include <string>
 #include <cstdio>
 #include <vector>
@@ -52,12 +54,43 @@ public:
     {}
 };
 
+class PauseButtonController{    
+public:
+    MyButton buttonDec;
+    Rectangle buttonMiddle;
+    int middleTextFontSize{24};
+    MyButton buttonInc;
+
+    Color soundButtonColor{235, 168, 52, 255};
+
+    float* volume = nullptr;      
+    const char* label = "Volume"; // optional label
+
+    void Bind(float& volumeRef, const char* labelText) {
+        volume = &volumeRef;
+        label = labelText;
+    }
+
+    PauseButtonController() = default;
+
+    void Draw();
+};
+
 class PauseMenu {
 public:
-    bool isGamePaused = false;
+    bool isGamePaused{false};
+
+    PauseButtonController musicControl;
+    PauseButtonController soundEffectsControl;
+
+    Color soundButtonColor{235, 168, 52, 255};
+
+    // PauseMenu(GameState& gameState);
+    PauseMenu() = default;
 
     void Show();
     void PauseGame();
+    void InitPauseMenuButtons(GameState& gameState);
 };
 
 class DebugManager {
@@ -71,18 +104,19 @@ public:
     DebugManager();
 
     void GetMenuColor();
-    void Draw();
+    void Draw(); // editor
+    void Show(GameState& gameState); // Game
     void ShowMenu(GameState& gameState);
     void ShowHitboxes(GameState& gameState);
 };
 
 class Game{
 public:
-    PauseMenu pauseMenu;
-    GameState gameState;
-    DebugManager debugMenu;
+    GameState gameState{};
+    PauseMenu pauseMenu{};
+    DebugManager debugMenu{};
 
-    Game();
+    Game() = default;
     void Run();
     void Initialize();
     void Shutdown();

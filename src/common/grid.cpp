@@ -10,9 +10,9 @@ void Grid::DrawStartingPoint(){
     DrawRectangleLinesEx({ startingPoint.x * CELL_SIZE, startingPoint.y * CELL_SIZE, CELL_SIZE, CELL_SIZE }, 3.0f, RED);
 }
 
-void Grid::DrawEndingPoint(){
-    DrawRectangleRec({ endingPoint.x * CELL_SIZE, endingPoint.y * CELL_SIZE, CELL_SIZE, CELL_SIZE }, matrix[int(endingPoint.x)][int(endingPoint.y)].endingPointColor);
-    DrawRectangleLinesEx({ endingPoint.x * CELL_SIZE, endingPoint.y * CELL_SIZE, CELL_SIZE, CELL_SIZE }, 3.0f, RED);
+void Grid::DrawEndingPointHitbox(){
+    DrawRectangleRec(endingPointRect, GREEN);
+    DrawRectangleLinesEx(endingPointRect, 1.0f, BLACK);
 }
 
 void Grid::Clear()
@@ -47,7 +47,7 @@ void Grid::Draw() {
     }
 
     if (endingPoint.x != -1.0f && endingPoint.y != -1.0f) {
-        DrawEndingPoint();
+        DrawEndingPointHitbox();
     }
 
     for (MyTriangle tri : triangles) {

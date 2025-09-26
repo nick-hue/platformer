@@ -30,6 +30,8 @@ public:
     Vector2 startingPoint{-1.0f,-1.0f};
     Vector2 endingPoint{-1.0f,-1.0f};
 
+    Rectangle endingPointRect{0.0f, 0.0f, 30.0f, 30.f};
+
     Grid();
     void Draw();
     void Clear();
@@ -45,7 +47,7 @@ public:
     void ImportMap(const char *filename);
     void ExportMap(const char *filename);
     void DrawStartingPoint();
-    void DrawEndingPoint();
+    void DrawEndingPointHitbox();
     void SetStartPoint(int gx, int gy);
     void SetEndPoint(int gx, int gy);
     void BucketFill(int gx, int gy);

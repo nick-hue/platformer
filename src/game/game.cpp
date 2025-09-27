@@ -34,7 +34,6 @@ void Game::Run(){
         gameState.map.grid.Update(dt, gameState);
         gameState.gameUI.Update(gameState);
 
-
         BeginDrawing();
             ClearBackground(RAYWHITE);
             
@@ -56,6 +55,7 @@ void Game::Initialize(){
     printf("GAME WIDTH: %d-%d\n", GAME_SCREEN_WIDTH, GAME_SCREEN_HEIGHT);
 
     InitWindow(GAME_SCREEN_WIDTH, GAME_SCREEN_HEIGHT, "Platformer");
+    GuiLoadStyleDefault();
     SetWindowPosition(300, 200);
     SetTargetFPS(60);
     SetExitKey(KEY_NULL);

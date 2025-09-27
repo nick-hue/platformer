@@ -34,3 +34,8 @@ void SoundManager::EditVolume(Sound sound, float& oldSoundVolume, float editValu
     SetSoundVolume(sound, oldSoundVolume);
     printf("new sound volume : %f\n", oldSoundVolume);
 }
+
+void SoundManager::ToggleMute(){
+    isMuted = !isMuted;
+    SetMasterVolume(isMuted ? 0.0f : 1.0f);
+}

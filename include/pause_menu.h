@@ -32,13 +32,14 @@ public:
     bool isGamePaused{false};
 
     MyButton resumeButton;
+    MyButton muteButton;
     PauseButtonController musicControl;
     PauseButtonController soundEffectsControl;
     MyButton exitButton;
+    GameState* pgs{nullptr};
 
     Color soundButtonColor{235, 168, 52, 255};
 
-    // PauseMenu(GameState& gameState);
     PauseMenu() = default;
 
     void Show();

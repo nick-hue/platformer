@@ -18,9 +18,26 @@ MyButton::MyButton(float x, float y, float width, float height, const char* text
 }
 
 int MyButton::Draw() {
+    
     if (GuiButton(box, displayText.c_str())) {
         if (onClick) onClick();
         return 1;
     }
+    
+    return 0;
+}
+
+int MyButton::Draw(bool value) {
+
+    if (value) {
+        GuiSetStyle(BUTTON, BASE_COLOR_NORMAL, muteColor);   
+    }
+
+    if (GuiButton(box, displayText.c_str())) {
+        if (onClick) onClick();
+        return 1;
+    }
+    GuiSetStyle(BUTTON, BASE_COLOR_NORMAL, oldNormal);
+
     return 0;
 }

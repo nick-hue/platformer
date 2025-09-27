@@ -22,6 +22,7 @@ void PauseMenu::Show(){
     DrawText("Game Paused", 20, 20, 40, LIGHTGRAY);
 
     resumeButton.Draw();
+    muteButton.Draw(pgs->soundManager.isMuted);
     musicControl.Draw();
     soundEffectsControl.Draw();
     exitButton.Draw();
@@ -32,12 +33,16 @@ void PauseMenu::InitPauseMenuButtons(GameState& gameState){
     float placementHeight = GetScreenHeight() / 8; 
     int xPadding = 20;
     int yPadding = placementHeight;
-    float buttonWidth = placementWidth/2;
+    float buttonWidth = placementWidth / 2;
     float buttonHeight = 40.0f;
+
+    pgs = &gameState;
 
     resumeButton = MyButton{placementWidth + buttonWidth + xPadding, placementHeight, placementWidth * 3, buttonHeight, "RESUME", "", ""};
     resumeButton.onClick = [&] { isGamePaused = false; };
 
+    muteButton = MyButton{placementWidth, placementHeight, buttonWidth, buttonHeight, "", "#122#", ""};
+    muteButton.onClick = [&] { gameState.soundManager.ToggleMute(); };
     placementHeight += yPadding;
 
     musicControl.buttonDec = MyButton{placementWidth, placementHeight, buttonWidth, buttonHeight, "-", "", ""};
@@ -72,10 +77,12 @@ void PauseMenu::InitPauseMenuButtons(GameState& gameState){
 }
 
 void PauseMenu::PauseGame() {
+    if (!pgs) return;  // or assert
+
     SetExitKey(KEY_NULL);
     GuiSetStyle(DEFAULT, TEXT_SIZE, 32); 
 
-    printf("inside %s\n", isGamePaused ? "true" : "false");
+    // printf("inside %s\n", isGamePaused ? "true" : "false");
     while (isGamePaused && !WindowShouldClose()) {
         if (IsKeyPressed(KEY_ESCAPE)) {
             isGamePaused = false;
@@ -84,7 +91,6 @@ void PauseMenu::PauseGame() {
 
         BeginDrawing();
             ClearBackground(DARKGRAY);
-
             Show();
         EndDrawing();
     }

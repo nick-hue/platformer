@@ -36,7 +36,7 @@ public:
     std::string  currLevelFilename{"exported_map_1.txt"};
     Map          map;
     TriangleMode movingSpikeMode{TriangleMode::DOWN};
-    bool         isGamePaused{false};
+    bool         shouldRun{true};
     int          levelIndex{1};
 
     GameState()
@@ -51,7 +51,7 @@ public:
     , currLevelFilename("exported_map_1.txt")
     , map(currLevelFilename.c_str())
     , movingSpikeMode(TriangleMode::DOWN)
-    , isGamePaused(false)
+    , shouldRun(true)
     , levelIndex(1)
     {}
 };

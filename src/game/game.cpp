@@ -2,15 +2,13 @@
 
 // TODO: gravity change button
 // TODO: add moving platforms
-// TODO: make pause menu better (audio menu)
 // TODO: fix bug where if death from spikes when respawning they are gone
 // TODO: make reusme quit button
 
 void Game::Run(){
     // pauseMenu.isGamePaused = true;
-    while (!WindowShouldClose()) {
+    while (!WindowShouldClose() && gameState.shouldRun) {
         UpdateMusicStream(gameState.soundManager.background); 
-        printf("menu paused : %s\n", pauseMenu.isGamePaused ? "true" : "false");
 
         if (IsKeyReleased(KEY_P)) pauseMenu.isGamePaused = !pauseMenu.isGamePaused;            
         if (IsKeyPressed(KEY_TAB)) debugMenu.active = !debugMenu.active;
@@ -24,7 +22,7 @@ void Game::Run(){
         if (gameState.currentLives <= 0) {
             printf("Game Over! You've run out of lives.\n");
             // go to losing screen
-            break;  // Exit the game loop
+            gameState.shouldRun = false;
         }
 
         float dt = GetFrameTime();

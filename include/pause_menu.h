@@ -31,8 +31,10 @@ class PauseMenu {
 public:
     bool isGamePaused{false};
 
+    MyButton resumeButton;
     PauseButtonController musicControl;
     PauseButtonController soundEffectsControl;
+    MyButton exitButton;
 
     Color soundButtonColor{235, 168, 52, 255};
 

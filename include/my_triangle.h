@@ -24,6 +24,7 @@ public:
     
     // Draw Cell
     void Draw() const ;
+    void DrawEditor() const ;
     void DrawVertices() const ;
     void ToString();
     void UpdateGeometry();

@@ -50,10 +50,15 @@ void MyTriangle::UpdateGeometry() {
     sprite.position = position;
 }
 
+void MyTriangle::DrawEditor() const {
+    DrawTriangle(vertices[0], vertices[1], vertices[2], color);
+    DrawTriangleLines(vertices[0], vertices[1], vertices[2], BLACK);
+}
+
 void MyTriangle::Draw() const {
     // UpdateGeometry();
-    // DrawTriangle(vertices[0], vertices[1], vertices[2], color);
-    // DrawTriangleLines(vertices[0], vertices[1], vertices[2], BLACK);
+    DrawTriangle(vertices[0], vertices[1], vertices[2], color);
+    DrawTriangleLines(vertices[0], vertices[1], vertices[2], BLACK);
 
     // printf("Drawing triangle at %f - %f\n", position.x, position.y);
     sprite.Draw(spriteCol);

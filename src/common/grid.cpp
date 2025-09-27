@@ -55,6 +55,28 @@ void Grid::Draw() {
     }
 }
 
+void Grid::DrawEditor() {
+    for (int i = 0; i < GRID_WIDTH; i++) {
+        DrawLine(i * CELL_SIZE, 0, i * CELL_SIZE, EDITOR_HEIGHT, GRAY);
+        for (int j = 0; j < GRID_HEIGHT; j++) {
+            DrawLine(0, j * CELL_SIZE, EDITOR_WIDTH, j * CELL_SIZE, GRAY);
+            matrix[i][j].Draw();
+        }
+    }
+
+    if (startingPoint.x != -1.0f && startingPoint.y != -1.0f) {
+        DrawStartingPoint();
+    }
+
+    if (endingPoint.x != -1.0f && endingPoint.y != -1.0f) {
+        DrawEndingPointHitbox();
+    }
+
+    for (MyTriangle tri : triangles) {
+        tri.DrawEditor();
+    }
+}
+
 void Grid::ShowSelectedCell() {
     Vector2 mouse_pos = GetMousePosition();
     Vector2 grid_pos = { mouse_pos.x / CELL_SIZE, mouse_pos.y / CELL_SIZE };

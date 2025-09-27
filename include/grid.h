@@ -34,6 +34,7 @@ public:
 
     Grid();
     void Draw();
+    void DrawEditor();
     void Clear();
     
     // General 

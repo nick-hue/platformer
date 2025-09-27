@@ -178,7 +178,7 @@ int main(void)
 
         BeginDrawing();
             ClearBackground(RAYWHITE);
-            state.grid.Draw();
+            state.grid.DrawEditor();
             state.grid.ShowSelectedCell();
             state.debugMenu.Draw();
             state.infoScreen.Draw(state.actionMode, state.triangleMode);

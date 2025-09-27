@@ -2,9 +2,9 @@
 #include "level_editor_defs.h"
 #include "grid.h"
 #include "cell.h"
-#include "debug_menu.h"
 #include "info_screen.h"
 #include "raygui.h"
+#include "game.h"
 
 class State {
     public:

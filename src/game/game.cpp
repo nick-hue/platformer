@@ -43,8 +43,8 @@ void Game::Run(){
             
             gameState.map.Draw(gameState);
             
-            if (debugMenu.active) debugMenu.Show(gameState);
             if (pauseMenu.isGamePaused) pauseMenu.PauseGame();
+            if (debugMenu.active) debugMenu.Show(gameState);
 
             gameState.playerSprite.Draw(gameState.player);
             gameState.keyGoalSprite.Draw();
@@ -56,6 +56,8 @@ void Game::Run(){
 void Game::Initialize(){
     srand(static_cast<unsigned>(time(nullptr))); // seed once
     
+    printf("GAME WIDTH: %d-%d\n", GAME_SCREEN_WIDTH, GAME_SCREEN_HEIGHT);
+
     InitWindow(GAME_SCREEN_WIDTH, GAME_SCREEN_HEIGHT, "Platformer");
     SetWindowPosition(300, 200);
     SetTargetFPS(60);
@@ -170,7 +172,7 @@ void PauseMenu::PauseGame() {
 }
 
 DebugManager::DebugManager() {
-    box = { 0.0f, 0.0f, 200.0f, 75.0f };
+    box = { 0.0f, 0.0f, 200.0f, 100.0f };
     mainColor = SKYBLUE;
     outlineColor = BLUE;
     currentColor = mainColor;
@@ -194,8 +196,9 @@ void DebugManager::Draw() {
 }
 
 void DebugManager::Show(GameState& gameState){
-    ShowMenu(gameState);
     ShowHitboxes(gameState);
+    ShowMenu(gameState);
+
 }
 
 void DebugManager::ShowMenu(GameState& gameState){
@@ -206,10 +209,11 @@ void DebugManager::ShowMenu(GameState& gameState){
     DrawRectangleRec(box, currentColor);
     DrawRectangleLinesEx(box, 1.0f, outlineColor);
 
+    DrawFPS(box.x + 10, box.y + 10);
     DrawText((std::string("Player position : {") + std::to_string((int)gameState.player.position.x) 
-        + "-" + std::to_string((int)gameState.player.position.y) + "}").c_str(), box.x + 10, box.y + 10, 12, DARKGRAY);
+        + "-" + std::to_string((int)gameState.player.position.y) + "}").c_str(), box.x + 10, box.y + 40, 12, DARKGRAY);
     DrawText((std::string("Player velocity : {") + std::to_string((int)gameState.player.velocity.x) 
-        + "-" + std::to_string((int)gameState.player.velocity.y) + "}").c_str(), box.x + 10, box.y + 40, 12, DARKGRAY);
+        + "-" + std::to_string((int)gameState.player.velocity.y) + "}").c_str(), box.x + 10, box.y + 70, 12, DARKGRAY);
 }
 
 void DebugManager::ShowHitboxes(GameState& gameState){

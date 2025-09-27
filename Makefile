@@ -14,6 +14,14 @@ SRCS_EDITOR := src/editor/level_editor.cpp \
 			   src/common/my_triangle.cpp \
 			   src/common/item_sprite.cpp \
 			   src/third_party/raygui_impl.cpp \
+			   src/game/game.cpp \
+				src/game/game_ui.cpp \
+				src/game/heart.cpp \
+				src/game/player.cpp \
+				src/game/tile.cpp \
+				src/game/texture.cpp \
+				src/game/map.cpp \
+				src/game/sound_manager.cpp \
 
 SRCS_GAME   := 	src/game/main.cpp \
 				src/game/game.cpp \

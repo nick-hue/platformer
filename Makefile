@@ -13,15 +13,13 @@ SRCS_EDITOR := src/editor/level_editor.cpp \
                src/common/cell.cpp \
 			   src/common/my_triangle.cpp \
 			   src/common/item_sprite.cpp \
+			   src/common/debug_manager.cpp \
+			   src/common/pause_menu.cpp \
 			   src/third_party/raygui_impl.cpp \
-			   src/game/game.cpp \
-				src/game/game_ui.cpp \
-				src/game/heart.cpp \
-				src/game/player.cpp \
-				src/game/tile.cpp \
-				src/game/texture.cpp \
-				src/game/map.cpp \
-				src/game/sound_manager.cpp \
+			   src/game/player.cpp \
+			   src/game/map.cpp \
+			   src/game/sound_manager.cpp \
+			   src/game/texture.cpp \
 
 SRCS_GAME   := 	src/game/main.cpp \
 				src/game/game.cpp \
@@ -37,6 +35,8 @@ SRCS_GAME   := 	src/game/main.cpp \
 				src/common/my_triangle.cpp \
 				src/common/cell.cpp \
 				src/common/my_button.cpp \
+				src/common/debug_manager.cpp \
+			   	src/common/pause_menu.cpp \
 				src/third_party/raygui_impl.cpp \
 
 

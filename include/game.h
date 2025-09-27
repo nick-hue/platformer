@@ -10,6 +10,8 @@
 #include "raygui.h"
 #include "tile.h"
 #include "my_button.h"
+#include "pause_menu.h"
+#include "debug_manager.h"
 #include <string>
 #include <cstdio>
 #include <vector>
@@ -54,61 +56,6 @@ public:
     {}
 };
 
-class PauseButtonController{    
-public:
-    MyButton buttonDec;
-    Rectangle buttonMiddle;
-    int middleTextFontSize{24};
-    MyButton buttonInc;
-
-    Color soundButtonColor{235, 168, 52, 255};
-
-    float* volume = nullptr;      
-    const char* label = "Volume"; // optional label
-
-    void Bind(float& volumeRef, const char* labelText) {
-        volume = &volumeRef;
-        label = labelText;
-    }
-
-    PauseButtonController() = default;
-
-    void Draw();
-};
-
-class PauseMenu {
-public:
-    bool isGamePaused{false};
-
-    PauseButtonController musicControl;
-    PauseButtonController soundEffectsControl;
-
-    Color soundButtonColor{235, 168, 52, 255};
-
-    // PauseMenu(GameState& gameState);
-    PauseMenu() = default;
-
-    void Show();
-    void PauseGame();
-    void InitPauseMenuButtons(GameState& gameState);
-};
-
-class DebugManager {
-public:
-    bool active = false;
-    Rectangle box{};
-    Color currentColor{};
-    Color mainColor{};
-    Color outlineColor{};
-
-    DebugManager();
-
-    void GetMenuColor();
-    void Draw(); // editor
-    void Show(GameState& gameState); // Game
-    void ShowMenu(GameState& gameState);
-    void ShowHitboxes(GameState& gameState);
-};
 
 class Game{
 public:

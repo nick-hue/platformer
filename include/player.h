@@ -14,7 +14,6 @@ constexpr float JUMP_BUFFER_TIME = 0.10f;     // seconds before landing
 
 class GameState;
 
-
 class Player {
 public:
     Vector2 position{0,0};

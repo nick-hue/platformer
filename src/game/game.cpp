@@ -3,7 +3,6 @@
 // TODO: gravity change button
 // TODO: add moving platforms
 // TODO: fix bug where if death from spikes when respawning they are gone
-// TODO: make reusme quit button
 
 void Game::Run(){
     // pauseMenu.isGamePaused = true;

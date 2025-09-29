@@ -153,6 +153,11 @@ void Map::Draw(GameState& gameState){
     for (MyTriangle tri : grid.triangles) {
         tri.Draw();
     }
+    
+    for (MovingPlatform plat : grid.platforms) {
+        plat.Draw();
+    }
+
 }
 
 void Map::ReloadMap(GameState& gameState) {

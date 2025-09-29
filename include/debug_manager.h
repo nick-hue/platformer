@@ -11,6 +11,8 @@ public:
     Color mainColor{};
     Color outlineColor{};
 
+    int platformIdFontSize{16};
+
     DebugManager();
 
     void GetMenuColor();
@@ -18,4 +20,5 @@ public:
     void Show(GameState& gameState); // Game
     void ShowMenu(GameState& gameState);
     void ShowHitboxes(GameState& gameState);
+    void ShowPlatformNumbers(GameState& gameState);
 };

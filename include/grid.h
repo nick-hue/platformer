@@ -3,6 +3,7 @@
 #include "level_editor_defs.h"  
 #include "cell.h"               
 #include "my_triangle.h"
+#include "moving_platform.h"
 
 #include <vector>
 #include <fstream>
@@ -25,6 +26,8 @@ public:
     std::vector<MyTriangle> triangles;
     std::vector<Vector2> triangleSpots;
     std::vector<const MyTriangle*> downs;
+
+    std::vector<MovingPlatform> platforms;
 
 
     Vector2 startingPoint{-1.0f,-1.0f};
@@ -58,8 +61,10 @@ public:
     void ShowSelectedCell();
     
     // For game mode 
-    void Update(float dt, GameState& gameState);
-    
+    void Update(GameState& gameState);
+    void UpdateTriangles(GameState& gameState);
+    void UpdatePlatforms(GameState& gameState);
+
     StoreItem ClassifyCell(int x, int y) const;
     char GetOutputChar(int x, int y) const;
 };

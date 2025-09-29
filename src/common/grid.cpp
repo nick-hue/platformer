@@ -352,8 +352,7 @@ bool IsPlayerBelowDownSpike(const Rectangle& player, const MyTriangle& tri) {
     && (player.y > tri.position.y);
 }
 
-void Grid::Update(float dt, GameState& gameState) {
-    // move spikes that are falling
+void Grid::UpdateTriangles(GameState& gameState){
     for (MyTriangle& tri : triangles) {
         if (tri.mode == gameState.movingSpikeMode) {
             if (!tri.falling && IsPlayerBelowDownSpike(gameState.player.rect, tri)) {
@@ -361,8 +360,8 @@ void Grid::Update(float dt, GameState& gameState) {
                 tri.velocityY = 0.0f;
             }
             if (tri.falling) {
-                tri.velocityY += GRAVITY * dt;
-                tri.position.y += tri.velocityY * dt;
+                tri.velocityY += GRAVITY * gameState.dt;
+                tri.position.y += tri.velocityY * gameState.dt;
                 tri.UpdateGeometry();
             }
         }
@@ -382,4 +381,17 @@ void Grid::Update(float dt, GameState& gameState) {
             }
         }
     }
+}
+
+void Grid::UpdatePlatforms(GameState& gameState){
+    for (MovingPlatform& platform : platforms){
+        platform.Update(gameState);
+    }
+}
+
+void Grid::Update(GameState& gameState) {
+    // move spikes that are falling
+    UpdateTriangles(gameState);
+    // move platforms
+    UpdatePlatforms(gameState);
 }

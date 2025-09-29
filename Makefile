@@ -15,6 +15,7 @@ SRCS_EDITOR := src/editor/level_editor.cpp \
 			   src/common/item_sprite.cpp \
 			   src/common/debug_manager.cpp \
 			   src/common/pause_menu.cpp \
+			   src/common/moving_platform.cpp \
 			   src/third_party/raygui_impl.cpp \
 			   src/game/player.cpp \
 			   src/game/map.cpp \
@@ -37,6 +38,7 @@ SRCS_GAME   := 	src/game/main.cpp \
 				src/common/my_button.cpp \
 				src/common/debug_manager.cpp \
 			   	src/common/pause_menu.cpp \
+				src/common/moving_platform.cpp \
 				src/third_party/raygui_impl.cpp \
 
 

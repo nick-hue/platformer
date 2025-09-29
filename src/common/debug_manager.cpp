@@ -25,10 +25,16 @@ void DebugManager::Draw() {
     DrawText("Debug Mode: ON", 10, 10, 20, RED);
 }
 
+void DebugManager::ShowPlatformNumbers(GameState& gameState){
+    
+    for (MovingPlatform plat : gameState.map.grid.platforms)
+        DrawText(std::to_string(plat.id).c_str(), plat.box.x + plat.box.width/2 - MeasureText(std::to_string(plat.id).c_str(), platformIdFontSize), plat.box.y + plat.box.height/4, platformIdFontSize, WHITE);
+}
+
 void DebugManager::Show(GameState& gameState){
     ShowHitboxes(gameState);
     ShowMenu(gameState);
-
+    ShowPlatformNumbers(gameState);
 }
 
 void DebugManager::ShowMenu(GameState& gameState){

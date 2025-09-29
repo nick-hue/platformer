@@ -6,6 +6,11 @@
 
 void Game::Run(){
     // pauseMenu.isGamePaused = true;
+    MovingPlatform platform = MovingPlatform{};
+    platform.position.y = 250.0f;
+    platform.id = 1;
+    gameState.map.grid.platforms.emplace_back(platform);
+
     while (!WindowShouldClose() && gameState.shouldRun) {
         UpdateMusicStream(gameState.soundManager.background); 
 
@@ -26,12 +31,13 @@ void Game::Run(){
 
         float dt = GetFrameTime();
         if (dt > 0.033f) dt = 0.033f;
+        gameState.dt = dt;
 
         // Update player and map
-        gameState.player.Update(dt, gameState);
-        gameState.playerSprite.UpdateAnimation(dt, gameState.player);
-        gameState.keyGoalSprite.UpdateAnimation(dt);
-        gameState.map.grid.Update(dt, gameState);
+        gameState.player.Update(gameState);
+        gameState.playerSprite.UpdateAnimation(gameState.dt, gameState.player);
+        gameState.keyGoalSprite.UpdateAnimation(gameState.dt);
+        gameState.map.grid.Update(gameState);
         gameState.gameUI.Update(gameState);
 
         BeginDrawing();

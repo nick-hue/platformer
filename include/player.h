@@ -30,19 +30,20 @@ public:
     Player() = default;
     Player(float x, float y, float w, float h, Color c);
 
-    void HandleInput(float dt, GameState& gameState);
+    void HandleInput(GameState& gameState);
     void Jump();
 
     // Move and collide with world
-    void Update(float dt, GameState& gameState);
+    void Update(GameState& gameState);
 
-    void CheckWin(GameState& gameState);
-
+    
     void DrawHitBox() const;
     void SyncRect();
     void ClampToScreenHorizontal(int world_width);
-
+    
 private:
+    void CheckWin(GameState& gameState);
+    void CheckPlatform(GameState& gameState);
     void ResolveCollisionsX(const std::vector<Tile>& world);
     void ResolveCollisionsY(const std::vector<Tile>& world);
     void CheckWorldDeath(GameState& gameState);

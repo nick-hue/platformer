@@ -12,7 +12,7 @@ float GetRandomFloat(float min, float max) {
     return min + static_cast<float>(rand()) / RAND_MAX * (max - min);
 }
 
-void Player::HandleInput(float dt, GameState& gameState) {
+void Player::HandleInput(GameState& gameState) {
     // Horizontal
     float dir = 0.0f;
     if (IsKeyDown(KEY_D)) dir += 1.0f;
@@ -30,8 +30,8 @@ void Player::HandleInput(float dt, GameState& gameState) {
     }
 
     // Timers tick down
-    coyoteTimer      = std::max(0.0f, coyoteTimer - dt);
-    jumpBufferTimer  = std::max(0.0f, jumpBufferTimer - dt);
+    coyoteTimer      = std::max(0.0f, coyoteTimer - gameState.dt);
+    jumpBufferTimer  = std::max(0.0f, jumpBufferTimer - gameState.dt);
 
     // Try to consume buffered jump when allowed
     if (jumpBufferTimer > 0.0f && (onGround || coyoteTimer > 0.0f)) {
@@ -97,20 +97,30 @@ void Player::CheckWorldDeath(GameState& gameState) {
     CheckOutOfMap(gameState);
 }
 
-    // Move and collide with world
-void Player::Update(float dt, GameState& gameState) {
-    HandleInput(dt, gameState);
+void Player::CheckPlatform(GameState& gameState){
+    int i = 0;
+    for (MovingPlatform plat : gameState.map.grid.platforms){
+        if (CheckCollisionRecs(rect, plat.box)){
+            printf("Colliding with platform %d\n", i);
+        }
+        i++;
+    } 
+}
+
+// Move and collide with world
+void Player::Update(GameState& gameState) {
+    HandleInput(gameState);
 
     // Gravity
-    velocity.y += GRAVITY * dt;
+    velocity.y += GRAVITY * gameState.dt;
 
     // --- X axis move & collide ---
-    position.x += velocity.x * dt;
+    position.x += velocity.x * gameState.dt;
     SyncRect();
     ResolveCollisionsX(gameState.map.tiles);
 
     // --- Y axis move & collide ---
-    position.y += velocity.y * dt;
+    position.y += velocity.y * gameState.dt;
     SyncRect();
     
     bool wasOnGround = onGround;
@@ -125,6 +135,7 @@ void Player::Update(float dt, GameState& gameState) {
     }
 
     CheckWin(gameState);
+    CheckPlatform(gameState);
     CheckWorldDeath(gameState);
 }
 

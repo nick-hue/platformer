@@ -63,7 +63,7 @@ void Grid::DrawEditor() {
             matrix[i][j].Draw();
         }
     }
-
+    
     if (startingPoint.x != -1.0f && startingPoint.y != -1.0f) {
         DrawStartingPoint();
     }
@@ -75,6 +75,8 @@ void Grid::DrawEditor() {
     for (MyTriangle tri : triangles) {
         tri.DrawEditor();
     }
+                
+
 }
 
 void Grid::ShowSelectedCell() {

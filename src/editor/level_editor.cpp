@@ -164,11 +164,9 @@ void HandleInput(){
 int main(void)
 {
     InitWindow(EDITOR_SCREEN_WIDTH, EDITOR_SCREEN_HEIGHT, "Level Editor");
-    const char *monitor_name = GetMonitorName(0);
-
-    printf("Monitor Name: %s\n", monitor_name);
     SetWindowPosition(300, 100);
     SetTargetFPS(60);              
+    GuiLoadStyleDefault();
 
     printf("GRID: %dx%d\n", GRID_WIDTH, GRID_HEIGHT);
 

@@ -18,70 +18,70 @@ InfoScreen::InfoScreen(ActionMode& actionModeRef, TriangleMode& triangleModeRef,
 void InfoScreen::MakeButtons(){
     float height_placement = 100.0f;
 
-    insertButton = { EDITOR_WIDTH + SIDE_OFFSET, height_placement, BUTTON_WIDTH, BUTTON_HEIGHT, " Insert", "#22#", " [I]"};
+    insertButton = { EDITOR_WIDTH + SIDE_OFFSET, height_placement, BUTTON_WIDTH, BUTTON_HEIGHT, " Insert", 22, " [I]"};
     insertButton.onClick = [&]{ actionMode = ActionMode::INSERT; triangleMode = TriangleMode::NONE; };
     buttons.push_back(insertButton);
 
     height_placement+=BUTTON_TOP_PADDING;
-    removeButton = { EDITOR_WIDTH + SIDE_OFFSET, height_placement, BUTTON_WIDTH, BUTTON_HEIGHT, "Remove", "#28#", " [R]"};
+    removeButton = { EDITOR_WIDTH + SIDE_OFFSET, height_placement, BUTTON_WIDTH, BUTTON_HEIGHT, "Remove", 28, " [R]"};
     removeButton.onClick = [&]{ actionMode = ActionMode::REMOVE; triangleMode = TriangleMode::NONE; };
     buttons.push_back(removeButton);
 
     height_placement+=BUTTON_TOP_PADDING;
-    bucketButton = { EDITOR_WIDTH + SIDE_OFFSET, height_placement, BUTTON_WIDTH, BUTTON_HEIGHT, "Bucket", "#29#", " [B]"};
+    bucketButton = { EDITOR_WIDTH + SIDE_OFFSET, height_placement, BUTTON_WIDTH, BUTTON_HEIGHT, "Bucket", 29, " [B]"};
     bucketButton.onClick = [&]{ actionMode = ActionMode::BUCKET; triangleMode = TriangleMode::NONE; };
     buttons.push_back(bucketButton);
 
     height_placement+=BUTTON_TOP_PADDING;
-    moveButton = { EDITOR_WIDTH + SIDE_OFFSET, height_placement, BUTTON_WIDTH, BUTTON_HEIGHT, "Move", "#68#", " [M]"};
+    moveButton = { EDITOR_WIDTH + SIDE_OFFSET, height_placement, BUTTON_WIDTH, BUTTON_HEIGHT, "Move", 68, " [M]"};
     moveButton.onClick = [&]{ actionMode = ActionMode::MOVE; triangleMode = TriangleMode::NONE; };
     buttons.push_back(moveButton);
 
     height_placement+=BUTTON_TOP_PADDING;
-    importButton = { EDITOR_WIDTH + SIDE_OFFSET, height_placement, BUTTON_WIDTH, BUTTON_HEIGHT, "Import", "#03#", " [CTRL + I]"};
+    importButton = { EDITOR_WIDTH + SIDE_OFFSET, height_placement, BUTTON_WIDTH, BUTTON_HEIGHT, "Import", 03, " [CTRL + I]"};
     importButton.onClick = [&]{ showImportMessageBox = true; };
     buttons.push_back(importButton);
     importBox = { EDITOR_WIDTH + SIDE_OFFSET + BUTTON_WIDTH + 5, height_placement,  BUTTON_WIDTH, 28 };
 
     height_placement+=BUTTON_TOP_PADDING;
-    exportButton = { EDITOR_WIDTH + SIDE_OFFSET, height_placement, BUTTON_WIDTH, BUTTON_HEIGHT, "Export", "#04#", " [CTRL + E]"};
+    exportButton = { EDITOR_WIDTH + SIDE_OFFSET, height_placement, BUTTON_WIDTH, BUTTON_HEIGHT, "Export", 04, " [CTRL + E]"};
     exportButton.onClick = [&]{ showExportMessageBox = true; };
     buttons.push_back(exportButton);
     exportBox = { EDITOR_WIDTH + SIDE_OFFSET + BUTTON_WIDTH + 5, height_placement,  BUTTON_WIDTH, 28 };
 
     height_placement+=BUTTON_TOP_PADDING;
-    startPointButton = { EDITOR_WIDTH + SIDE_OFFSET, height_placement, BUTTON_WIDTH, BUTTON_HEIGHT, "Start Point", "#170#", " [S]"};
+    startPointButton = { EDITOR_WIDTH + SIDE_OFFSET, height_placement, BUTTON_WIDTH, BUTTON_HEIGHT, "Start Point", 170, " [S]"};
     startPointButton.onClick = [&]{ actionMode = ActionMode::START_POINT; };
     buttons.push_back(startPointButton);
 
     height_placement+=BUTTON_TOP_PADDING;
-    endPointButton = { EDITOR_WIDTH + SIDE_OFFSET, height_placement, BUTTON_WIDTH, BUTTON_HEIGHT, "End Point", "#151#", " [E]"};
+    endPointButton = { EDITOR_WIDTH + SIDE_OFFSET, height_placement, BUTTON_WIDTH, BUTTON_HEIGHT, "End Point", 151, " [E]"};
     endPointButton.onClick = [&]{ actionMode = ActionMode::END_POINT; };
     buttons.push_back(endPointButton);
 
     height_placement+=BUTTON_TOP_PADDING;
-    clearButton = { EDITOR_WIDTH + SIDE_OFFSET, height_placement, BUTTON_WIDTH, NON_TEXT_BUTTON_HEIGHT, "Clear", "#24#", ""};
+    clearButton = { EDITOR_WIDTH + SIDE_OFFSET, height_placement, BUTTON_WIDTH, NON_TEXT_BUTTON_HEIGHT, "Clear", 24, ""};
     clearButton.onClick = [&]{ showClearGridMessageBox = true; actionMode = ActionMode::NONE; };
     buttons.push_back(clearButton);
 
     height_placement+=BUTTON_TOP_PADDING;
     float width_placement = EDITOR_WIDTH + SIDE_OFFSET;
-    spikeButtonLEFT = { width_placement, height_placement, NON_TEXT_BUTTON_WIDTH, NON_TEXT_BUTTON_HEIGHT, "", "#118#", ""};
+    spikeButtonLEFT = { width_placement, height_placement, NON_TEXT_BUTTON_WIDTH, NON_TEXT_BUTTON_HEIGHT, "", 118, ""};
     spikeButtonLEFT.onClick = [&]{ actionMode = ActionMode::TRIANGLE; triangleMode = TriangleMode::LEFT;};
     buttons.push_back(spikeButtonLEFT);
     
     width_placement+=SMALL_BUTTONS_SIDE_PADDING;
-    spikeButtonRIGHT = { width_placement, height_placement, NON_TEXT_BUTTON_WIDTH, NON_TEXT_BUTTON_HEIGHT, "", "#119#", ""};
+    spikeButtonRIGHT = { width_placement, height_placement, NON_TEXT_BUTTON_WIDTH, NON_TEXT_BUTTON_HEIGHT, "", 119, ""};
     spikeButtonRIGHT.onClick = [&]{ actionMode = ActionMode::TRIANGLE; triangleMode = TriangleMode::RIGHT;};
     buttons.push_back(spikeButtonRIGHT);
     
     width_placement+=SMALL_BUTTONS_SIDE_PADDING;
-    spikeButtonDOWN = { width_placement, height_placement, NON_TEXT_BUTTON_WIDTH, NON_TEXT_BUTTON_HEIGHT, "", "#120#", ""};
+    spikeButtonDOWN = { width_placement, height_placement, NON_TEXT_BUTTON_WIDTH, NON_TEXT_BUTTON_HEIGHT, "", 120, ""};
     spikeButtonDOWN.onClick = [&]{ actionMode = ActionMode::TRIANGLE; triangleMode = TriangleMode::DOWN;};
     buttons.push_back(spikeButtonDOWN);
     
     width_placement+=SMALL_BUTTONS_SIDE_PADDING;
-    spikeButtonUP = { width_placement, height_placement, NON_TEXT_BUTTON_WIDTH, NON_TEXT_BUTTON_HEIGHT, "", "#121#", ""};
+    spikeButtonUP = { width_placement, height_placement, NON_TEXT_BUTTON_WIDTH, NON_TEXT_BUTTON_HEIGHT, "", 121, ""};
     spikeButtonUP.onClick = [&]{ actionMode = ActionMode::TRIANGLE; triangleMode = TriangleMode::UP;};
     buttons.push_back(spikeButtonUP);
 }
@@ -208,6 +208,7 @@ void InfoScreen::HandleFilePathTextBoxes(){
 void InfoScreen::Draw(ActionMode mode, TriangleMode triMode) {
     DrawBase(mode, triMode);
     DrawWidgets();
+
     HandleClearMessageBox();
     HandleFilePathTextBoxes();
 

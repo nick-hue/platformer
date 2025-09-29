@@ -67,6 +67,5 @@ void MyTriangle::DrawVertices() const {
 }
 
 void MyTriangle::ToString() {
-    // IMPORTANT: print enums as int to avoid UB
     printf("Triangle: %f-%f - Grid : %d-%d, %d\n", position.x, position.y, gridPosX, gridPosY, (int)mode);
 }

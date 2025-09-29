@@ -5,6 +5,7 @@
 #pragma GCC diagnostic ignored "-Wunused-result"  // for fgets/fread warnings
 
 #define RAYGUI_IMPLEMENTATION
+#define RAYGUI_SUPPORT_ICONS
 #include "raygui.h"
 
 #pragma GCC diagnostic pop

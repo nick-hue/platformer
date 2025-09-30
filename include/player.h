@@ -44,8 +44,8 @@ public:
 private:
     void CheckWin(GameState& gameState);
     void CheckPlatform(GameState& gameState);
-    void ResolveCollisionsX(const std::vector<Tile>& world);
-    void ResolveCollisionsY(const std::vector<Tile>& world);
+    void ResolveCollisionsX(GameState& gameState);
+    void ResolveCollisionsY(GameState& gameState);
     void CheckWorldDeath(GameState& gameState);
     void CheckTriangleCollisions(GameState& gameState);
     void CheckOutOfMap(GameState& gameState);

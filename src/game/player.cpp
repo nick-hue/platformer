@@ -98,12 +98,15 @@ void Player::CheckWorldDeath(GameState& gameState) {
 }
 
 void Player::CheckPlatform(GameState& gameState){
-    int i = 0;
+    int i = 1;
     for (MovingPlatform plat : gameState.map.grid.platforms){
         if (CheckCollisionRecs(rect, plat.box)){
-            printf("Colliding with platform %d\n", i);
+            printf("Colliding with platform id : %d\n", i++);
+            // if player is below stop vertical movement
+            // rect.y += overlapBottom;
+            //     position.y = rect.y;
+            //     if (velocity.y < 0.0f) velocity.y = 0.0f;
         }
-        i++;
     } 
 }
 
@@ -114,10 +117,12 @@ void Player::Update(GameState& gameState) {
     // Gravity
     velocity.y += GRAVITY * gameState.dt;
 
+    // save previous position
+    previousPosition = position;
     // --- X axis move & collide ---
     position.x += velocity.x * gameState.dt;
     SyncRect();
-    ResolveCollisionsX(gameState.map.tiles);
+    ResolveCollisionsX(gameState);
 
     // --- Y axis move & collide ---
     position.y += velocity.y * gameState.dt;
@@ -125,7 +130,7 @@ void Player::Update(GameState& gameState) {
     
     bool wasOnGround = onGround;
     onGround = false;
-    ResolveCollisionsY(gameState.map.tiles); // will set onGround and zero vy if landing
+    ResolveCollisionsY(gameState); // will set onGround and zero vy if landing
 
     ClampToScreenHorizontal(gameState.map.MAP_WIDTH);
 
@@ -151,8 +156,8 @@ void Player::ClampToScreenHorizontal(int world_width) {
     SyncRect();
 }
 
-void Player::ResolveCollisionsX(const std::vector<Tile>& world) {
-    for (const auto& p : world) {
+void Player::ResolveCollisionsX(GameState& gameState) {
+    for (const auto& p : gameState.map.tiles) {
         if (CheckCollisionRecs(rect, p.rect)) {
             // compute penetration on X
             float playerRight = rect.x + rect.width;
@@ -174,10 +179,36 @@ void Player::ResolveCollisionsX(const std::vector<Tile>& world) {
             position.x = rect.x;
         }
     }
+
+     for (const auto& p : gameState.map.grid.platforms) {
+        if (CheckCollisionRecs(rect, p.box)) {
+            // compute penetration on X
+            float playerRight = rect.x + rect.width;
+            float playerLeft  = rect.x;
+            float platRight   = p.box.x + p.box.width;
+            float platLeft    = p.box.x;
+
+            float overlapLeft  = playerRight - platLeft;   // if >0, overlapped from left
+            float overlapRight = platRight - playerLeft;   // if >0, overlapped from right
+
+            // push out by the smaller magnitude
+            if (overlapLeft < overlapRight) {
+                // collided from left side: push player left
+                rect.x -= overlapLeft;
+            } else {
+                // collided from right side: push player right
+                rect.x += overlapRight;
+            }
+            position.x = rect.x;
+        }
+    }
+   
+
 }
 
-void Player::ResolveCollisionsY(const std::vector<Tile>& world) {
-    for (const auto& p : world) {
+void Player::ResolveCollisionsY(GameState& gameState) {
+    // world tiles
+    for (const auto& p : gameState.map.tiles) {
         if (CheckCollisionRecs(rect, p.rect)) {
             float playerBottom = rect.y + rect.height;
             float playerTop    = rect.y;
@@ -199,6 +230,32 @@ void Player::ResolveCollisionsY(const std::vector<Tile>& world) {
                 position.y = rect.y;
                 if (velocity.y < 0.0f) velocity.y = 0.0f;
             }
+        }
+    }
+
+     for (const auto& plat : gameState.map.grid.platforms) {
+        if (!CheckCollisionRecs(rect, plat.box)) continue;
+
+        const float prevBottom = previousPosition.y + rect.height;   // rect.height is constant
+        const float prevTop    = previousPosition.y;
+        const float platTop    = plat.box.y;
+        const float platBottom = plat.box.y + plat.box.height;
+
+        // Coming down from above this frame? -> land on top
+        if (prevBottom <= platTop && velocity.y > 0.0f) {
+            rect.y = platTop - rect.height;
+            position.y = rect.y;
+            velocity.y = 0.0f;
+            onGround = true;
+            continue;
+        }
+
+        // Coming up from below this frame? -> bonk head
+        if (prevTop >= platBottom && velocity.y < 0.0f) {
+            rect.y = platBottom;
+            position.y = rect.y;
+            if (velocity.y < 0.0f) velocity.y = 0.0f;
+            continue;
         }
     }
 }

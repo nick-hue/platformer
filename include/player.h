@@ -4,6 +4,7 @@
 #include <vector>
 #include <algorithm>
 #include "anim.h"
+#include "moving_platform.h"
 
 constexpr float GRAVITY          = 2000.0f;   // px/s^2
 constexpr float JUMP_VELOCITY    = -700.0f;   // px/s
@@ -22,8 +23,11 @@ public:
     float width{30}, height{40};
     Rectangle rect{position.x, position.y, width, height};
     Color color{MAROON};
+    Vector2 lastPlatPos{0.0f, 0.0f};
 
     bool onGround{false};
+    bool onPlatform{false};
+    int ridingPlatform; // platform the user is currently riding (-1 if none)
     float coyoteTimer{0.0f};
     float jumpBufferTimer{0.0f};
 
@@ -40,10 +44,12 @@ public:
     void DrawHitBox() const;
     void SyncRect();
     void ClampToScreenHorizontal(int world_width);
+    void ClampToScreenVertical(int world_height);
     
 private:
     void CheckWin(GameState& gameState);
-    void CheckPlatform(GameState& gameState);
+    int GetCollidingPlatformIndex(GameState& gameState);
+    void CarryWithPlatform(GameState& gameState);
     void ResolveCollisionsX(GameState& gameState);
     void ResolveCollisionsY(GameState& gameState);
     void CheckWorldDeath(GameState& gameState);

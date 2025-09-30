@@ -29,7 +29,6 @@ public:
 
     std::vector<MovingPlatform> platforms;
 
-
     Vector2 startingPoint{-1.0f,-1.0f};
     Vector2 endingPoint{-1.0f,-1.0f};
 

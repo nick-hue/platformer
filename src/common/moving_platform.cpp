@@ -7,7 +7,7 @@ void MovingPlatform::Draw() const {
 }
 
 void MovingPlatform::Move(GameState& gameState){
-    printf("Moving...\n");
+    // printf("Moving...\n");
     if (position.x > endPos) movingDirection = -1;
     if (position.x < startPos) movingDirection = 1;
     

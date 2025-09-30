@@ -34,7 +34,7 @@ void Player::HandleInput(GameState& gameState) {
     jumpBufferTimer  = std::max(0.0f, jumpBufferTimer - gameState.dt);
 
     // Try to consume buffered jump when allowed
-    if (jumpBufferTimer > 0.0f && (onGround || coyoteTimer > 0.0f)) {
+    if (jumpBufferTimer > 0.0f && ((onGround || coyoteTimer > 0.0f) || ((onPlatform || coyoteTimer > 0.0f)))) {
         Jump();
         SetSoundPitch(gameState.soundManager.jump, GetRandomFloat(0.7f, 1.1f));
         PlaySound(gameState.soundManager.jump);
@@ -45,6 +45,8 @@ void Player::HandleInput(GameState& gameState) {
 void Player::Jump() {
     velocity.y = JUMP_VELOCITY;
     onGround = false;
+    onPlatform = false;
+    ridingPlatform = -1;          
     coyoteTimer = 0.0f;
 }
 
@@ -97,19 +99,13 @@ void Player::CheckWorldDeath(GameState& gameState) {
     CheckOutOfMap(gameState);
 }
 
-void Player::CheckPlatform(GameState& gameState){
-    int i = 1;
-    for (MovingPlatform plat : gameState.map.grid.platforms){
-        if (CheckCollisionRecs(rect, plat.box)){
-            printf("Colliding with platform id : %d\n", i++);
-            // if player is below stop vertical movement
-            // rect.y += overlapBottom;
-            //     position.y = rect.y;
-            //     if (velocity.y < 0.0f) velocity.y = 0.0f;
-        }
-    } 
+int Player::GetCollidingPlatformIndex(GameState& gameState) {
+    for (int i = 0; i < (int)gameState.map.grid.platforms.size(); ++i) {
+        auto& plat = gameState.map.grid.platforms[i];
+        if (CheckCollisionRecs(rect, plat.box)) return i;
+    }
+    return -1;
 }
-
 // Move and collide with world
 void Player::Update(GameState& gameState) {
     HandleInput(gameState);
@@ -119,28 +115,41 @@ void Player::Update(GameState& gameState) {
 
     // save previous position
     previousPosition = position;
+    
     // --- X axis move & collide ---
     position.x += velocity.x * gameState.dt;
     SyncRect();
+
     ResolveCollisionsX(gameState);
 
     // --- Y axis move & collide ---
     position.y += velocity.y * gameState.dt;
     SyncRect();
     
-    bool wasOnGround = onGround;
-    onGround = false;
-    ResolveCollisionsY(gameState); // will set onGround and zero vy if landing
+    bool wasOnGround = onGround; onGround = false;
+    bool wasOnPlatform = onPlatform; onPlatform = false;    
+    ResolveCollisionsY(gameState);
+
+    // Vector2 platformVelocity = {0.0f, 0.0f};
+    // int platformIndex = GetCollidingPlatformIndex(gameState);
+    // // printf("on platform : %s\n", onPlatform ? "true" : "false");
+    // if (platformIndex != -1) {
+    //     MovingPlatform plat = gameState.map.grid.platforms[platformIndex];
+    //     platformVelocity = plat.velocity;
+    //     printf("plat vel : %.2f-%.2f\n", platformVelocity.x, platformVelocity.y);
+    // }
+    
+    CarryWithPlatform(gameState);
 
     ClampToScreenHorizontal(gameState.map.MAP_WIDTH);
 
-    // Start coyote time when just left the ground
-    if (wasOnGround && !onGround) {
+    bool wasSupported = wasOnGround || wasOnPlatform;
+    bool supported    = onGround    || onPlatform;
+    if (wasSupported && !supported) {
         coyoteTimer = COYOTE_TIME;
     }
 
     CheckWin(gameState);
-    CheckPlatform(gameState);
     CheckWorldDeath(gameState);
 }
 
@@ -151,8 +160,12 @@ void Player::SyncRect() { rect = { position.x, position.y, width, height }; }
 void Player::ClampToScreenHorizontal(int world_width) {
     if (position.x < 0) position.x = 0;
     if (position.x + width > world_width) position.x = world_width - width;
-    // if (position.y < 0) position.y = 0;
-    // if (position.y + height > world_height) position.y = world_height - height;
+    SyncRect();
+}
+
+void Player::ClampToScreenVertical(int world_height) {
+    if (position.y < 0) position.y = 0;
+    if (position.y + height > world_height) position.y = world_height - height;
     SyncRect();
 }
 
@@ -168,12 +181,9 @@ void Player::ResolveCollisionsX(GameState& gameState) {
             float overlapLeft  = playerRight - platLeft;   // if >0, overlapped from left
             float overlapRight = platRight - playerLeft;   // if >0, overlapped from right
 
-            // push out by the smaller magnitude
             if (overlapLeft < overlapRight) {
-                // collided from left side: push player left
                 rect.x -= overlapLeft;
             } else {
-                // collided from right side: push player right
                 rect.x += overlapRight;
             }
             position.x = rect.x;
@@ -209,55 +219,88 @@ void Player::ResolveCollisionsX(GameState& gameState) {
 void Player::ResolveCollisionsY(GameState& gameState) {
     // world tiles
     for (const auto& p : gameState.map.tiles) {
-        if (CheckCollisionRecs(rect, p.rect)) {
-            float playerBottom = rect.y + rect.height;
-            float playerTop    = rect.y;
-            float platBottom   = p.rect.y + p.rect.height;
-            float platTop      = p.rect.y;
+        if (!CheckCollisionRecs(rect, p.rect)) continue;
 
-            float overlapTop    = playerBottom - platTop;   // landed on top
-            float overlapBottom = platBottom - playerTop;   // hit head
+        float playerBottom = rect.y + rect.height;
+        float playerTop    = rect.y;
+        float platBottom   = p.rect.y + p.rect.height;
+        float platTop      = p.rect.y;
 
-            if (overlapTop < overlapBottom) {
-                // Landed on platform
-                rect.y -= overlapTop;
-                position.y = rect.y;
-                velocity.y = 0.0f;
-                onGround = true;
-            } else {
-                // Hit underside of platform
-                rect.y += overlapBottom;
-                position.y = rect.y;
-                if (velocity.y < 0.0f) velocity.y = 0.0f;
-            }
-        }
-    }
+        float overlapTop    = playerBottom - platTop; // landing
+        float overlapBottom = platBottom - playerTop; // head bonk
 
-     for (const auto& plat : gameState.map.grid.platforms) {
-        if (!CheckCollisionRecs(rect, plat.box)) continue;
-
-        const float prevBottom = previousPosition.y + rect.height;   // rect.height is constant
-        const float prevTop    = previousPosition.y;
-        const float platTop    = plat.box.y;
-        const float platBottom = plat.box.y + plat.box.height;
-
-        // Coming down from above this frame? -> land on top
-        if (prevBottom <= platTop && velocity.y > 0.0f) {
+        if (overlapTop < overlapBottom) {
             rect.y = platTop - rect.height;
             position.y = rect.y;
             velocity.y = 0.0f;
             onGround = true;
+        } else {
+            rect.y = platBottom;
+            position.y = rect.y;
+            if (velocity.y < 0.0f) velocity.y = 0.0f;
+        }
+    }
+
+    // --- Platforms: vertical-only ---
+    auto& plats = gameState.map.grid.platforms;   // no copy
+    for (int i = 0; i < (int) plats.size(); ++i) {
+        auto& plat = plats[i];
+        if (!CheckCollisionRecs(rect, plat.box)) continue;
+
+        const float prevBottom = previousPosition.y + rect.height;
+        const float prevTop    = previousPosition.y;
+        const float platTop    = plat.box.y;
+        const float platBottom = plat.box.y + plat.box.height;
+
+        // Landing from above
+        if (prevBottom <= platTop && velocity.y > 0.0f) {
+            rect.y = platTop - rect.height;
+            position.y = rect.y;
+            velocity.y = 0.0f;
+            onPlatform = true;
+
+            // start riding THIS platform
+            ridingPlatform = i;
+            lastPlatPos = { plat.box.x, plat.box.y };
             continue;
         }
 
-        // Coming up from below this frame? -> bonk head
+        // Bonk from below
         if (prevTop >= platBottom && velocity.y < 0.0f) {
             rect.y = platBottom;
             position.y = rect.y;
             if (velocity.y < 0.0f) velocity.y = 0.0f;
+            // not riding when under it
+            if (ridingPlatform == i) ridingPlatform = -1;
             continue;
         }
+
+        // side touch -> ignore (no horizontal correction)
     }
+}
+
+void Player::CarryWithPlatform(GameState& gameState) {
+    if (ridingPlatform < 0) return;
+
+    auto& plats = gameState.map.grid.platforms;
+    if (ridingPlatform >= (int)plats.size()) { ridingPlatform = -1; return; }
+
+    auto& plat = plats[ridingPlatform];
+
+    // optional: ensure we're still on top / touching
+    bool stillTouching = CheckCollisionRecs(rect, plat.box)
+                      && (rect.y + rect.height <= plat.box.y + 0.5f);
+    if (!stillTouching) { ridingPlatform = -1; return; }
+
+    // apply platform delta (position change since last frame)
+    Vector2 currPlatPos = { plat.box.x, plat.box.y };
+    Vector2 delta       = { currPlatPos.x - lastPlatPos.x, currPlatPos.y - lastPlatPos.y };
+
+    position.x += delta.x;
+    position.y += delta.y;
+    SyncRect();
+
+    lastPlatPos = currPlatPos;
 }
 
 // Sprite code moved to sprite.cpp

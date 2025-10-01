@@ -6,6 +6,7 @@ void SoundManager::LoadSounds() {
     victory = LoadSound("assets/resources/victory.wav");   
     spikeBreak = LoadSound("assets/resources/spike_break.wav");
 
+    if (isMuted) SetMasterVolume(0.0f);
     SetMusicVolume(background, musicVolume);
     SetSoundVolume(jump, soundEffectsVolume); 
     SetSoundVolume(victory, soundEffectsVolume); 

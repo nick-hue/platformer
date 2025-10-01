@@ -14,7 +14,7 @@ public:
     float musicVolume{0.3f};
     float soundEffectsVolume{0.3f};
 
-    bool isMuted{false};
+    bool isMuted{true};
 
     SoundManager() = default;
     void LoadSounds();

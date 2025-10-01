@@ -6,7 +6,8 @@ Map::Map(){
 }
 
 Map::Map(const char *filename){
-    LoadMap(filename);
+    // LoadMap(filename);
+    LoadMapBinary(filename);
 }
 
 void Map::LoadMap(const char *filename){
@@ -50,19 +51,17 @@ void Map::LoadMap(const char *filename){
 
     grid.Clear();
 
-    if (startX >= 0 && startX < GRID_WIDTH && startY >= 0 && startY < GRID_HEIGHT) {
-        grid.startingPoint = { (float)startX * TILE_WIDTH, (float)startY * TILE_HEIGHT };
-    } else {
-        grid.startingPoint = { -1.0f, -1.0f };
-    }
+    if (startX >= 0 && startX < GRID_WIDTH && startY >= 0 && startY < GRID_HEIGHT)
+        grid.startingPointGridPos = {startX, startY};
+    else
+        grid.startingPointGridPos = {-1,-1};
 
-    if (endX >= 0 && endX < GRID_WIDTH && endY >= 0 && endY < GRID_HEIGHT) {
-        grid.endingPoint = { (float)endX * TILE_WIDTH, (float)endY * TILE_HEIGHT };
-        grid.endingPointRect.x = (float)endX * TILE_WIDTH;
-        grid.endingPointRect.y = (float)endY * TILE_HEIGHT;
-    } else {
-        grid.endingPoint = { -1.0f, -1.0f };
-    }
+    if (endX >= 0 && endX < GRID_WIDTH && endY >= 0 && endY < GRID_HEIGHT)
+        grid.endingPointGridPos = {endX, endY};
+    else
+        grid.endingPointGridPos = {-1,-1};
+
+    grid.SyncFromGridPositions();
 
     for (int y = 0; y < fileH && y < GRID_HEIGHT; ++y) {
         if (!std::getline(in, line)) break;
@@ -160,4 +159,19 @@ void Map::ReloadMap(GameState& gameState) {
     LoadMap(gameState.currLevelFilename.c_str());
     gameState.keyGoalSprite.position = grid.endingPoint;
     gameState.textureHandler.SetupTextures(gameState);  
+}
+
+
+void Map::LoadMapBinary(const char* filename) {
+    if (!grid.LoadBinary(filename)) return;
+
+    // Sync your map sizes if needed (you currently derive sizes from the header in text mode)
+    MAP_TILE_WIDTH  = GRID_WIDTH;
+    MAP_TILE_HEIGHT = GRID_HEIGHT;
+    TILE_WIDTH = CELL_SIZE;
+    TILE_HEIGHT = CELL_SIZE;
+    MAP_WIDTH  = MAP_TILE_WIDTH * TILE_WIDTH;
+    MAP_HEIGHT = MAP_TILE_HEIGHT * TILE_HEIGHT;
+
+    CellToTiles();
 }

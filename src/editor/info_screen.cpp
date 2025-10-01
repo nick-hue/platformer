@@ -158,7 +158,8 @@ void InfoScreen::HandleClearMessageBox(){
             return;
         } else if (result == 2) {
             printf("Exporting map...\n");
-            grid.ExportMap(exportedMapName.c_str());
+            // grid.ExportMap(exportedMapName.c_str());
+            grid.SaveBinary(exportedMapName.c_str());
             showExportMessageBox = false;
         }
     }

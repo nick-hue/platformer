@@ -5,12 +5,13 @@ Grid::Grid() {
     Clear();
 }
 
-void Grid::DrawStartingPoint(){
-    DrawRectangleRec({ startingPoint.x * CELL_SIZE, startingPoint.y * CELL_SIZE, CELL_SIZE, CELL_SIZE }, matrix[int(startingPoint.x)][int(startingPoint.y)].startingPointColor);
-    DrawRectangleLinesEx({ startingPoint.x * CELL_SIZE, startingPoint.y * CELL_SIZE, CELL_SIZE, CELL_SIZE }, 3.0f, RED);
+void Grid::DrawStartingPoint() {
+    DrawRectangleRec({ startingPoint.x, startingPoint.y, (float)CELL_SIZE, (float)CELL_SIZE },
+                     matrix[startingPointGridPos.first][startingPointGridPos.second].startingPointColor);
+    DrawRectangleLinesEx({ startingPoint.x, startingPoint.y, (float)CELL_SIZE, (float)CELL_SIZE }, 3.0f, RED);
 }
 
-void Grid::DrawEndingPointHitbox(){
+void Grid::DrawEndingPointHitbox() {
     DrawRectangleRec(endingPointRect, GREEN);
     DrawRectangleLinesEx(endingPointRect, 1.0f, BLACK);
 }
@@ -26,11 +27,9 @@ void Grid::Clear()
     triangles.clear();
     triangleSpots.clear();
 
-    startingPoint.x = -1.0f;
-    startingPoint.y = -1.0f;
-    
-    endingPoint.x = -1.0f;
-    endingPoint.y = -1.0f;
+    startingPointGridPos = {-1, -1};
+    endingPointGridPos   = {-1, -1};
+    SyncFromGridPositions();
 }
 
 void Grid::Draw() {
@@ -150,22 +149,17 @@ void Grid::MoveFrom(int gx, int gy) {
 }
 
 void Grid::SetStartPoint(int gx, int gy) {
-    if (!IsInbounds(gx, gy)) {
-        printf("SetStartPoint aborted: Cell (%d, %d) is out of bounds\n", gx, gy);
-        return;
-    }
-    printf("Start point set to (%d, %d)\n", gx, gy);
-    startingPoint = { float(gx), float(gy) };
+    if (!IsInbounds(gx, gy)) { printf("SetStartPoint aborted: Cell (%d, %d) is out of bounds\n", gx, gy); return; }
+    startingPointGridPos = { gx, gy };
+    SyncFromGridPositions();
 }
 
-void Grid::SetEndPoint(int gx, int gy){
-    if (!IsInbounds(gx, gy)) {
-        printf("SetEndPoint aborted: Cell (%d, %d) is out of bounds\n", gx, gy);
-        return;
-    }
-    printf("End point set to (%d, %d)\n", gx, gy);
-    endingPoint = { float(gx), float(gy) };
+void Grid::SetEndPoint(int gx, int gy) {
+    if (!IsInbounds(gx, gy)) { printf("SetEndPoint aborted: Cell (%d, %d) is out of bounds\n", gx, gy); return; }
+    endingPointGridPos = { gx, gy };
+    SyncFromGridPositions();
 }
+
 
 bool Grid::TriangleExistsAt(Vector2 pos){
     for (Vector2 v : triangleSpots){
@@ -380,4 +374,239 @@ void Grid::Update(float dt, GameState& gameState) {
             }
         }
     }
+}
+
+namespace {
+    struct FileHeader {
+        char magic[4] = {'G','R','I','D'}; // "GRID"
+        uint32_t version = 1;
+        uint32_t width;
+        uint32_t height;
+        uint32_t cellSize;
+    };
+
+    struct CellBlob {
+        uint8_t occupied; // 0/1
+    };
+
+    struct TriBlob {
+        int32_t gx, gy;     // grid coords (not pixels)
+        int32_t mode;       // TriangleMode enum as int
+    };
+}
+
+bool Grid::SaveBinary(const char* filename) const {
+    std::string full = baseMapFilePath + filename;
+    FILE* f = fopen(full.c_str(), "wb");
+    if (!f) { printf("SaveBinary: can't open %s\n", full.c_str()); return false; }
+
+    FileHeader hdr{ {'G','R','I','D'}, 1, GRID_WIDTH, GRID_HEIGHT, CELL_SIZE };
+    fwrite(&hdr, sizeof(hdr), 1, f);
+
+    // v3: write pixel positions first (screen-space)
+    int32_t startPx = (int32_t)startingPoint.x;
+    int32_t startPy = (int32_t)startingPoint.y;
+    int32_t endPx   = (int32_t)endingPoint.x;
+    int32_t endPy   = (int32_t)endingPoint.y;
+    fwrite(&startPx, sizeof(startPx), 1, f);
+    fwrite(&startPy, sizeof(startPy), 1, f);
+    fwrite(&endPx,   sizeof(endPx),   1, f);
+    fwrite(&endPy,   sizeof(endPy),   1, f);
+
+    // v3: also write grid indices (authoritative for logic)
+    int32_t sgx = startingPointGridPos.first,  sgy = startingPointGridPos.second;
+    int32_t egx = endingPointGridPos.first,    egy = endingPointGridPos.second;
+    fwrite(&sgx, sizeof(sgx), 1, f);
+    fwrite(&sgy, sizeof(sgy), 1, f);
+    fwrite(&egx, sizeof(egx), 1, f);
+    fwrite(&egy, sizeof(egy), 1, f);
+
+    // cells
+    for (int y = 0; y < GRID_HEIGHT; ++y)
+        for (int x = 0; x < GRID_WIDTH; ++x) {
+            uint8_t occ = matrix[x][y].isOccupied ? 1u : 0u;
+            fwrite(&occ, 1, 1, f);
+        }
+
+    // triangles
+    uint32_t tcount = (uint32_t)triangles.size();
+    fwrite(&tcount, sizeof(tcount), 1, f);
+    for (size_t i = 0; i < triangles.size(); ++i) {
+        TriBlob tb{ (int32_t)triangleSpots[i].x, (int32_t)triangleSpots[i].y, (int32_t)triangles[i].mode };
+        fwrite(&tb, sizeof(tb), 1, f);
+    }
+
+    fclose(f);
+    printf("Saved grid to %s\n", full.c_str());
+    return true;
+}
+
+bool Grid::LoadBinary(const char* filename) {
+    std::string full = baseMapFilePath + filename;
+    FILE* f = fopen(full.c_str(), "rb");
+    if (!f) { printf("LoadBinary: can't open %s\n", full.c_str()); return false; }
+
+    FileHeader hdr{};
+    if (fread(&hdr, sizeof(hdr), 1, f) != 1 || strncmp(hdr.magic, "GRID", 4) != 0) {
+        printf("LoadBinary: bad header in %s\n", full.c_str()); fclose(f); return false;
+    }
+
+    int32_t sx_v1=0, sy_v1=0, ex_v1=0, ey_v1=0;   // old block (v1/v2 meaning: grid coords)
+    int32_t startPx=0, startPy=0, endPx=0, endPy=0; // new block (v3)
+    int32_t sgx=-1, sgy=-1, egx=-1, egy=-1;        // grid indices
+
+    if (hdr.version >= 3) {
+        // read pixel block
+        fread(&startPx, sizeof(startPx), 1, f);
+        fread(&startPy, sizeof(startPy), 1, f);
+        fread(&endPx,   sizeof(endPx),   1, f);
+        fread(&endPy,   sizeof(endPy),   1, f);
+        // read grid indices
+        fread(&sgx, sizeof(sgx), 1, f);
+        fread(&sgy, sizeof(sgy), 1, f);
+        fread(&egx, sizeof(egx), 1, f);
+        fread(&egy, sizeof(egy), 1, f);
+    } else if (hdr.version == 2) {
+        // v2 wrote 4 ints "v1 block" as grid coords + 4 ints grid indices
+        fread(&sx_v1, sizeof(sx_v1), 1, f);
+        fread(&sy_v1, sizeof(sy_v1), 1, f);
+        fread(&ex_v1, sizeof(ex_v1), 1, f);
+        fread(&ey_v1, sizeof(ey_v1), 1, f);
+        fread(&sgx, sizeof(sgx), 1, f);
+        fread(&sgy, sizeof(sgy), 1, f);
+        fread(&egx, sizeof(egx), 1, f);
+        fread(&egy, sizeof(egy), 1, f);
+    } else { // v1
+        fread(&sx_v1, sizeof(sx_v1), 1, f);
+        fread(&sy_v1, sizeof(sy_v1), 1, f);
+        fread(&ex_v1, sizeof(ex_v1), 1, f);
+        fread(&ey_v1, sizeof(ey_v1), 1, f);
+        sgx = sx_v1; sgy = sy_v1;
+        egx = ex_v1; egy = ey_v1;
+    }
+
+    Clear();
+
+    // Authoritative: grid indices
+    if (sgx < 0 || sgy < 0 || sgx >= GRID_WIDTH || sgy >= GRID_HEIGHT)
+        startingPointGridPos = {-1,-1};
+    else
+        startingPointGridPos = { sgx, sgy };
+
+    if (egx < 0 || egy < 0 || egx >= GRID_WIDTH || egy >= GRID_HEIGHT)
+        endingPointGridPos = {-1,-1};
+    else
+        endingPointGridPos = { egx, egy };
+
+    // compute pixel positions/rects from grid
+    SyncFromGridPositions();
+
+    // cells
+    for (int y = 0; y < GRID_HEIGHT; ++y)
+        for (int x = 0; x < GRID_WIDTH; ++x) {
+            uint8_t occ = 0;
+            fread(&occ, 1, 1, f);
+            matrix[x][y].isOccupied = (occ != 0);
+        }
+
+    // triangles
+    uint32_t tcount = 0;
+    fread(&tcount, sizeof(tcount), 1, f);
+    for (uint32_t i = 0; i < tcount; ++i) {
+        TriBlob tb{};
+        fread(&tb, sizeof(tb), 1, f);
+        MakeCustomTriangle(tb.gx, tb.gy, (TriangleMode)tb.mode);
+    }
+
+    fclose(f);
+    printf("Loaded grid from %s\n", full.c_str());
+
+    Dump();
+
+    return true;
+}
+
+
+std::string Grid::ToString() const {
+    std::ostringstream oss;
+
+    // Basic header
+    oss << "GRID DEBUG\n";
+    oss << "  Size: " << GRID_WIDTH << "x" << GRID_HEIGHT
+        << "  CellSize: " << CELL_SIZE << "\n";
+
+    // Start/End (grid coords)
+    oss << "  Start: (" << int(startingPoint.x) << "," << int(startingPoint.y) << ")\n";
+    oss << "  End  : (" << int(endingPoint.x)   << "," << int(endingPoint.y)   << ")\n";
+
+    // If you keep an endingPointRect, show it too
+    oss << "  EndRect(px): { x:" << int(endingPointRect.x)
+        << ", y:" << int(endingPointRect.y)
+        << ", w:" << int(endingPointRect.width)
+        << ", h:" << int(endingPointRect.height) << " }\n";
+
+    // Cells summary
+    int occupiedCount = 0;
+    for (int y = 0; y < GRID_HEIGHT; ++y)
+        for (int x = 0; x < GRID_WIDTH; ++x)
+            occupiedCount += matrix[x][y].isOccupied ? 1 : 0;
+
+    oss << "  Cells: occupied=" << occupiedCount
+        << " / total=" << (GRID_WIDTH * GRID_HEIGHT) << "\n";
+
+    // Triangles summary + list
+    oss << "  Triangles: " << triangles.size() << "\n";
+    for (size_t i = 0; i < triangles.size(); ++i) {
+        const auto& t = triangles[i];
+        // triangles[i].mode is your enum; cast to int for clarity
+        // position is in pixels; triangleSpots[i] (if you keep it) is grid coords
+        oss << "    [" << i << "] grid_pos=("
+            << int(triangleSpots[i].x) << "," << int(triangleSpots[i].y) << ") "
+            << "mode=" << int(t.mode) << " position=("
+            << int(t.position.x) << "," << int(t.position.y) << ")\n";
+    }
+
+    // Optional: first few rows of the occupancy map (0/1), to spot obvious mismatches
+    oss << "  Occupancy preview (first 4 rows):\n";
+    int previewRows = std::min(GRID_HEIGHT, 16);
+    for (int y = 0; y < previewRows; ++y) {
+        oss << "    y=" << std::setw(2) << y << " : ";
+        for (int x = 0; x < GRID_WIDTH; ++x) {
+            oss << (matrix[x][y].isOccupied ? '1' : '0');
+        }
+        oss << "\n";
+    }
+
+    return oss.str();
+}
+
+void Grid::Dump() const {
+    auto s = ToString();
+    printf("%s", s.c_str());
+}
+
+static inline Rectangle CellRectFromGrid(int gx, int gy) {
+    return { gx * (float)CELL_SIZE, gy * (float)CELL_SIZE,
+             (float)CELL_SIZE, (float)CELL_SIZE };
+}
+
+void Grid::SyncFromGridPositions(){
+    startingPoint = { (float)startingPointGridPos.first,  (float)startingPointGridPos.second };
+    endingPoint   = { (float)endingPointGridPos.first,    (float)endingPointGridPos.second };
+    startingPointRect = CellRectFromGrid(startingPointGridPos.first, startingPointGridPos.second);
+    endingPointRect   = CellRectFromGrid(endingPointGridPos.first,   endingPointGridPos.second);
+}
+
+void Grid::SyncFromPixelPositions() {
+    // derive grid indices from pixel positions
+    auto gx = (int)floorf(startingPoint.x / CELL_SIZE);
+    auto gy = (int)floorf(startingPoint.y / CELL_SIZE);
+    startingPointGridPos = { gx, gy };
+
+    gx = (int)floorf(endingPoint.x / CELL_SIZE);
+    gy = (int)floorf(endingPoint.y / CELL_SIZE);
+    endingPointGridPos = { gx, gy };
+
+    startingPointRect = { startingPoint.x, startingPoint.y, (float)CELL_SIZE, (float)CELL_SIZE };
+    endingPointRect   = { endingPoint.x,   endingPoint.y,   (float)CELL_SIZE, (float)CELL_SIZE };
 }

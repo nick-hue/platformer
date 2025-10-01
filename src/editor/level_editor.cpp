@@ -165,7 +165,7 @@ int main(void)
 {
     InitWindow(EDITOR_SCREEN_WIDTH, EDITOR_SCREEN_HEIGHT, "Level Editor");
     const char *monitor_name = GetMonitorName(0);
-
+    GuiLoadStyleDefault();
     printf("Monitor Name: %s\n", monitor_name);
     SetWindowPosition(300, 100);
     SetTargetFPS(60);              

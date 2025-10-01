@@ -48,7 +48,7 @@ public:
     , currentLives(MAX_LIVES)
     , maxLives(MAX_LIVES)
     , gameUI(Vector2{35.0f, 25.0f}, maxLives)     
-    , currLevelFilename("exported_map_1.txt")
+    , currLevelFilename("export.grid")
     , map(currLevelFilename.c_str())
     , movingSpikeMode(TriangleMode::DOWN)
     , shouldRun(true)

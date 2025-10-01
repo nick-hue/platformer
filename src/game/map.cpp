@@ -139,8 +139,8 @@ void Map::LoadPlatforms(){
 } 
 
 void Map::DrawEndPoint() {
-    DrawRectangleV(grid.endingPoint, {(float)TILE_WIDTH, (float)TILE_HEIGHT}, GREEN);
-    DrawRectangleLinesEx({grid.endingPoint.x, grid.endingPoint.y, (float)TILE_WIDTH, (float)TILE_HEIGHT}, 2.0f, BLACK);
+    DrawRectangleV(Vector2{ grid.endingPoint.x * TILE_WIDTH, grid.endingPoint.y * TILE_WIDTH}, {(float)TILE_WIDTH, (float)TILE_HEIGHT}, GREEN);
+    DrawRectangleLinesEx({grid.endingPoint.x * TILE_WIDTH , grid.endingPoint.y * TILE_WIDTH, (float)TILE_WIDTH, (float)TILE_HEIGHT}, 2.0f, BLACK);
 }
 
 void Map::DrawBackground(GameState& gameState){

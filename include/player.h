@@ -39,7 +39,6 @@ public:
     // Move and collide with world
     void Update(GameState& gameState);
 
-    
     void DrawHitBox() const;
     void SyncRect();
     void ClampToScreenHorizontal(int world_width);

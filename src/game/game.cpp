@@ -1,6 +1,7 @@
 #include "game.h"
 
 // TODO: gravity change button
+
 // TODO: fix bug where if death from spikes when respawning they are gone
 // TODO: object map loading
 // TODO: move platforms to map
@@ -59,6 +60,7 @@ void Game::Initialize(){
     printf("GAME WIDTH: %d-%d\n", GAME_SCREEN_WIDTH, GAME_SCREEN_HEIGHT);
 
     InitWindow(GAME_SCREEN_WIDTH, GAME_SCREEN_HEIGHT, "Platformer");
+    SetWindowState(FLAG_WINDOW_RESIZABLE);
     GuiLoadStyleDefault();
     SetWindowPosition(300, 200);
     SetTargetFPS(60);

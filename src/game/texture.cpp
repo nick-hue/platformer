@@ -43,8 +43,8 @@ void TextureHandler::UnloadTextures() {
 
 void TextureHandler::SetupPlayerTexture(GameState& gameState){
     gameState.playerSprite.SetSprite(player, 9, 7);
-    gameState.playerSprite.idle = Anim{0, 0, 4, 12.f};   // row 0, cols [0..3]
-    gameState.playerSprite.walk = Anim{1, 0, 9, 12.f};  // row 1, cols [0..8]
+    gameState.playerSprite.idle = Anim{0, 0, 6, 12.f};   // row 0, cols [0..3]
+    gameState.playerSprite.walk = Anim{1, 0, 8, 12.f};  // row 1, cols [0..8]
 }
 
 void TextureHandler::SetupKeyGoalTexture(GameState& gameState){

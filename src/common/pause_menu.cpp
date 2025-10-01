@@ -41,7 +41,7 @@ void PauseMenu::InitPauseMenuButtons(GameState& gameState){
     resumeButton = MyButton{placementWidth + buttonWidth + xPadding, placementHeight, placementWidth * 3, buttonHeight, "RESUME", -1, ""};
     resumeButton.onClick = [&] { isGamePaused = false; };
 
-    muteButton = MyButton{placementWidth, placementHeight, buttonWidth, buttonHeight, "", 100, ""};
+    muteButton = MyButton{placementWidth, placementHeight, buttonWidth, buttonHeight, "-", 100, ""};
     muteButton.onClick = [&] { gameState.soundManager.ToggleMute(); };
     placementHeight += yPadding;
 

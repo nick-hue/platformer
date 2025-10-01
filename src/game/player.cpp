@@ -73,6 +73,13 @@ inline bool PointInRectInclusive(Vector2 p, const Rectangle& r) {
            (p.y >= r.y) && (p.y <= r.y + r.height);
 }
 
+inline bool RectCollidingInclusive(const Rectangle& a, const Rectangle& b) {
+    return !((a.x + a.width  < b.x) ||
+             (b.x + b.width  < a.x) ||
+             (a.y + a.height < b.y) ||
+             (b.y + b.height < a.y));
+}
+
 void Player::CheckTriangleCollisions(GameState& gameState) {
     
     for (MyTriangle tri : gameState.map.grid.triangles){
@@ -110,18 +117,19 @@ int Player::GetCollidingPlatformIndex(GameState& gameState) {
 void Player::Update(GameState& gameState) {
     HandleInput(gameState);
 
+    
     // Gravity
     velocity.y += GRAVITY * gameState.dt;
-
+    
     // save previous position
     previousPosition = position;
     
     // --- X axis move & collide ---
     position.x += velocity.x * gameState.dt;
     SyncRect();
-
+    
     ResolveCollisionsX(gameState);
-
+    
     // --- Y axis move & collide ---
     position.y += velocity.y * gameState.dt;
     SyncRect();
@@ -129,15 +137,8 @@ void Player::Update(GameState& gameState) {
     bool wasOnGround = onGround; onGround = false;
     bool wasOnPlatform = onPlatform; onPlatform = false;    
     ResolveCollisionsY(gameState);
+    // printf("standing on platform %d\n", );
 
-    // Vector2 platformVelocity = {0.0f, 0.0f};
-    // int platformIndex = GetCollidingPlatformIndex(gameState);
-    // // printf("on platform : %s\n", onPlatform ? "true" : "false");
-    // if (platformIndex != -1) {
-    //     MovingPlatform plat = gameState.map.grid.platforms[platformIndex];
-    //     platformVelocity = plat.velocity;
-    //     printf("plat vel : %.2f-%.2f\n", platformVelocity.x, platformVelocity.y);
-    // }
     
     CarryWithPlatform(gameState);
 
@@ -169,8 +170,8 @@ void Player::ClampToScreenVertical(int world_height) {
     SyncRect();
 }
 
-void Player::ResolveCollisionsX(GameState& gameState) {
-    for (const auto& p : gameState.map.tiles) {
+void Player::CheckTilesXCollision(std::vector<Tile>& tiles){
+    for (const auto& p : tiles) {
         if (CheckCollisionRecs(rect, p.rect)) {
             // compute penetration on X
             float playerRight = rect.x + rect.width;
@@ -189,8 +190,10 @@ void Player::ResolveCollisionsX(GameState& gameState) {
             position.x = rect.x;
         }
     }
+}
 
-     for (const auto& p : gameState.map.grid.platforms) {
+void Player::CheckPlatformXCollision(std::vector<MovingPlatform>& plats){
+    for (const auto& p : plats) {
         if (CheckCollisionRecs(rect, p.box)) {
             // compute penetration on X
             float playerRight = rect.x + rect.width;
@@ -212,13 +215,15 @@ void Player::ResolveCollisionsX(GameState& gameState) {
             position.x = rect.x;
         }
     }
-   
-
 }
 
-void Player::ResolveCollisionsY(GameState& gameState) {
-    // world tiles
-    for (const auto& p : gameState.map.tiles) {
+void Player::ResolveCollisionsX(GameState& gameState) {
+    CheckTilesXCollision(gameState.map.tiles);
+    CheckPlatformXCollision(gameState.map.grid.platforms);
+}
+
+void Player::CheckTilesYCollision(std::vector<Tile>& tiles){
+    for (const auto& p : tiles) {
         if (!CheckCollisionRecs(rect, p.rect)) continue;
 
         float playerBottom = rect.y + rect.height;
@@ -240,9 +245,9 @@ void Player::ResolveCollisionsY(GameState& gameState) {
             if (velocity.y < 0.0f) velocity.y = 0.0f;
         }
     }
+}
 
-    // --- Platforms: vertical-only ---
-    auto& plats = gameState.map.grid.platforms;   // no copy
+void Player::CheckPlatformYCollision(std::vector<MovingPlatform>& plats){
     for (int i = 0; i < (int) plats.size(); ++i) {
         auto& plat = plats[i];
         if (!CheckCollisionRecs(rect, plat.box)) continue;
@@ -258,10 +263,7 @@ void Player::ResolveCollisionsY(GameState& gameState) {
             position.y = rect.y;
             velocity.y = 0.0f;
             onPlatform = true;
-
-            // start riding THIS platform
             ridingPlatform = i;
-            lastPlatPos = { plat.box.x, plat.box.y };
             continue;
         }
 
@@ -274,36 +276,35 @@ void Player::ResolveCollisionsY(GameState& gameState) {
             if (ridingPlatform == i) ridingPlatform = -1;
             continue;
         }
-
-        // side touch -> ignore (no horizontal correction)
     }
 }
 
+void Player::ResolveCollisionsY(GameState& gameState) {
+    // world tiles
+    CheckTilesYCollision(gameState.map.tiles);
+    // platform check 
+    CheckPlatformYCollision(gameState.map.grid.platforms);
+    
+}
+
 void Player::CarryWithPlatform(GameState& gameState) {
+    // printf("riding plat : %d\n", ridingPlatform);
     if (ridingPlatform < 0) return;
 
-    auto& plats = gameState.map.grid.platforms;
-    if (ridingPlatform >= (int)plats.size()) { ridingPlatform = -1; return; }
+    // get platform
+    auto& plat = gameState.map.grid.platforms[ridingPlatform];
 
-    auto& plat = plats[ridingPlatform];
+    // check if player is still touching the platform
+    bool stillTouching = RectCollidingInclusive(rect, plat.box);
+    if (!stillTouching) { ridingPlatform = -1; printf("not still touching\n"); return; }
 
-    // optional: ensure we're still on top / touching
-    bool stillTouching = CheckCollisionRecs(rect, plat.box)
-                      && (rect.y + rect.height <= plat.box.y + 0.5f);
-    if (!stillTouching) { ridingPlatform = -1; return; }
-
-    // apply platform delta (position change since last frame)
-    Vector2 currPlatPos = { plat.box.x, plat.box.y };
-    Vector2 delta       = { currPlatPos.x - lastPlatPos.x, currPlatPos.y - lastPlatPos.y };
-
+    // move the player by the platform's delta
+    Vector2 delta = { plat.position.x - plat.lastPosition.x, plat.position.y - plat.lastPosition.y };
     position.x += delta.x;
     position.y += delta.y;
     SyncRect();
-
-    lastPlatPos = currPlatPos;
 }
 
-// Sprite code moved to sprite.cpp
 void PlayerSprite::SetSprite(Texture2D tex, int cols_, int rows_) {
     sprite = tex;    // copy is fine (Texture2D is small handle)
     cols = cols_;

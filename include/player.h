@@ -23,7 +23,6 @@ public:
     float width{30}, height{40};
     Rectangle rect{position.x, position.y, width, height};
     Color color{MAROON};
-    Vector2 lastPlatPos{0.0f, 0.0f};
 
     bool onGround{false};
     bool onPlatform{false};
@@ -51,7 +50,11 @@ private:
     int GetCollidingPlatformIndex(GameState& gameState);
     void CarryWithPlatform(GameState& gameState);
     void ResolveCollisionsX(GameState& gameState);
+    void CheckTilesXCollision(std::vector<Tile>& tiles);
+    void CheckPlatformXCollision(std::vector<MovingPlatform>& plats);
     void ResolveCollisionsY(GameState& gameState);
+    void CheckTilesYCollision(std::vector<Tile>& tiles);
+    void CheckPlatformYCollision(std::vector<MovingPlatform>& plats);
     void CheckWorldDeath(GameState& gameState);
     void CheckTriangleCollisions(GameState& gameState);
     void CheckOutOfMap(GameState& gameState);

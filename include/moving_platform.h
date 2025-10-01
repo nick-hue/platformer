@@ -8,6 +8,7 @@ class GameState;
 class MovingPlatform {
 public:
     Vector2 position{.0f, .0f};
+    Vector2 lastPosition{.0f, .0f};
     Vector2 velocity{100.0f, .0f};
     Color color{BLACK};
     Color outlineColor{RED};

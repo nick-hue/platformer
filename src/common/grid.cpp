@@ -25,12 +25,10 @@ void Grid::Clear()
     }
     triangles.clear();
     triangleSpots.clear();
+    platforms.clear();
 
-    startingPoint.x = -1.0f;
-    startingPoint.y = -1.0f;
-    
-    endingPoint.x = -1.0f;
-    endingPoint.y = -1.0f;
+    startingPoint = {-1.0f,-1.0f};
+    endingPoint = {-1.0f, -1.0f};
 }
 
 void Grid::Draw() {

@@ -1,21 +1,59 @@
 #include "moving_platform.h"
 #include "game.h"
 
+MovingPlatform::MovingPlatform(Vector2 start_pos, Vector2 movement,int plat_id){
+    position = start_pos;
+    lastPosition = start_pos;
+    movementBounds = Vector4{position.x, position.x + movement.x, position.y, position.y + movement.y};
+    id = plat_id;
+    if (movementBounds.x == movementBounds.y)
+        velocity.x = 0.0f;
+    if (movementBounds.z == movementBounds.w)
+        velocity.y = 0.0f;
+}
+
 void MovingPlatform::Draw() const {
     DrawRectangleRec(box, color);
     DrawRectangleLinesEx(box, 1.0f, color);
 }
 
+static inline void GetMovementDirection(Vector2 pos, const Vector4& bounds, Vector2& dir){  
+    if (pos.x < bounds.x) dir.x = 1.0f;
+    if (pos.x > bounds.y) dir.x = -1.0f;
+
+    if (pos.y < bounds.z) dir.y = 1.0f;
+    if (pos.y > bounds.w) dir.y = -1.0f;
+}
+
 void MovingPlatform::Move(GameState& gameState){
     // printf("Moving...\n");
-    if (position.x > endPos) movingDirection = -1;
-    if (position.x < startPos) movingDirection = 1;
     
+    GetMovementDirection(position, movementBounds, movementDirection);
+    // printf("movement dir : %f-%f\n", movementDirection.x, movementDirection.y);
+
     lastPosition = position;
-    position.x += velocity.x * movingDirection * gameState.dt;    
+    position.x += velocity.x * movementDirection.x * gameState.dt;    
+    position.y += velocity.y * movementDirection.y * gameState.dt;    
 }
 
 void MovingPlatform::Update(GameState& gameState){
     Move(gameState);
     SyncRect();
 }
+
+inline std::string ToString(const MovingPlatform& plat){
+    std::ostringstream ss;
+    ss << "MovingPlatform { "
+    << "id=" << plat.id
+    << ", pos=(" << plat.position.x << "," << plat.position.y << ")"
+    << ", vel=(" << plat.velocity.x << "," << plat.velocity.y << ")"
+    << ", dir=(" << plat.movementDirection.x << "," << plat.movementDirection.y << ")"
+    << ", bounds=(minX" 
+            << plat.movementBounds.x << ",maxX" 
+            << plat.movementBounds.y << ",minY" 
+            << plat.movementBounds.z << ",maxY" 
+            << plat.movementBounds.w << ")"
+    << " }";
+    return ss.str();
+}
+    

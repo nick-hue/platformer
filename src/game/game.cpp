@@ -1,16 +1,14 @@
 #include "game.h"
 
 // TODO: gravity change button
-// TODO: add moving platforms
 // TODO: fix bug where if death from spikes when respawning they are gone
+// TODO: object map loading
+// TODO: move platforms to map
+// TODO: bounding box collision checking
 
 void Game::Run(){
-    // pauseMenu.isGamePaused = true;
-    MovingPlatform platform = MovingPlatform{};
-    platform.position.y = 250.0f;
-    platform.id = 1;
-    gameState.map.grid.platforms.emplace_back(platform);
-
+    
+    
     while (!WindowShouldClose() && gameState.shouldRun) {
         UpdateMusicStream(gameState.soundManager.background); 
 

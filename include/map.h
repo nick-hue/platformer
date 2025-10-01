@@ -24,6 +24,7 @@ class Map {
         int TILE_HEIGHT{0};
 
         Grid grid;
+        
         // obstacles (floor, walls, ceillings)
         std::vector<Tile> tiles;
 
@@ -35,6 +36,7 @@ class Map {
         void LoadMap(const char *filename);
         // makes the cells that were occupied (from the file) into tiles for the game
         void CellToTiles();
+        void LoadPlatforms();
         void DrawEndPoint();
         void Draw(GameState& gameState);
         void DrawBackground(GameState& gameState);

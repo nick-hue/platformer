@@ -16,6 +16,8 @@ void Grid::DrawEndingPointHitbox() {
     DrawRectangleLinesEx(endingPointRect, 1.0f, BLACK);
 }
 
+
+
 void Grid::Clear()
 {
     for (int i = 0; i < GRID_WIDTH; i++) {
@@ -29,7 +31,7 @@ void Grid::Clear()
 
     startingPointGridPos = {-1, -1};
     endingPointGridPos   = {-1, -1};
-    SyncFromGridPositions();
+    SyncFromGridPositions(matrix[0]->cellSize);
 }
 
 void Grid::Draw() {
@@ -153,13 +155,13 @@ void Grid::MoveFrom(int gx, int gy) {
 void Grid::SetStartPoint(int gx, int gy) {
     if (!IsInbounds(gx, gy)) { printf("SetStartPoint aborted: Cell (%d, %d) is out of bounds\n", gx, gy); return; }
     startingPointGridPos = { gx, gy };
-    SyncFromGridPositions();
+    SyncFromGridPositions(matrix[0]->cellSize);
 }
 
 void Grid::SetEndPoint(int gx, int gy) {
     if (!IsInbounds(gx, gy)) { printf("SetEndPoint aborted: Cell (%d, %d) is out of bounds\n", gx, gy); return; }
     endingPointGridPos = { gx, gy };
-    SyncFromGridPositions();
+    SyncFromGridPositions(matrix[0]->cellSize);
 }
 
 
@@ -194,7 +196,7 @@ void Grid::ImportMap(const char* filename) {
 
     std::ifstream in(fullpath);
     if (!in) {
-        TraceLog(LOG_WARNING, "Map::LoadMap: could not open file: %s", fullpath.c_str());
+        TraceLog(LOG_WARNING, "Map::ImportMap: could not open file: %s", fullpath.c_str());
         return;
     }
 
@@ -202,7 +204,7 @@ void Grid::ImportMap(const char* filename) {
     int fileW=0, fileH=0, fileCell=0, startX=0, startY=0, endX=0, endY=0;
 
     if (!std::getline(in, line)) {
-        TraceLog(LOG_WARNING, "Map::LoadMap: missing header line");
+        TraceLog(LOG_WARNING, "Map::ImportMap: missing header line");
         return;
     }
 
@@ -500,7 +502,7 @@ bool Grid::LoadBinary(const char* filename) {
         endingPointGridPos = { egx, egy };
 
     // compute pixel positions/rects from grid
-    SyncFromGridPositions();
+    SyncFromGridPositions(matrix[0]->cellSize);
 
     // cells
     for (int y = 0; y < GRID_HEIGHT; ++y)
@@ -538,7 +540,9 @@ std::string Grid::ToString() const {
 
     // Start/End (grid coords)
     oss << "  Start: (" << int(startingPoint.x) << "," << int(startingPoint.y) << ")\n";
+    oss << "  StartGridPos: (" << startingPointGridPos.first << "," << startingPointGridPos.second << ")\n";
     oss << "  End  : (" << int(endingPoint.x)   << "," << int(endingPoint.y)   << ")\n";
+    oss << "  EndGridPos  : (" << endingPointGridPos.first   << "," << endingPointGridPos.second   << ")\n";
 
     // If you keep an endingPointRect, show it too
     oss << "  EndRect(px): { x:" << int(endingPointRect.x)
@@ -568,8 +572,9 @@ std::string Grid::ToString() const {
     }
 
     // Optional: first few rows of the occupancy map (0/1), to spot obvious mismatches
-    oss << "  Occupancy preview (first 4 rows):\n";
-    int previewRows = std::min(GRID_HEIGHT, 16);
+    int showingRows = 16;
+    oss << "  Occupancy preview (first " << showingRows << " rows):\n";
+    int previewRows = std::min(GRID_HEIGHT, showingRows);
     for (int y = 0; y < previewRows; ++y) {
         oss << "    y=" << std::setw(2) << y << " : ";
         for (int x = 0; x < GRID_WIDTH; ++x) {
@@ -591,9 +596,9 @@ static inline Rectangle CellRectFromGrid(int gx, int gy) {
              (float)CELL_SIZE, (float)CELL_SIZE };
 }
 
-void Grid::SyncFromGridPositions(){
-    startingPoint = { (float)startingPointGridPos.first,  (float)startingPointGridPos.second };
-    endingPoint   = { (float)endingPointGridPos.first,    (float)endingPointGridPos.second };
+void Grid::SyncFromGridPositions(int tileSize){
+    startingPoint = { (float)startingPointGridPos.first * tileSize,  (float)startingPointGridPos.second * tileSize};
+    endingPoint   = { (float)endingPointGridPos.first * tileSize,    (float)endingPointGridPos.second * tileSize};
     startingPointRect = CellRectFromGrid(startingPointGridPos.first, startingPointGridPos.second);
     endingPointRect   = CellRectFromGrid(endingPointGridPos.first,   endingPointGridPos.second);
 }

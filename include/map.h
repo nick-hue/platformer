@@ -39,9 +39,10 @@ class Map {
         void CellToTiles();
         void LoadPlatforms();
         void DrawEndPoint();
+        void DrawTilesHitboxes();
         void Draw(GameState& gameState);
         void DrawBackground(GameState& gameState);
         void ReloadMap(GameState& gameState);
-        TileType GetTypeForTile(int i, int j);
+        GroundTileType GetTypeForTile(int i, int j);
 
 };

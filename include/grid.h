@@ -46,7 +46,7 @@ public:
     void Draw();
     void DrawEditor();
     void Clear();
-    void SyncFromGridPositions();
+    void SyncFromGridPositions(int tileSize);
     void SyncFromPixelPositions();   // pixels -> grid/rects
 
     std::string ToString() const;
@@ -81,6 +81,7 @@ public:
 
     StoreItem ClassifyCell(int x, int y) const;
     char GetOutputChar(int x, int y) const;
+
 };
 
 

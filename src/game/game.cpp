@@ -7,10 +7,10 @@
 // TODO: move platforms to map
 // TODO: bounding box collision checking
 
-void Game::Run(){
-    
-    
-    while (!WindowShouldClose() && gameState.shouldRun) {
+void Game::Run(){    
+    while (gameState.shouldRun) {
+        if (WindowShouldClose()) { gameState.shouldRun = false; continue; };
+
         UpdateMusicStream(gameState.soundManager.background); 
 
         if (IsKeyReleased(KEY_P)) pauseMenu.isGamePaused = !pauseMenu.isGamePaused;            
@@ -72,6 +72,7 @@ void Game::Initialize(){
     printf("Map Size: %dx%d\n", gameState.map.MAP_WIDTH, gameState.map.MAP_HEIGHT);
 
     SetWindowSize(gameState.map.MAP_WIDTH, gameState.map.MAP_HEIGHT);
+    printf("starting point : %f-%f\n", gameState.map.grid.startingPoint.x, gameState.map.grid.startingPoint.y);
     gameState.player.position = gameState.map.grid.startingPoint;
     gameState.textureHandler.LoadTextures();
     gameState.textureHandler.SetupTextures(gameState);

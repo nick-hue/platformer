@@ -61,8 +61,8 @@ void LoadNextLevel(GameState& gameState){
 
 void Player::CheckWin(GameState& gameState)
 {
-    printf("player pos ::: %d-%d\n", (int) position.x, (int) position.y);
-    printf("ending pos ::: %d-%d\n", (int) gameState.map.grid.endingPoint.x, (int) gameState.map.grid.endingPoint.y);
+    // printf("player pos ::: %d-%d\n", (int) position.x, (int) position.y);
+    // printf("ending pos ::: %d-%d\n", (int) gameState.map.grid.endingPoint.x, (int) gameState.map.grid.endingPoint.y);
     if (CheckCollisionRecs(rect, {gameState.map.grid.endingPoint.x, gameState.map.grid.endingPoint.y, (float)gameState.map.TILE_WIDTH, (float)gameState.map.TILE_HEIGHT})) {
         // Player reached end point load next level
         LoadNextLevel(gameState);       

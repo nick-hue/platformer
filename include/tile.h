@@ -4,20 +4,20 @@
 #include "item_sprite.h"
 #include <utility>
 
-enum TileType {
+enum GroundTileType {
     GRASS,
     GROUND,
     BROKEN,
     UNKNOWN  
 };
 
-inline void TileTypeToString(TileType type){
+inline void TileTypeToString(GroundTileType type){
     switch (type)
     {
-    case TileType::GRASS: printf("TileType: GRASS\n"); break;
-    case TileType::GROUND: printf("TileType: GROUND\n"); break;
-    case TileType::BROKEN: printf("TileType: BROKEN\n"); break;
-    case TileType::UNKNOWN: printf("TileType: UNKNOWN\n"); break;
+    case GroundTileType::GRASS: printf("GroundTileType: GRASS\n"); break;
+    case GroundTileType::GROUND: printf("GroundTileType: GROUND\n"); break;
+    case GroundTileType::BROKEN: printf("GroundTileType: BROKEN\n"); break;
+    case GroundTileType::UNKNOWN: printf("GroundTileType: UNKNOWN\n"); break;
     default: break;
     }
 }
@@ -29,12 +29,12 @@ struct Tile {
     float height{};
     Rectangle rect{};
     Color color{};
-    TileType type;
+    GroundTileType type;
     std::pair<int, int> spriteSheetLocation;
     ItemSprite sprite;
     std::pair<int, int> gridPos;
 
-    Tile(float x, float y, float w, float h, Color c, TileType t)
+    Tile(float x, float y, float w, float h, Color c, GroundTileType t)
         : position{ x, y }, width{ w }, height{ h }, rect{ x, y, w, h }, color{ c }, type{t}, gridPos{position.x / w, position.y / h} {}
 
     void Sync() { rect = { position.x, position.y, width, height }; }

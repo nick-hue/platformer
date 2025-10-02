@@ -78,12 +78,12 @@ void TextureHandler::SetupSpikeTextures(GameState& gameState) {
     }
 }
 
-std::pair<int, int> GetSpriteLocation(TileType type){
+std::pair<int, int> GetSpriteLocation(GroundTileType type){
     switch (type)
     {
-        case TileType::GRASS: return {0,0};
-        case TileType::GROUND: return {1,0};
-        case TileType::BROKEN: return {0,1};
+        case GroundTileType::GRASS: return {0,0};
+        case GroundTileType::GROUND: return {1,0};
+        case GroundTileType::BROKEN: return {0,1};
         default: return {-1, -1};
     }
 }

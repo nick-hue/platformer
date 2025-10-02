@@ -45,7 +45,6 @@ void Map::LoadMap(const char *filename){
     MAP_WIDTH   = MAP_TILE_WIDTH * TILE_WIDTH;
     MAP_HEIGHT  = MAP_TILE_HEIGHT * TILE_HEIGHT;
     
-
     grid.Clear();
 
     if (startX >= 0 && startX < GRID_WIDTH && startY >= 0 && startY < GRID_HEIGHT)
@@ -58,8 +57,8 @@ void Map::LoadMap(const char *filename){
     else
         grid.endingPointGridPos = {-1,-1};
 
-    grid.SyncFromGridPositions();
-
+    grid.SyncFromGridPositions(TILE_WIDTH);
+    
     for (int y = 0; y < fileH && y < GRID_HEIGHT; ++y) {
         if (!std::getline(in, line)) break;
         std::stringstream ss(line);
@@ -97,21 +96,21 @@ void Map::LoadMap(const char *filename){
             }
         }
     }
-
+    grid.Dump();
     CellToTiles();
     LoadPlatforms();
 }
 
-TileType Map::GetTypeForTile(int i, int j){
-    if (j-1 < 0) return TileType::GROUND;
+GroundTileType Map::GetTypeForTile(int i, int j){
+    if (j-1 < 0) return GroundTileType::GROUND;
     Cell cellAbove = grid.matrix[i][j-1];
     
     if (!cellAbove.isOccupied){
-        return TileType::GRASS;
+        return GroundTileType::GRASS;
     } else {
-        // one out of 10 times return broken
+        // one out of 10 times return broken tile sprite
         int r = rand() % 10;  
-        return (r != 0) ? TileType::GROUND : TileType::BROKEN;
+        return (r != 0) ? GroundTileType::GROUND : GroundTileType::BROKEN;
     }
 
 }
@@ -122,7 +121,7 @@ void Map::CellToTiles() {
         for (int j = 0; j < grid.height; j++){
             Cell cell = grid.matrix[i][j];
             if (cell.isOccupied) {
-                TileType type = GetTypeForTile(i, j);
+                GroundTileType type = GetTypeForTile(i, j);
                 // printf("%d-%d -> ", i ,j); TileTypeToString(type);
                 tiles.emplace_back(cell.position.x, cell.position.y, cell.cellSize, cell.cellSize, DARKGRAY, type);
             }
@@ -145,6 +144,12 @@ void Map::DrawEndPoint() {
 void Map::DrawBackground(GameState& gameState){
     DrawTextureEx(gameState.textureHandler.background, Vector2{ gameState.gameUI.scrollBack, gameState.gameUI.yOffset }, 0.0f, gameState.gameUI.bgScale, WHITE);
     DrawTextureEx(gameState.textureHandler.background, Vector2{ gameState.gameUI.scrollBack + gameState.gameUI.wrapW, gameState.gameUI.yOffset }, 0.0f, gameState.gameUI.bgScale, WHITE);
+}
+
+void Map::DrawTilesHitboxes(){
+    for (auto& tile : tiles){
+        tile.DrawOutline();
+    }
 }
 
 void Map::Draw(GameState& gameState){

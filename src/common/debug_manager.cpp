@@ -59,6 +59,9 @@ void DebugManager::ShowHitboxes(GameState& gameState){
     // drawing ending point
     gameState.map.grid.DrawEndingPointHitbox();
     
+    // drawing tiles hitboxes
+    gameState.map.DrawTilesHitboxes();
+
     // triangle hitbox
     for (MyTriangle tri : gameState.map.grid.triangles){
         tri.DrawVertices();

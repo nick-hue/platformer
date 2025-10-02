@@ -38,34 +38,34 @@ void PauseMenu::InitPauseMenuButtons(GameState& gameState){
 
     pgs = &gameState;
 
-    resumeButton = MyButton{placementWidth + buttonWidth + xPadding, placementHeight, placementWidth * 3, buttonHeight, "RESUME", "", ""};
+    resumeButton = MyButton{placementWidth + buttonWidth + xPadding, placementHeight, placementWidth * 3, buttonHeight, "RESUME", -1, ""};
     resumeButton.onClick = [&] { isGamePaused = false; };
 
-    muteButton = MyButton{placementWidth, placementHeight, buttonWidth, buttonHeight, "", "#122#", ""};
+    muteButton = MyButton{placementWidth, placementHeight, buttonWidth, buttonHeight, "-", 100, ""};
     muteButton.onClick = [&] { gameState.soundManager.ToggleMute(); };
     placementHeight += yPadding;
 
-    musicControl.buttonDec = MyButton{placementWidth, placementHeight, buttonWidth, buttonHeight, "-", "", ""};
+    musicControl.buttonDec = MyButton{placementWidth, placementHeight, buttonWidth, buttonHeight, "-", -1, ""};
     musicControl.buttonDec.onClick = [&]{ gameState.soundManager.EditVolume(gameState.soundManager.background, gameState.soundManager.musicVolume, -0.05f); };
     musicControl.buttonMiddle = {placementWidth + buttonWidth + xPadding, placementHeight, placementWidth * 3, buttonHeight};
-    musicControl.buttonInc = MyButton{musicControl.buttonMiddle.x + musicControl.buttonMiddle.width + xPadding, placementHeight, buttonWidth, buttonHeight, "+", "", ""};
+    musicControl.buttonInc = MyButton{musicControl.buttonMiddle.x + musicControl.buttonMiddle.width + xPadding, placementHeight, buttonWidth, buttonHeight, "+", -1, ""};
     musicControl.buttonInc.onClick = [&]{ gameState.soundManager.EditVolume(gameState.soundManager.background, gameState.soundManager.musicVolume, +0.05f); };
 
     placementHeight += yPadding;
 
-    soundEffectsControl.buttonDec = MyButton{placementWidth, placementHeight, buttonWidth, buttonHeight, "-", "", ""};
+    soundEffectsControl.buttonDec = MyButton{placementWidth, placementHeight, buttonWidth, buttonHeight, "-", -1, ""};
     soundEffectsControl.buttonDec.onClick = [&]{ gameState.soundManager.EditVolume(gameState.soundManager.spikeBreak, gameState.soundManager.soundEffectsVolume, -0.05f);
                                           gameState.soundManager.EditVolume(gameState.soundManager.jump, gameState.soundManager.soundEffectsVolume, -0.00f);
                                           gameState.soundManager.EditVolume(gameState.soundManager.victory, gameState.soundManager.soundEffectsVolume, -0.00f);  };   
     soundEffectsControl.buttonMiddle = {placementWidth + buttonWidth + xPadding, placementHeight, placementWidth * 3, buttonHeight};
-    soundEffectsControl.buttonInc = MyButton{soundEffectsControl.buttonMiddle.x + soundEffectsControl.buttonMiddle.width + xPadding, placementHeight, buttonWidth, buttonHeight, "+", "", ""};
+    soundEffectsControl.buttonInc = MyButton{soundEffectsControl.buttonMiddle.x + soundEffectsControl.buttonMiddle.width + xPadding, placementHeight, buttonWidth, buttonHeight, "+", -1, ""};
     soundEffectsControl.buttonInc.onClick = [&]{ gameState.soundManager.EditVolume(gameState.soundManager.spikeBreak, gameState.soundManager.soundEffectsVolume, +0.05f);
                                           gameState.soundManager.EditVolume(gameState.soundManager.jump, gameState.soundManager.soundEffectsVolume, +0.0f);
                                           gameState.soundManager.EditVolume(gameState.soundManager.victory, gameState.soundManager.soundEffectsVolume, +0.0f);  }; // put 0.0 here only to increment once per click and not 3 times since we dont want 0.15f total
 
     placementHeight += yPadding;
 
-    exitButton = MyButton{placementWidth + buttonWidth + xPadding, placementHeight, placementWidth * 3, buttonHeight, "EXIT", "", ""};
+    exitButton = MyButton{placementWidth + buttonWidth + xPadding, placementHeight, placementWidth * 3, buttonHeight, "EXIT", -1, ""};
     exitButton.onClick = [&] { isGamePaused = false; gameState.shouldRun = false; };
 
     // Bind music volume

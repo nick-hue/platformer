@@ -1,11 +1,15 @@
 #include "game.h"
 
 // TODO: gravity change button
-// TODO: add moving platforms
+
 // TODO: fix bug where if death from spikes when respawning they are gone
+// TODO: object map loading
+// TODO: move platforms to map
+// TODO: bounding box collision checking
 
 void Game::Run(){
-    // pauseMenu.isGamePaused = true;
+    
+    
     while (!WindowShouldClose() && gameState.shouldRun) {
         UpdateMusicStream(gameState.soundManager.background); 
 
@@ -26,12 +30,13 @@ void Game::Run(){
 
         float dt = GetFrameTime();
         if (dt > 0.033f) dt = 0.033f;
+        gameState.dt = dt;
 
         // Update player and map
-        gameState.player.Update(dt, gameState);
-        gameState.playerSprite.UpdateAnimation(dt, gameState.player);
-        gameState.keyGoalSprite.UpdateAnimation(dt);
-        gameState.map.grid.Update(dt, gameState);
+        gameState.player.Update(gameState);
+        gameState.playerSprite.UpdateAnimation(gameState.dt, gameState.player);
+        gameState.keyGoalSprite.UpdateAnimation(gameState.dt);
+        gameState.map.grid.Update(gameState);
         gameState.gameUI.Update(gameState);
 
         BeginDrawing();
@@ -55,6 +60,7 @@ void Game::Initialize(){
     printf("GAME WIDTH: %d-%d\n", GAME_SCREEN_WIDTH, GAME_SCREEN_HEIGHT);
 
     InitWindow(GAME_SCREEN_WIDTH, GAME_SCREEN_HEIGHT, "Platformer");
+    SetWindowState(FLAG_WINDOW_RESIZABLE);
     GuiLoadStyleDefault();
     SetWindowPosition(300, 200);
     SetTargetFPS(60);

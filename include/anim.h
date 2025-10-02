@@ -5,6 +5,8 @@ enum class AnimState {
     WALK,
     UNKNOWN
 };
+//TODO: 
+//FIXME:
 
 struct Anim {
     int row;        // which row in the sheet

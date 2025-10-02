@@ -160,15 +160,17 @@ void HandleInput(){
 //TODO: make connected tiles into one bigger
 //TODO: add info label
 //TODO: drag n drop level file
+//TODO: check folder exists before exporting (if not create it)
 
 int main(void)
 {
     InitWindow(EDITOR_SCREEN_WIDTH, EDITOR_SCREEN_HEIGHT, "Level Editor");
     const char *monitor_name = GetMonitorName(0);
-    GuiLoadStyleDefault();
+
     printf("Monitor Name: %s\n", monitor_name);
     SetWindowPosition(300, 100);
     SetTargetFPS(60);              
+    GuiLoadStyleDefault();
 
     printf("GRID: %dx%d\n", GRID_WIDTH, GRID_HEIGHT);
 

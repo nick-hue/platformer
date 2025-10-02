@@ -12,7 +12,7 @@ float GetRandomFloat(float min, float max) {
     return min + static_cast<float>(rand()) / RAND_MAX * (max - min);
 }
 
-void Player::HandleInput(float dt, GameState& gameState) {
+void Player::HandleInput(GameState& gameState) {
     // Horizontal
     float dir = 0.0f;
     if (IsKeyDown(KEY_D)) dir += 1.0f;
@@ -30,11 +30,11 @@ void Player::HandleInput(float dt, GameState& gameState) {
     }
 
     // Timers tick down
-    coyoteTimer      = std::max(0.0f, coyoteTimer - dt);
-    jumpBufferTimer  = std::max(0.0f, jumpBufferTimer - dt);
+    coyoteTimer      = std::max(0.0f, coyoteTimer - gameState.dt);
+    jumpBufferTimer  = std::max(0.0f, jumpBufferTimer - gameState.dt);
 
     // Try to consume buffered jump when allowed
-    if (jumpBufferTimer > 0.0f && (onGround || coyoteTimer > 0.0f)) {
+    if (jumpBufferTimer > 0.0f && ((onGround || coyoteTimer > 0.0f) || ((onPlatform || coyoteTimer > 0.0f)))) {
         Jump();
         SetSoundPitch(gameState.soundManager.jump, GetRandomFloat(0.7f, 1.1f));
         PlaySound(gameState.soundManager.jump);
@@ -45,6 +45,8 @@ void Player::HandleInput(float dt, GameState& gameState) {
 void Player::Jump() {
     velocity.y = JUMP_VELOCITY;
     onGround = false;
+    onPlatform = false;
+    ridingPlatform = -1;          
     coyoteTimer = 0.0f;
 }
 
@@ -73,6 +75,13 @@ inline bool PointInRectInclusive(Vector2 p, const Rectangle& r) {
            (p.y >= r.y) && (p.y <= r.y + r.height);
 }
 
+inline bool RectCollidingInclusive(const Rectangle& a, const Rectangle& b) {
+    return !((a.x + a.width  < b.x) ||
+             (b.x + b.width  < a.x) ||
+             (a.y + a.height < b.y) ||
+             (b.y + b.height < a.y));
+}
+
 void Player::CheckTriangleCollisions(GameState& gameState) {
     
     for (MyTriangle tri : gameState.map.grid.triangles){
@@ -99,30 +108,47 @@ void Player::CheckWorldDeath(GameState& gameState) {
     CheckOutOfMap(gameState);
 }
 
-    // Move and collide with world
-void Player::Update(float dt, GameState& gameState) {
-    HandleInput(dt, gameState);
+int Player::GetCollidingPlatformIndex(GameState& gameState) {
+    for (int i = 0; i < (int)gameState.map.grid.platforms.size(); ++i) {
+        auto& plat = gameState.map.grid.platforms[i];
+        if (CheckCollisionRecs(rect, plat.box)) return i;
+    }
+    return -1;
+}
+// Move and collide with world
+void Player::Update(GameState& gameState) {
+    HandleInput(gameState);
 
+    
     // Gravity
-    velocity.y += GRAVITY * dt;
-
+    velocity.y += GRAVITY * gameState.dt;
+    
+    // save previous position
+    previousPosition = position;
+    
     // --- X axis move & collide ---
-    position.x += velocity.x * dt;
-    SyncRect();
-    ResolveCollisionsX(gameState.map.tiles);
-
-    // --- Y axis move & collide ---
-    position.y += velocity.y * dt;
+    position.x += velocity.x * gameState.dt;
     SyncRect();
     
-    bool wasOnGround = onGround;
-    onGround = false;
-    ResolveCollisionsY(gameState.map.tiles); // will set onGround and zero vy if landing
+    ResolveCollisionsX(gameState);
+    
+    // --- Y axis move & collide ---
+    position.y += velocity.y * gameState.dt;
+    SyncRect();
+    
+    bool wasOnGround = onGround; onGround = false;
+    bool wasOnPlatform = onPlatform; onPlatform = false;    
+    ResolveCollisionsY(gameState);
+    // printf("standing on platform %d\n", );
+
+    
+    CarryWithPlatform(gameState);
 
     ClampToScreenHorizontal(gameState.map.MAP_WIDTH);
 
-    // Start coyote time when just left the ground
-    if (wasOnGround && !onGround) {
+    bool wasSupported = wasOnGround || wasOnPlatform;
+    bool supported    = onGround    || onPlatform;
+    if (wasSupported && !supported) {
         coyoteTimer = COYOTE_TIME;
     }
 
@@ -137,19 +163,45 @@ void Player::SyncRect() { rect = { position.x, position.y, width, height }; }
 void Player::ClampToScreenHorizontal(int world_width) {
     if (position.x < 0) position.x = 0;
     if (position.x + width > world_width) position.x = world_width - width;
-    // if (position.y < 0) position.y = 0;
-    // if (position.y + height > world_height) position.y = world_height - height;
     SyncRect();
 }
 
-void Player::ResolveCollisionsX(const std::vector<Tile>& world) {
-    for (const auto& p : world) {
+void Player::ClampToScreenVertical(int world_height) {
+    if (position.y < 0) position.y = 0;
+    if (position.y + height > world_height) position.y = world_height - height;
+    SyncRect();
+}
+
+void Player::CheckTilesXCollision(std::vector<Tile>& tiles){
+    for (const auto& p : tiles) {
         if (CheckCollisionRecs(rect, p.rect)) {
             // compute penetration on X
             float playerRight = rect.x + rect.width;
             float playerLeft  = rect.x;
             float platRight   = p.rect.x + p.rect.width;
             float platLeft    = p.rect.x;
+
+            float overlapLeft  = playerRight - platLeft;   // if >0, overlapped from left
+            float overlapRight = platRight - playerLeft;   // if >0, overlapped from right
+
+            if (overlapLeft < overlapRight) {
+                rect.x -= overlapLeft;
+            } else {
+                rect.x += overlapRight;
+            }
+            position.x = rect.x;
+        }
+    }
+}
+
+void Player::CheckPlatformXCollision(std::vector<MovingPlatform>& plats){
+    for (const auto& p : plats) {
+        if (CheckCollisionRecs(rect, p.box)) {
+            // compute penetration on X
+            float playerRight = rect.x + rect.width;
+            float playerLeft  = rect.x;
+            float platRight   = p.box.x + p.box.width;
+            float platLeft    = p.box.x;
 
             float overlapLeft  = playerRight - platLeft;   // if >0, overlapped from left
             float overlapRight = platRight - playerLeft;   // if >0, overlapped from right
@@ -167,34 +219,94 @@ void Player::ResolveCollisionsX(const std::vector<Tile>& world) {
     }
 }
 
-void Player::ResolveCollisionsY(const std::vector<Tile>& world) {
-    for (const auto& p : world) {
-        if (CheckCollisionRecs(rect, p.rect)) {
-            float playerBottom = rect.y + rect.height;
-            float playerTop    = rect.y;
-            float platBottom   = p.rect.y + p.rect.height;
-            float platTop      = p.rect.y;
+void Player::ResolveCollisionsX(GameState& gameState) {
+    CheckTilesXCollision(gameState.map.tiles);
+    CheckPlatformXCollision(gameState.map.grid.platforms);
+}
 
-            float overlapTop    = playerBottom - platTop;   // landed on top
-            float overlapBottom = platBottom - playerTop;   // hit head
+void Player::CheckTilesYCollision(std::vector<Tile>& tiles){
+    for (const auto& p : tiles) {
+        if (!CheckCollisionRecs(rect, p.rect)) continue;
 
-            if (overlapTop < overlapBottom) {
-                // Landed on platform
-                rect.y -= overlapTop;
-                position.y = rect.y;
-                velocity.y = 0.0f;
-                onGround = true;
-            } else {
-                // Hit underside of platform
-                rect.y += overlapBottom;
-                position.y = rect.y;
-                if (velocity.y < 0.0f) velocity.y = 0.0f;
-            }
+        float playerBottom = rect.y + rect.height;
+        float playerTop    = rect.y;
+        float platBottom   = p.rect.y + p.rect.height;
+        float platTop      = p.rect.y;
+
+        float overlapTop    = playerBottom - platTop; // landing
+        float overlapBottom = platBottom - playerTop; // head bonk
+
+        if (overlapTop < overlapBottom) {
+            rect.y = platTop - rect.height;
+            position.y = rect.y;
+            velocity.y = 0.0f;
+            onGround = true;
+        } else {
+            rect.y = platBottom;
+            position.y = rect.y;
+            if (velocity.y < 0.0f) velocity.y = 0.0f;
         }
     }
 }
 
-// Sprite code moved to sprite.cpp
+void Player::CheckPlatformYCollision(std::vector<MovingPlatform>& plats){
+    for (int i = 0; i < (int) plats.size(); ++i) {
+        auto& plat = plats[i];
+        if (!CheckCollisionRecs(rect, plat.box)) continue;
+
+        const float prevBottom = previousPosition.y + rect.height;
+        const float prevTop    = previousPosition.y;
+        const float platTop    = plat.box.y;
+        const float platBottom = plat.box.y + plat.box.height;
+
+        // Landing from above
+        if (prevBottom <= platTop && velocity.y > 0.0f) {
+            rect.y = platTop - rect.height;
+            position.y = rect.y;
+            velocity.y = 0.0f;
+            onPlatform = true;
+            ridingPlatform = i;
+            continue;
+        }
+
+        // Bonk from below
+        if (prevTop >= platBottom && velocity.y < 0.0f) {
+            rect.y = platBottom;
+            position.y = rect.y;
+            if (velocity.y < 0.0f) velocity.y = 0.0f;
+            // not riding when under it
+            if (ridingPlatform == i) ridingPlatform = -1;
+            continue;
+        }
+    }
+}
+
+void Player::ResolveCollisionsY(GameState& gameState) {
+    // world tiles
+    CheckTilesYCollision(gameState.map.tiles);
+    // platform check 
+    CheckPlatformYCollision(gameState.map.grid.platforms);
+    
+}
+
+void Player::CarryWithPlatform(GameState& gameState) {
+    // printf("riding plat : %d\n", ridingPlatform);
+    if (ridingPlatform < 0) return;
+
+    // get platform
+    auto& plat = gameState.map.grid.platforms[ridingPlatform];
+
+    // check if player is still touching the platform
+    bool stillTouching = RectCollidingInclusive(rect, plat.box);
+    if (!stillTouching) { ridingPlatform = -1; printf("not still touching\n"); return; }
+
+    // move the player by the platform's delta
+    Vector2 delta = { plat.position.x - plat.lastPosition.x, plat.position.y - plat.lastPosition.y };
+    position.x += delta.x;
+    position.y += delta.y;
+    SyncRect();
+}
+
 void PlayerSprite::SetSprite(Texture2D tex, int cols_, int rows_) {
     sprite = tex;    // copy is fine (Texture2D is small handle)
     cols = cols_;

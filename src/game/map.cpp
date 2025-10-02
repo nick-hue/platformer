@@ -45,9 +45,6 @@ void Map::LoadMap(const char *filename){
     MAP_WIDTH   = MAP_TILE_WIDTH * TILE_WIDTH;
     MAP_HEIGHT  = MAP_TILE_HEIGHT * TILE_HEIGHT;
     
-    // printf("Tile Size: %dx%d\n", TILE_WIDTH, TILE_HEIGHT);
-    // printf("Map Tile Size: %dx%d\n", MAP_TILE_WIDTH, MAP_TILE_HEIGHT);
-    // printf("Map Size: %dx%d\n", MAP_WIDTH, MAP_HEIGHT);
 
     grid.Clear();
 
@@ -102,6 +99,7 @@ void Map::LoadMap(const char *filename){
     }
 
     CellToTiles();
+    LoadPlatforms();
 }
 
 TileType Map::GetTypeForTile(int i, int j){
@@ -132,9 +130,16 @@ void Map::CellToTiles() {
     }
 }
 
+void Map::LoadPlatforms(){
+    MovingPlatform platform = MovingPlatform{Vector2{100.0f, 250.0f}, Vector2{200.0f, 0.0f}, (int) grid.platforms.size() + 1};
+    grid.platforms.emplace_back(platform);
+    platform = MovingPlatform{Vector2{400.0f, 100.0f}, Vector2{0.0f, 200.0f}, (int) grid.platforms.size() + 1};
+    grid.platforms.emplace_back(platform);
+} 
+
 void Map::DrawEndPoint() {
-    DrawRectangleV(grid.endingPoint, {(float)TILE_WIDTH, (float)TILE_HEIGHT}, GREEN);
-    DrawRectangleLinesEx({grid.endingPoint.x, grid.endingPoint.y, (float)TILE_WIDTH, (float)TILE_HEIGHT}, 2.0f, BLACK);
+    DrawRectangleV(Vector2{ grid.endingPoint.x * TILE_WIDTH, grid.endingPoint.y * TILE_WIDTH}, {(float)TILE_WIDTH, (float)TILE_HEIGHT}, GREEN);
+    DrawRectangleLinesEx({grid.endingPoint.x * TILE_WIDTH , grid.endingPoint.y * TILE_WIDTH, (float)TILE_WIDTH, (float)TILE_HEIGHT}, 2.0f, BLACK);
 }
 
 void Map::DrawBackground(GameState& gameState){
@@ -152,6 +157,11 @@ void Map::Draw(GameState& gameState){
     for (MyTriangle tri : grid.triangles) {
         tri.Draw();
     }
+    
+    for (MovingPlatform plat : grid.platforms) {
+        plat.Draw();
+    }
+
 }
 
 void Map::ReloadMap(GameState& gameState) {

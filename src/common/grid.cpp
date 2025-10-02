@@ -62,7 +62,7 @@ void Grid::DrawEditor() {
             matrix[i][j].Draw();
         }
     }
-
+    
     if (startingPoint.x != -1.0f && startingPoint.y != -1.0f) {
         DrawStartingPoint();
     }
@@ -74,6 +74,8 @@ void Grid::DrawEditor() {
     for (MyTriangle tri : triangles) {
         tri.DrawEditor();
     }
+                
+
 }
 
 void Grid::ShowSelectedCell() {
@@ -344,8 +346,7 @@ bool IsPlayerBelowDownSpike(const Rectangle& player, const MyTriangle& tri) {
     && (player.y > tri.position.y);
 }
 
-void Grid::Update(float dt, GameState& gameState) {
-    // move spikes that are falling
+void Grid::UpdateTriangles(GameState& gameState){
     for (MyTriangle& tri : triangles) {
         if (tri.mode == gameState.movingSpikeMode) {
             if (!tri.falling && IsPlayerBelowDownSpike(gameState.player.rect, tri)) {
@@ -353,8 +354,8 @@ void Grid::Update(float dt, GameState& gameState) {
                 tri.velocityY = 0.0f;
             }
             if (tri.falling) {
-                tri.velocityY += GRAVITY * dt;
-                tri.position.y += tri.velocityY * dt;
+                tri.velocityY += GRAVITY * gameState.dt;
+                tri.position.y += tri.velocityY * gameState.dt;
                 tri.UpdateGeometry();
             }
         }
@@ -609,4 +610,17 @@ void Grid::SyncFromPixelPositions() {
 
     startingPointRect = { startingPoint.x, startingPoint.y, (float)CELL_SIZE, (float)CELL_SIZE };
     endingPointRect   = { endingPoint.x,   endingPoint.y,   (float)CELL_SIZE, (float)CELL_SIZE };
+}
+
+void Grid::UpdatePlatforms(GameState& gameState){
+    for (MovingPlatform& platform : platforms){
+        platform.Update(gameState);
+    }
+}
+
+void Grid::Update(GameState& gameState) {
+    // move spikes that are falling
+    UpdateTriangles(gameState);
+    // move platforms
+    UpdatePlatforms(gameState);
 }

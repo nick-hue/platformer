@@ -9,7 +9,7 @@ public:
     Rectangle box{};
     std::string text{};
     std::function<void()> onClick;
-    std::string iconId{};
+    int icon{};
     std::string selectLetter{};
     std::string displayText{};
     int fontSize{32};
@@ -19,7 +19,7 @@ public:
     int oldNormal  = GuiGetStyle(BUTTON, BASE_COLOR_NORMAL);
 
     MyButton();
-    MyButton(float x, float y, float width, float height, const char* text, const char* iconId, const char* selectLetter);
+    MyButton(float x, float y, float width, float height, const char* text, int icon, const char* selectLetter);
     int Draw();
     int Draw(bool value);
 };

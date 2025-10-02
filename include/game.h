@@ -38,6 +38,7 @@ public:
     TriangleMode movingSpikeMode{TriangleMode::DOWN};
     bool         shouldRun{true};
     int          levelIndex{1};
+    float        dt; // deltaTime between frames
 
     GameState()
     : player()

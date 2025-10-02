@@ -4,6 +4,7 @@
 #include <vector>
 #include <algorithm>
 #include "anim.h"
+#include "moving_platform.h"
 
 constexpr float GRAVITY          = 2000.0f;   // px/s^2
 constexpr float JUMP_VELOCITY    = -700.0f;   // px/s
@@ -24,27 +25,35 @@ public:
     Color color{MAROON};
 
     bool onGround{false};
+    bool onPlatform{false};
+    int ridingPlatform; // platform the user is currently riding (-1 if none)
     float coyoteTimer{0.0f};
     float jumpBufferTimer{0.0f};
 
     Player() = default;
     Player(float x, float y, float w, float h, Color c);
 
-    void HandleInput(float dt, GameState& gameState);
+    void HandleInput(GameState& gameState);
     void Jump();
 
     // Move and collide with world
-    void Update(float dt, GameState& gameState);
-
-    void CheckWin(GameState& gameState);
+    void Update(GameState& gameState);
 
     void DrawHitBox() const;
     void SyncRect();
     void ClampToScreenHorizontal(int world_width);
-
+    void ClampToScreenVertical(int world_height);
+    
 private:
-    void ResolveCollisionsX(const std::vector<Tile>& world);
-    void ResolveCollisionsY(const std::vector<Tile>& world);
+    void CheckWin(GameState& gameState);
+    int GetCollidingPlatformIndex(GameState& gameState);
+    void CarryWithPlatform(GameState& gameState);
+    void ResolveCollisionsX(GameState& gameState);
+    void CheckTilesXCollision(std::vector<Tile>& tiles);
+    void CheckPlatformXCollision(std::vector<MovingPlatform>& plats);
+    void ResolveCollisionsY(GameState& gameState);
+    void CheckTilesYCollision(std::vector<Tile>& tiles);
+    void CheckPlatformYCollision(std::vector<MovingPlatform>& plats);
     void CheckWorldDeath(GameState& gameState);
     void CheckTriangleCollisions(GameState& gameState);
     void CheckOutOfMap(GameState& gameState);

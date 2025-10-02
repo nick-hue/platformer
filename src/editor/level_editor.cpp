@@ -160,6 +160,7 @@ void HandleInput(){
 //TODO: make connected tiles into one bigger
 //TODO: add info label
 //TODO: drag n drop level file
+//TODO: check folder exists before exporting (if not create it)
 
 int main(void)
 {

@@ -1,6 +1,6 @@
 #include "grid.h"
-#include "game.h"   // or whichever header DEFINES GameState
-
+#include "game.h"   
+#include <cstdint>
 Grid::Grid() {
     Clear();
 }

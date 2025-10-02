@@ -28,6 +28,7 @@ void Grid::Clear()
     }
     triangles.clear();
     triangleSpots.clear();
+    platforms.clear();
 
     startingPointGridPos = {-1, -1};
     endingPointGridPos   = {-1, -1};

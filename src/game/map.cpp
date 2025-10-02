@@ -6,8 +6,8 @@ Map::Map(){
 }
 
 Map::Map(const char *filename){
-    // LoadMap(filename);
-    LoadMapBinary(filename);
+    LoadMap(filename);
+    // LoadMapBinary(filename);
 }
 
 void Map::LoadMap(const char *filename){

@@ -80,9 +80,12 @@ void Game::Initialize(){
     gameState.textureHandler.LoadTextures();
     gameState.textureHandler.SetupTextures(gameState);
     gameState.soundManager.LoadSounds();
+    // gameState.map.box.width = gameState.map.grid.left.texture.width + gameState.map.grid.mid.texture.width * gameState.map.grid.length + gameState.map.grid.right.texture.width;
+    // gameState.map.box.height = gameState.map.grid.left.texture.height;
 
     PlayMusicStream(gameState.soundManager.background);
 }
+
 
 void Game::Shutdown(){
     gameState.textureHandler.UnloadTextures();

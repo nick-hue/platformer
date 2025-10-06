@@ -44,7 +44,6 @@ public:
 class PlatformSprite : public ItemSprite
 {
 public:
-    // PlatformTextures textures;
     ItemSprite left;
     ItemSprite mid;
     ItemSprite right;

@@ -34,7 +34,11 @@ public:
 
     void Update(GameState& gameState);
     void Draw() const ;
+    void DrawOutline() const ;
     void SyncRect() { box.x = position.x; box.y = position.y; };
+    void SyncAnimation() {sprite.left.position = position;
+                          sprite.mid.position = Vector2{sprite.left.position.x + sprite.left.texture.width, sprite.left.position.y}; 
+                          sprite.right.position = Vector2{sprite.left.position.x + sprite.left.texture.width + sprite.mid.texture.width * length , sprite.left.position.y}; }
     void Move(GameState& gameState);
     inline std::string ToString(const MovingPlatform& plat);
 };

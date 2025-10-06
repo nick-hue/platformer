@@ -6,8 +6,12 @@ MovingPlatform::MovingPlatform(Vector2 start_pos, Vector2 movement, int plat_len
     position = Vector2{start_pos.x * tileSize, start_pos.y * tileSize};
     lastPosition = position;
     length = plat_length;
+    
+    
     tileSize = tile_size;
     box = Rectangle{position.x, position.y, (float) length * tileSize, (float) tileSize};
+    
+    printf("box width %f height %f\n", box.width, box.height);
     movementBounds = Vector4{position.x, position.x + movement.x * tileSize, position.y, position.y + movement.y * tileSize};
     id = plat_id;
     if (movementBounds.x == movementBounds.y)
@@ -16,11 +20,16 @@ MovingPlatform::MovingPlatform(Vector2 start_pos, Vector2 movement, int plat_len
         velocity.y = 0.0f;
 }
 
+void MovingPlatform::DrawOutline() const {
+    DrawRectangleLinesEx(box, 2.0f, outlineColor);
+}
+
 void MovingPlatform::Draw() const {
     sprite.Draw(length);
-    
-    DrawRectangleRec(box, color);
-    // DrawRectangleLinesEx(box, 1.0f, outlineColor);
+    // printf("left %f-%f\n", sprite.left.position.x, sprite.left.position.y);
+    // printf("mid %f-%f\n", sprite.mid.position.x, sprite.mid.position.y);
+    // printf("right %f-%f\n", sprite.right.position.x, sprite.right.position.y);
+    // printf("box %f-%f-%f-%f\n", box.x, box.y, box.width, box.height);
 }
 
 static inline void GetMovementDirection(Vector2 pos, const Vector4& bounds, Vector2& dir){  
@@ -32,10 +41,8 @@ static inline void GetMovementDirection(Vector2 pos, const Vector4& bounds, Vect
 }
 
 void MovingPlatform::Move(GameState& gameState){
-    // printf("Moving...\n");
     
     GetMovementDirection(position, movementBounds, movementDirection);
-    // printf("movement dir : %f-%f\n", movementDirection.x, movementDirection.y);
 
     lastPosition.x = position.x;
     lastPosition.y = position.y;
@@ -46,9 +53,10 @@ void MovingPlatform::Move(GameState& gameState){
 void MovingPlatform::Update(GameState& gameState){
     Move(gameState);
     SyncRect();
+    SyncAnimation();
 }
 
-inline std::string ToString(const MovingPlatform& plat){
+inline std::string MovingPlatform::ToString(const MovingPlatform& plat){
     std::ostringstream ss;
     ss << "MovingPlatform { "
     << "id=" << plat.id

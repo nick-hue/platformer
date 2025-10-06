@@ -126,6 +126,8 @@ void TextureHandler::SetupPlatformTextures(GameState& gameState){
     for (auto& plat : gameState.map.grid.platforms){
         printf("Setting up platform : %d\n", plat.id);
         plat.sprite.SetSprite(platform.left, platform.mid, platform.right, plat.position, plat.length);
+        plat.box.width = plat.sprite.left.texture.width + plat.sprite.mid.texture.width * plat.length + plat.sprite.right.texture.width;
+        plat.box.height = plat.sprite.left.texture.height;
     }
 
 }

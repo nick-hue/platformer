@@ -92,6 +92,7 @@ void PlatformSprite::SetSprite(Texture2D& tex_left, Texture2D& tex_mid, Texture2
     animTimer = 0.0f;
     scale = 1.0f;  
     texture = {};
+
 }
 
 void PlatformSprite::DrawMiddle(int length) const {
@@ -99,7 +100,7 @@ void PlatformSprite::DrawMiddle(int length) const {
         DrawRectangle(100, 100, 32, 32, BLUE);
         return;
     }
-    printf("width : %d - height : %d\n", mid.texture.width, mid.texture.height);
+
     Rectangle src{
         (float)(currentFrame * mid.texture.width),
         (float)(idle.row * mid.texture.height),

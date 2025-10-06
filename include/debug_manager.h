@@ -20,5 +20,5 @@ public:
     void Show(GameState& gameState); // Game
     void ShowMenu(GameState& gameState);
     void ShowHitboxes(GameState& gameState);
-    void ShowPlatformNumbers(GameState& gameState);
+    void ShowPlatformDebug(GameState& gameState);
 };

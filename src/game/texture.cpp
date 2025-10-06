@@ -47,9 +47,9 @@ void TextureHandler::UnloadTextures() {
 
 void TextureHandler::SetupPlayerTexture(GameState& gameState){
     gameState.playerSprite.SetSprite(player, 8, 2);
-    gameState.playerSprite.idle = Anim{0, 0, 4, 60.f};   // row 0, cols [0..3]
+    gameState.playerSprite.idle = Anim{0, 0, 4, 6.f};   // row 0, cols [0..3]
     gameState.playerSprite.scale = 1.4f;
-    gameState.playerSprite.walk = Anim{1, 0, 8, 60.f};  // row 1, cols [0..8]
+    gameState.playerSprite.walk = Anim{1, 0, 8, 6.f};  // row 1, cols [0..8]
 }
 
 void TextureHandler::SetupKeyGoalTexture(GameState& gameState){
@@ -71,7 +71,7 @@ void TextureHandler::SetupSpikeTextures(GameState& gameState) {
     for (MyTriangle& tri : gameState.map.grid.triangles) {
         tri.sprite.SetSprite(spike, tri.position, 4, 1);
         tri.sprite.idle = Anim{0, 0, 1, 12.f};
-        tri.sprite.scale = 2.0f;
+        tri.sprite.scale = 1.0f;
         switch (tri.mode)
         {
             case TriangleMode::UP:      tri.spriteCol = 0; break;

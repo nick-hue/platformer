@@ -10,10 +10,7 @@ DebugManager::DebugManager() {
 
 void DebugManager::GetMenuColor() {
     Vector2 mouse_pos = GetMousePosition();
-    if (CheckCollisionPointRec(mouse_pos, box))
-        currentColor = Fade(mainColor, 0.5f);
-    else
-        currentColor = mainColor;
+    currentColor = CheckCollisionPointRec(mouse_pos, box) ? Fade(mainColor, 0.5f) : mainColor;
 }
 
 void DebugManager::Draw() {

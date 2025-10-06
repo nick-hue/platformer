@@ -47,7 +47,7 @@ void ItemSprite::Draw(int col) const {
     }
 
     Rectangle src{
-        (float)((currentFrame + col) * frameWidth),
+        (float)(col * frameWidth),
         (float)(idle.row * frameHeight),
         (float)frameWidth,
         (float)frameHeight

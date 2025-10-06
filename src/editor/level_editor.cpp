@@ -161,6 +161,9 @@ void HandleInput(){
 //TODO: add info label
 //TODO: drag n drop level file
 //TODO: check folder exists before exporting (if not create it)
+//TODO: make bucker/insert check if triangle is there
+//TODO: make main file to run level editor
+//FIXME: make import work
 
 int main(void)
 {

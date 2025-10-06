@@ -79,7 +79,7 @@ public:
     // Draw the panel
     void Draw(ActionMode actionMode, TriangleMode triMode);
     // Handle the behavior of the clear grid pop up box
-    void HandleClearMessageBox();
+    void HandleMessageBoxes();
     // Handle the behavior of the filepath text boxes
     void HandleFilePathTextBoxes();
 

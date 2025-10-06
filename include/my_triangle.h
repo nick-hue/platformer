@@ -20,7 +20,7 @@ public:
     
     std::array<Vector2,3> vertices{ Vector2{0,0}, Vector2{0,0}, Vector2{0,0} };
     
-    MyTriangle(int gridPosX,int gridPosY, Color c, TriangleMode mode);
+    MyTriangle(int gridPosX, int gridPosY, Color c, TriangleMode mode);
     
     // Draw Cell
     void Draw() const ;

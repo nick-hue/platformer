@@ -1,6 +1,11 @@
 #include "info_screen.h"
 
-InfoScreen::InfoScreen(ActionMode& actionModeRef, TriangleMode& triangleModeRef, std::string& exportedMapNameRef, std::string& importedMapNameRef, Grid& gridRef) : actionMode(actionModeRef), triangleMode(triangleModeRef), exportedMapName(exportedMapNameRef), importedMapName(importedMapNameRef), grid(gridRef) {
+InfoScreen::InfoScreen(ActionMode& actionModeRef, TriangleMode& triangleModeRef, std::string& exportedMapNameRef, std::string& importedMapNameRef, Grid& gridRef)
+    :   actionMode(actionModeRef), 
+        triangleMode(triangleModeRef), 
+        exportedMapName(exportedMapNameRef), 
+        importedMapName(importedMapNameRef), 
+        grid(gridRef) {
     // use floats to avoid narrowing
     box = { (float)EDITOR_WIDTH, 0.0f, (float)GUI_WIDTH, (float)GUI_HEIGHT};
     mainColor = LIGHTGRAY;
@@ -15,6 +20,10 @@ InfoScreen::InfoScreen(ActionMode& actionModeRef, TriangleMode& triangleModeRef,
     MakeButtons();
 }
 
+/**
+ * @brief
+ * Initializes buttons on the info screen
+ */
 void InfoScreen::MakeButtons(){
     float height_placement = 100.0f;
 
@@ -117,7 +126,7 @@ void InfoScreen::DrawWidgets(){
    DrawTextBoxes();   
 }
 
-void InfoScreen::HandleClearMessageBox(){
+void InfoScreen::HandleMessageBoxes(){
     if (showClearGridMessageBox){
         int result = GuiMessageBox(messageBox, "#191#Clear Grid", "Are you sure you want to clear the grid?", "No;Yes");
         // printf("result = %d\n", result);
@@ -158,8 +167,8 @@ void InfoScreen::HandleClearMessageBox(){
             return;
         } else if (result == 2) {
             printf("Exporting map...\n");
-            // grid.ExportMap(exportedMapName.c_str());
-            grid.SaveBinary(exportedMapName.c_str());
+            grid.ExportMap(exportedMapName.c_str());
+            // grid.SaveBinary(exportedMapName.c_str());
             showExportMessageBox = false;
         }
     }
@@ -210,7 +219,7 @@ void InfoScreen::Draw(ActionMode mode, TriangleMode triMode) {
     DrawBase(mode, triMode);
     DrawWidgets();
 
-    HandleClearMessageBox();
+    HandleMessageBoxes();
     HandleFilePathTextBoxes();
 
 }

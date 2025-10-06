@@ -6,7 +6,7 @@ class GameState;
 
 class PauseButtonController{    
 public:
-    MyButton buttonDec;
+    MyButton buttonDec;                 // button that decrements 
     Rectangle buttonMiddle;
     int middleTextFontSize{24};
     MyButton buttonInc;

@@ -22,7 +22,7 @@ void GameUI::Draw(GameState& gameState) {
     DrawHearts(gameState);
 }
 
-void GameUI::Update(GameState& gameState) {
+void GameUI::UpdateBackground(GameState& gameState){
     wrapW = gameState.textureHandler.background.width * bgScale;
     float dx = gameState.player.position.x - gameState.player.previousPosition.x;
     gameState.player.previousPosition = gameState.player.position;
@@ -30,4 +30,9 @@ void GameUI::Update(GameState& gameState) {
     scrollBack -= dx * backgroundSlowdown;
     if (scrollBack <= -wrapW) scrollBack += wrapW;
     if (scrollBack >= 0.0f)    scrollBack -= wrapW; // handle moving right too
+}
+
+void GameUI::Update(GameState& gameState) {
+    UpdateBackground(gameState);
+    
 }

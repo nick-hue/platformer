@@ -31,7 +31,8 @@ void MovingPlatform::Move(GameState& gameState){
     GetMovementDirection(position, movementBounds, movementDirection);
     // printf("movement dir : %f-%f\n", movementDirection.x, movementDirection.y);
 
-    lastPosition = position;
+    lastPosition.x = position.x;
+    lastPosition.y = position.y;
     position.x += velocity.x * movementDirection.x * gameState.dt;    
     position.y += velocity.y * movementDirection.y * gameState.dt;    
 }

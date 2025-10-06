@@ -31,6 +31,7 @@ int MyButton::Draw() {
     return 0;
 }
 
+// volume button
 int MyButton::Draw(bool value) {
 
     if (value) {
@@ -41,6 +42,7 @@ int MyButton::Draw(bool value) {
         if (onClick) onClick();
         return 1;
     }
+    
     GuiSetStyle(BUTTON, BASE_COLOR_NORMAL, oldNormal);
 
     return 0;

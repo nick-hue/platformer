@@ -2,15 +2,24 @@
 
 // TODO: gravity change button
 
-// TODO: fix bug where if death from spikes when respawning they are gone
+// FIXME: bug where if death from spikes when respawning they are gone
 // TODO: object map loading
 // TODO: move platforms to map
 // TODO: bounding box collision checking
+// TODO: vertical moving platforms
+// TODO: inheritance sprite drawing
+// TODO: make utils file
 
 void Game::Run(){    
     while (gameState.shouldRun) {
         if (WindowShouldClose()) { gameState.shouldRun = false; continue; };
 
+        if (gameState.currentLives <= 0) {
+            printf("Game Over! You've run out of lives.\n");
+            // go to losing screen
+            gameState.shouldRun = false;
+        }
+        
         UpdateMusicStream(gameState.soundManager.background); 
 
         if (IsKeyReleased(KEY_P)) pauseMenu.isGamePaused = !pauseMenu.isGamePaused;            
@@ -20,12 +29,6 @@ void Game::Run(){
         if (IsKeyDown(KEY_LEFT_CONTROL) && IsKeyPressed(KEY_R)) {
             printf("Reloading level: %s\n", gameState.currLevelFilename.c_str());
             gameState.map.ReloadMap(gameState);
-        }
-
-        if (gameState.currentLives <= 0) {
-            printf("Game Over! You've run out of lives.\n");
-            // go to losing screen
-            gameState.shouldRun = false;
         }
 
         float dt = GetFrameTime();
@@ -55,8 +58,8 @@ void Game::Run(){
 }
 
 void Game::Initialize(){
-    srand(static_cast<unsigned>(time(nullptr))); // seed once
-    
+    // gameState.seed = rand
+
     printf("GAME WIDTH: %d-%d\n", GAME_SCREEN_WIDTH, GAME_SCREEN_HEIGHT);
 
     InitWindow(GAME_SCREEN_WIDTH, GAME_SCREEN_HEIGHT, "Platformer");

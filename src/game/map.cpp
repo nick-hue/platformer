@@ -11,6 +11,8 @@ Map::Map(const char *filename){
 }
 
 void Map::LoadMap(const char *filename){
+    srand(static_cast<unsigned>(1)); // seed once
+
     std::string fullpath = grid.baseMapFilePath + filename;
 
     printf("Loading map from %s\n", fullpath.c_str());

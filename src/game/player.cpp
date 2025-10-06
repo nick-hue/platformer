@@ -302,6 +302,7 @@ void Player::CarryWithPlatform(GameState& gameState) {
     Vector2 delta = { plat.position.x - plat.lastPosition.x, plat.position.y - plat.lastPosition.y };
     position.x += delta.x;
     position.y += delta.y;
+    printf("delta y : %f\n", delta.y);
     SyncRect();
 }
 
@@ -327,6 +328,7 @@ void PlayerSprite::UpdateAnimation(float dt, Player& player) {
     if (player.velocity.x < -1.0f) facingRight = false;
 
     Anim& anim = CurrentAnim();
+    printf("current anim : %s\n", (anim.frames == 4) ? "idle" : "walk");
     animTimer += dt;
     const float spf = 1.0f / animFPS;   // seconds per frame
     while (animTimer >= spf) {

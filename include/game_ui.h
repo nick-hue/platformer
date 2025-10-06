@@ -11,8 +11,11 @@ class GameState;
 
 class GameUI {
 public:
+    // hearts
     Vector2 heartPosition{50.0f, 100.0f};
     std::array<Heart, 3> hearts;
+
+    //background
     float wrapW{0.0f};
     float scrollBack{0.0f};
     const float bgScale = 0.75f;     
@@ -24,6 +27,7 @@ public:
     GameUI(Vector2 position, int maxLives);
 
     void Update(GameState& gameState);
+    void UpdateBackground(GameState& gameState);
     void Draw(GameState& gameState);
     void DrawHearts(GameState& gameState);
 };

@@ -25,14 +25,16 @@ public:
     int width  = GRID_WIDTH;
     int height = GRID_HEIGHT;
     Cell matrix[GRID_WIDTH][GRID_HEIGHT];
-    std::string baseMapFilePath = "assets/maps/custom/";
+    std::string baseMapFilePath = "assets/maps/custom/"; //TODO: move to map
     
+    //TODO: remove triangle sports implementation
     std::vector<MyTriangle> triangles;
     std::vector<Vector2> triangleSpots;
     std::vector<const MyTriangle*> downs;
 
     std::vector<MovingPlatform> platforms;
 
+    // TODO: make struct
     Vector2 startingPoint{-1.0f,-1.0f};
     std::pair<int, int> startingPointGridPos{-1, -1};
     Rectangle startingPointRect{0.0f, 0.0f, 30.0f, 30.f};

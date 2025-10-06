@@ -7,7 +7,7 @@ void TextureHandler::LoadTextures() {
     background = LoadTexture("assets/resources/background.png");
     if (background.id == 0) { TraceLog(LOG_ERROR, "Failed to load background texture"); }
 
-    player = LoadTexture("assets/sprites/characters/Soldier/Soldier/Soldier.png");
+    player = LoadTexture("assets/sprites/characters/penguin.png");
     if (player.id == 0) { TraceLog(LOG_ERROR, "Failed to load player texture"); }
 
     keyGoal = LoadTexture("assets/sprites/items/key/goal_key.png");
@@ -42,9 +42,10 @@ void TextureHandler::UnloadTextures() {
 }
 
 void TextureHandler::SetupPlayerTexture(GameState& gameState){
-    gameState.playerSprite.SetSprite(player, 9, 7);
-    gameState.playerSprite.idle = Anim{0, 0, 6, 12.f};   // row 0, cols [0..3]
-    gameState.playerSprite.walk = Anim{1, 0, 8, 12.f};  // row 1, cols [0..8]
+    gameState.playerSprite.SetSprite(player, 8, 2);
+    gameState.playerSprite.idle = Anim{0, 0, 4, 60.f};   // row 0, cols [0..3]
+    gameState.playerSprite.scale = 1.3f;
+    gameState.playerSprite.walk = Anim{1, 0, 8, 60.f};  // row 1, cols [0..8]
 }
 
 void TextureHandler::SetupKeyGoalTexture(GameState& gameState){

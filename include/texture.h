@@ -13,6 +13,8 @@ public:
     Texture2D floor;
     Texture2D ground;
 
+    std::vector<Texture2D> textures;
+
     TextureHandler() = default;
     void LoadTextures();
     void UnloadTextures();

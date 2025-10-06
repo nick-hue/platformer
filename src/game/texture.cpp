@@ -6,24 +6,31 @@
 void TextureHandler::LoadTextures() {
     background = LoadTexture("assets/resources/background.png");
     if (background.id == 0) { TraceLog(LOG_ERROR, "Failed to load background texture"); }
+    textures.emplace_back(background);
 
     player = LoadTexture("assets/sprites/characters/penguin.png");
     if (player.id == 0) { TraceLog(LOG_ERROR, "Failed to load player texture"); }
+    textures.emplace_back(player);
 
     keyGoal = LoadTexture("assets/sprites/world/items/key/goal_key.png");
     if (keyGoal.id == 0) { TraceLog(LOG_ERROR, "Failed to load key goal texture"); }
+    textures.emplace_back(keyGoal);
 
     heart = LoadTexture("assets/sprites/ui/heart/heart_32x32.png");
     if (heart.id == 0) { TraceLog(LOG_ERROR, "Failed to load heart texture"); }
+    textures.emplace_back(heart);
 
     spike = LoadTexture("assets/sprites/world/items/spike/spikes.png");
     if (spike.id == 0) { TraceLog(LOG_ERROR, "Failed to load spike texture"); }
+    textures.emplace_back(spike);
 
     floor = LoadTexture("assets/resources/world_tileset.png");
     if (floor.id == 0) { TraceLog(LOG_ERROR, "Failed to load floor texture"); }
+    textures.emplace_back(floor);
 
     ground = LoadTexture("assets/sprites/world/ground-Sheet.png");
     if (ground.id == 0) { TraceLog(LOG_ERROR, "Failed to load floor texture"); }
+    textures.emplace_back(ground);
 
 }
 
@@ -36,13 +43,9 @@ void TextureHandler::SetupTextures(GameState& gameState) {
 }
 
 void TextureHandler::UnloadTextures() {
-    if (background.id != 0) UnloadTexture(background);
-    if (player.id != 0) UnloadTexture(player);
-    if (keyGoal.id != 0) UnloadTexture(keyGoal);
-    if (heart.id != 0) UnloadTexture(heart);
-    if (spike.id != 0) UnloadTexture(spike);
-    if (floor.id != 0) UnloadTexture(floor);
-    if (ground.id != 0) UnloadTexture(floor);
+    for (auto& tex : textures){
+        if (tex.id != 0) UnloadTexture(tex);    
+    };
 }
 
 void TextureHandler::SetupPlayerTexture(GameState& gameState){

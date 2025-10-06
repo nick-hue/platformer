@@ -307,11 +307,11 @@ void Player::CarryWithPlatform(GameState& gameState) {
 }
 
 void PlayerSprite::SetSprite(Texture2D tex, int cols_, int rows_) {
-    sprite = tex;    // copy is fine (Texture2D is small handle)
+    texture = tex;    // copy is fine (Texture2D is small handle)
     cols = cols_;
     rows = rows_;
-    frameWidth = sprite.width  / cols;
-    frameHeight = sprite.height / rows;
+    frameWidth = texture.width  / cols;
+    frameHeight = texture.height / rows;
     currentFrame = 0;
     animTimer = 0.0f;
 }
@@ -338,7 +338,7 @@ void PlayerSprite::UpdateAnimation(float dt, Player& player) {
 }
 
 void PlayerSprite::Draw(Player& player) const {
-    if (sprite.id == 0) {                 // fallback if no texture yet
+    if (texture.id == 0) {                 // fallback if no texture yet
         DrawRectangleRec(player.rect, player.color);
         return;
     }
@@ -346,7 +346,7 @@ void PlayerSprite::Draw(Player& player) const {
     // Determine which row to use based on state
     int row = (std::abs(player.velocity.x) > 2.0f) ? walk.row : idle.row;
     
-    // Get the rectangle to draw from the sprite sheet
+    // Get the rectangle to draw from the texture sheet
     Rectangle src{
         (float)(currentFrame * frameWidth),
         (float)(row   * frameHeight),
@@ -366,5 +366,5 @@ void PlayerSprite::Draw(Player& player) const {
     dst.y = player.rect.y - (dst.height - player.rect.height) * 0.47f;
 
     Vector2 origin = { 0, 0 };
-    DrawTexturePro(sprite, src, dst, origin, 0.0f, WHITE);
+    DrawTexturePro(texture, src, dst, origin, 0.0f, WHITE);
 }

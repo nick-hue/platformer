@@ -3,6 +3,12 @@
 #include "tile.h"
 class GameState;
 
+struct PlatformTextures {
+    Texture2D left;
+    Texture2D mid;
+    Texture2D right;
+};
+
 class TextureHandler {
 public:
     Texture2D background;
@@ -12,6 +18,8 @@ public:
     Texture2D spike;
     Texture2D floor;
     Texture2D ground;
+    PlatformTextures platform;
+    
 
     std::vector<Texture2D> textures;
 
@@ -25,4 +33,6 @@ public:
     void SetupHeartTextures(GameState& gameState);
     void SetupSpikeTextures(GameState& gameState);
     void SetupFloorTileTextures(GameState& gameState);
+    void SetupPlatformTextures(GameState& gameState);
+    void SetPlatformTexture(ItemSprite& sprite, int index);
 };

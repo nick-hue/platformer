@@ -1,12 +1,12 @@
 #include "item_sprite.h"
 
 void ItemSprite::SetSprite(Texture2D tex, Vector2 pos, int cols_, int rows_) {
-    sprite = tex;
+    texture = tex;
     position = pos;
     cols = cols_;
     rows = rows_;
-    frameWidth = sprite.width  / cols;
-    frameHeight = sprite.height / rows;
+    frameWidth = texture.width  / cols;
+    frameHeight = texture.height / rows;
     currentFrame = 0;
     animTimer = 0.0f;
     scale = 1.0f;    
@@ -22,8 +22,9 @@ void ItemSprite::UpdateAnimation(float dt) {
 }
 
 void ItemSprite::Draw() const {
-    if (sprite.id == 0) {  // fallback if no texture yet
+    if (texture.id == 0) {  // fallback if no texture yet
         DrawRectangle(100, 100, 32, 32, BLUE);
+        // printf("HERE\n");
         return;
     }
 
@@ -37,11 +38,11 @@ void ItemSprite::Draw() const {
     Rectangle dst = { position.x, position.y, frameWidth * scale, frameHeight * scale };
     
     Vector2 origin = {0.0f, 0.0f};       // Top-left origin
-    DrawTexturePro(sprite, src, dst, origin, 0.0f, WHITE);
+    DrawTexturePro(texture, src, dst, origin, 0.0f, WHITE);
 }
 
 void ItemSprite::Draw(int col) const {
-    if (sprite.id == 0) {  // fallback if no texture yet
+    if (texture.id == 0) {  // fallback if no texture yet
         DrawRectangle(position.x, position.y, 32, 32, RED);
         return;
     }
@@ -56,11 +57,11 @@ void ItemSprite::Draw(int col) const {
     Rectangle dst = { position.x, position.y, frameWidth * scale, frameHeight * scale };
     
     Vector2 origin = {0.0f, 0.0f};       // Top-left origin
-    DrawTexturePro(sprite, src, dst, origin, 0.0f, WHITE);
+    DrawTexturePro(texture, src, dst, origin, 0.0f, WHITE);
 }
 
 void ItemSprite::Draw(std::pair<int,int> location) const{
-    if (sprite.id == 0) {  // fallback if no texture yet
+    if (texture.id == 0) {  // fallback if no texture yet
         DrawRectangle(position.x, position.y, 32, 32, BLUE);
         return;
     }
@@ -75,5 +76,32 @@ void ItemSprite::Draw(std::pair<int,int> location) const{
     Rectangle dst = { position.x, position.y, frameWidth * scale, frameHeight * scale };
     
     Vector2 origin = {0.0f, 0.0f};       // Top-left origin
-    DrawTexturePro(sprite, src, dst, origin, 0.0f, WHITE);
+    DrawTexturePro(texture, src, dst, origin, 0.0f, WHITE);
+}
+
+void ItemSprite::Draw(bool meow, int length, ItemSprite sprite) const {
+    if (!meow) return; //bullshit have to refactor sprite drawing
+    
+    if (texture.id == 0) {  // fallback if no texture yet
+        DrawRectangle(100, 100, 32, 32, BLUE);
+        // printf("HERE\n");
+        return;
+    }
+
+    Rectangle src{
+        (float)(currentFrame * frameWidth),
+        (float)(idle.row * frameHeight),
+        (float)frameWidth,
+        (float)frameHeight
+    };
+    Rectangle dst;
+    if (sprite.texture.id == 10) {
+        dst = { position.x, position.y, frameWidth * scale * length, frameHeight * scale };
+    } else {
+        dst = { position.x, position.y, frameWidth * scale, frameHeight * scale };
+    }
+    
+    
+    Vector2 origin = {0.0f, 0.0f};       // Top-left origin
+    DrawTexturePro(sprite.texture, src, dst, origin, 0.0f, WHITE);
 }

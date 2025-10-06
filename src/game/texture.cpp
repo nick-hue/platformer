@@ -24,13 +24,25 @@ void TextureHandler::LoadTextures() {
     if (spike.id == 0) { TraceLog(LOG_ERROR, "Failed to load spike texture"); }
     textures.emplace_back(spike);
 
-    floor = LoadTexture("assets/resources/world_tileset.png");
-    if (floor.id == 0) { TraceLog(LOG_ERROR, "Failed to load floor texture"); }
-    textures.emplace_back(floor);
+    // floor = LoadTexture("assets/resources/world_tileset.png");
+    // if (floor.id == 0) { TraceLog(LOG_ERROR, "Failed to load floor texture"); }
+    // textures.emplace_back(floor);
 
     ground = LoadTexture("assets/sprites/world/ground-Sheet.png");
-    if (ground.id == 0) { TraceLog(LOG_ERROR, "Failed to load floor texture"); }
+    if (ground.id == 0) { TraceLog(LOG_ERROR, "Failed to load ground texture"); }
     textures.emplace_back(ground);
+
+    platform.left = LoadTexture("assets/sprites/world/platform/platform_left.png");
+    if (platform.left.id == 0) { TraceLog(LOG_ERROR, "Failed to left platform texture"); }
+    textures.emplace_back(platform.left);
+
+    platform.mid = LoadTexture("assets/sprites/world/platform/platform_mid.png");
+    if (platform.mid.id == 0) { TraceLog(LOG_ERROR, "Failed to mid platform texture"); }
+    textures.emplace_back(platform.mid);
+
+    platform.right = LoadTexture("assets/sprites/world/platform/platform_right.png");
+    if (platform.right.id == 0) { TraceLog(LOG_ERROR, "Failed to right platform texture"); }
+    textures.emplace_back(platform.right);
 
 }
 
@@ -40,6 +52,7 @@ void TextureHandler::SetupTextures(GameState& gameState) {
     SetupHeartTextures(gameState);
     SetupSpikeTextures(gameState);
     SetupFloorTileTextures(gameState);
+    SetupPlatformTextures(gameState);
 }
 
 void TextureHandler::UnloadTextures() {
@@ -111,5 +124,34 @@ void TextureHandler::SetupFloorTileTextures(GameState& gameState){
         tile.sprite.SetSprite(ground, tile.position, 3, 3);
         tile.sprite.scale = 1.0f;
         tile.spriteSheetLocation = GetSpriteLocation(tile.type);
+    }
+}
+
+void TextureHandler::SetPlatformTexture(ItemSprite& sprite, int index){
+    if (index == 0)
+        sprite.texture = platform.left;
+    else if (index == 1)
+        sprite.texture = platform.mid;
+    else if (index == 2)
+        sprite.texture = platform.right;
+    else 
+        TraceLog(LOG_ERROR, "Bad platform texture");
+    
+}
+
+void TextureHandler::SetupPlatformTextures(GameState& gameState){
+    for (auto& plat : gameState.map.grid.platforms){
+        printf("Setting up platform : %d\n", plat.id);
+        Vector2 position = plat.position; 
+        int textureIndex = 0;
+        for (auto& sprite : plat.sprites){
+            SetPlatformTexture(sprite, textureIndex++);            
+            sprite.SetSprite(sprite.texture, position, 1, 1);
+            sprite.idle = Anim{0, 0, 1, 12.f};
+            sprite.scale = 1.0f;
+            position.x += 16;
+            printf("sprite texture of plat : %d is : %d\n", plat.id, sprite.texture.id);
+        }
+        
     }
 }

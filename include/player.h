@@ -62,11 +62,11 @@ private:
 
 class PlayerSprite {
 public:
-    Texture2D sprite{};
+    Texture2D texture{};
     int cols{9};
     int rows{7};
-    int frameWidth{sprite.width/cols};  // frame width
-    int frameHeight{sprite.height/rows}; // frame height
+    int frameWidth{texture.width/cols};  // frame width
+    int frameHeight{texture.height/rows}; // frame height
     float animFPS{12.0f};
     float scale = 2.25f;
     

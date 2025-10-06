@@ -1,20 +1,29 @@
 #include "moving_platform.h"
 #include "game.h"
 
-MovingPlatform::MovingPlatform(Vector2 start_pos, Vector2 movement,int plat_id){
-    position = start_pos;
-    lastPosition = start_pos;
-    movementBounds = Vector4{position.x, position.x + movement.x, position.y, position.y + movement.y};
+MovingPlatform::MovingPlatform(Vector2 start_pos, Vector2 movement, int plat_length, int tile_size, int plat_id){
+    gridPos = start_pos;
+    position = Vector2{start_pos.x * tileSize, start_pos.y * tileSize};
+    lastPosition = position;
+    length = plat_length;
+    tileSize = tileSize;
+    box = Rectangle{position.x, position.y, (float) length * tileSize, (float) tileSize};
+    movementBounds = Vector4{position.x, position.x + movement.x * tileSize, position.y, position.y + movement.y * tileSize};
     id = plat_id;
     if (movementBounds.x == movementBounds.y)
         velocity.x = 0.0f;
     if (movementBounds.z == movementBounds.w)
         velocity.y = 0.0f;
+    sprites = {sprite_left, sprite_mid, sprite_right};
 }
 
 void MovingPlatform::Draw() const {
+
+    // for (auto& sprite : sprites){
+    //     sprite.Draw(true, length, sprite);
+    // }
     DrawRectangleRec(box, color);
-    DrawRectangleLinesEx(box, 1.0f, color);
+    DrawRectangleLinesEx(box, 1.0f, outlineColor);
 }
 
 static inline void GetMovementDirection(Vector2 pos, const Vector4& bounds, Vector2& dir){  

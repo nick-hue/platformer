@@ -6,12 +6,12 @@
 
 class ItemSprite {
 public:
-    Texture2D sprite{};
+    Texture2D texture{};
     Vector2 position{0.0f, 0.0f}; // Example position
     int cols{1};
     int rows{1};
-    int frameWidth{sprite.width/cols};  // frame width
-    int frameHeight{sprite.height/rows}; // frame height
+    int frameWidth{texture.width/cols};  // frame width
+    int frameHeight{texture.height/rows}; // frame height
     float animFPS{12.0f};
     float scale = 1.0f;
     
@@ -27,4 +27,5 @@ public:
     void Draw() const;
     void Draw(int col) const;
     void Draw(std::pair<int,int> location) const;
+    void Draw(bool meow, int length, ItemSprite sprite) const ;
 };

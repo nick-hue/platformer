@@ -103,16 +103,27 @@ void Map::LoadMap(const char *filename){
     LoadPlatforms();
 }
 
+/**
+ * @brief
+ * returns a random <GroundTileType> depending on the list provided, i.e. if we want
+ * a random underground tile we supply the <GroundTiles.undergroundTiles> as [list]
+ * @param
+ * list : the list we want to get random tiles out of
+ */
+GroundTileType GetRandomTileType(std::vector<GroundTileType> list){
+    int index = rand() % (int) list.size();  
+    return list[index];
+}
+
 GroundTileType Map::GetTypeForTile(int i, int j){
-    if (j-1 < 0) return GroundTileType::GROUND;
+    
+    if (j-1 < 0) return GetRandomTileType(groundTiles.undergroundTiles);
     Cell cellAbove = grid.matrix[i][j-1];
     
     if (!cellAbove.isOccupied){
-        return GroundTileType::GRASS;
+        return GetRandomTileType(groundTiles.grassTiles);
     } else {
-        // one out of 10 times return broken tile sprite
-        int r = rand() % 10;  
-        return (r != 0) ? GroundTileType::GROUND : GroundTileType::BROKEN;
+        return GetRandomTileType(groundTiles.undergroundTiles);
     }
 
 }

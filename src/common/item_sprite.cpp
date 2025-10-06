@@ -23,7 +23,7 @@ void ItemSprite::UpdateAnimation(float dt) {
 
 void ItemSprite::Draw() const {
     if (sprite.id == 0) {  // fallback if no texture yet
-        DrawRectangle(100, 100, 50, 50, BLUE);
+        DrawRectangle(100, 100, 32, 32, BLUE);
         return;
     }
 
@@ -42,7 +42,7 @@ void ItemSprite::Draw() const {
 
 void ItemSprite::Draw(int col) const {
     if (sprite.id == 0) {  // fallback if no texture yet
-        DrawRectangle(position.x, position.y, 100, 50, RED);
+        DrawRectangle(position.x, position.y, 32, 32, RED);
         return;
     }
 
@@ -61,7 +61,7 @@ void ItemSprite::Draw(int col) const {
 
 void ItemSprite::Draw(std::pair<int,int> location) const{
     if (sprite.id == 0) {  // fallback if no texture yet
-        DrawRectangle(position.x, position.y, 100, 50, BLUE);
+        DrawRectangle(position.x, position.y, 32, 32, BLUE);
         return;
     }
 

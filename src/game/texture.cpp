@@ -10,17 +10,20 @@ void TextureHandler::LoadTextures() {
     player = LoadTexture("assets/sprites/characters/penguin.png");
     if (player.id == 0) { TraceLog(LOG_ERROR, "Failed to load player texture"); }
 
-    keyGoal = LoadTexture("assets/sprites/items/key/goal_key.png");
+    keyGoal = LoadTexture("assets/sprites/world/items/key/goal_key.png");
     if (keyGoal.id == 0) { TraceLog(LOG_ERROR, "Failed to load key goal texture"); }
 
     heart = LoadTexture("assets/sprites/ui/heart/heart_32x32.png");
     if (heart.id == 0) { TraceLog(LOG_ERROR, "Failed to load heart texture"); }
 
-    spike = LoadTexture("assets/sprites/items/spike/spikes.png");
+    spike = LoadTexture("assets/sprites/world/items/spike/spikes.png");
     if (spike.id == 0) { TraceLog(LOG_ERROR, "Failed to load spike texture"); }
 
     floor = LoadTexture("assets/resources/world_tileset.png");
     if (floor.id == 0) { TraceLog(LOG_ERROR, "Failed to load floor texture"); }
+
+    ground = LoadTexture("assets/sprites/world/ground-Sheet.png");
+    if (ground.id == 0) { TraceLog(LOG_ERROR, "Failed to load floor texture"); }
 
 }
 
@@ -39,12 +42,13 @@ void TextureHandler::UnloadTextures() {
     if (heart.id != 0) UnloadTexture(heart);
     if (spike.id != 0) UnloadTexture(spike);
     if (floor.id != 0) UnloadTexture(floor);
+    if (ground.id != 0) UnloadTexture(floor);
 }
 
 void TextureHandler::SetupPlayerTexture(GameState& gameState){
     gameState.playerSprite.SetSprite(player, 8, 2);
     gameState.playerSprite.idle = Anim{0, 0, 4, 60.f};   // row 0, cols [0..3]
-    gameState.playerSprite.scale = 1.3f;
+    gameState.playerSprite.scale = 1.4f;
     gameState.playerSprite.walk = Anim{1, 0, 8, 60.f};  // row 1, cols [0..8]
 }
 
@@ -82,17 +86,27 @@ void TextureHandler::SetupSpikeTextures(GameState& gameState) {
 std::pair<int, int> GetSpriteLocation(GroundTileType type){
     switch (type)
     {
-        case GroundTileType::GRASS: return {0,0};
-        case GroundTileType::GROUND: return {1,0};
-        case GroundTileType::BROKEN: return {0,1};
-        default: return {-1, -1};
+    case GroundTileType::GRASS_1: return {0, 0};
+    case GroundTileType::GRASS_2: return {0, 1};
+    case GroundTileType::GRASS_3: return {0, 2};
+    case GroundTileType::UNDERGROUND_1: return {1,0}; 
+    case GroundTileType::UNDERGROUND_2: return {1,1}; 
+    case GroundTileType::UNDERGROUND_3: return {1,2}; 
+    case GroundTileType::UNDERGROUND_4: return {2,0}; 
+    case GroundTileType::UNDERGROUND_5: return {2,1}; 
+    case GroundTileType::UNDERGROUND_6: return {2,2}; 
+    case GroundTileType::UNKNOWN: return {-1,-1};
+    default: return {-1, -1};
     }
 }
 
 void TextureHandler::SetupFloorTileTextures(GameState& gameState){
     for (auto& tile : gameState.map.tiles){
-        tile.sprite.SetSprite(floor, tile.position, 16, 16);
-        tile.sprite.scale = 2.0f;
+        // tile.sprite.SetSprite(floor, tile.position, 16, 16);
+        // tile.sprite.scale = 2.0f;
+        // tile.spriteSheetLocation = GetSpriteLocation(tile.type);
+        tile.sprite.SetSprite(ground, tile.position, 3, 3);
+        tile.sprite.scale = 1.0f;
         tile.spriteSheetLocation = GetSpriteLocation(tile.type);
     }
 }

@@ -328,7 +328,7 @@ void PlayerSprite::UpdateAnimation(float dt, Player& player) {
     if (player.velocity.x < -1.0f) facingRight = false;
 
     Anim& anim = CurrentAnim();
-    printf("current anim : %s\n", (anim.frames == 4) ? "idle" : "walk");
+    // printf("current anim : %s\n", (anim.frames == 4) ? "idle" : "walk");
     animTimer += dt;
     const float spf = 1.0f / animFPS;   // seconds per frame
     while (animTimer >= spf) {

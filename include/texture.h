@@ -1,5 +1,6 @@
 #pragma once
 #include "raylib.h"
+#include "tile.h"
 class GameState;
 
 class TextureHandler {
@@ -10,6 +11,7 @@ public:
     Texture2D heart;
     Texture2D spike;
     Texture2D floor;
+    Texture2D ground;
 
     TextureHandler() = default;
     void LoadTextures();

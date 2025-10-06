@@ -6,7 +6,7 @@ MovingPlatform::MovingPlatform(Vector2 start_pos, Vector2 movement, int plat_len
     position = Vector2{start_pos.x * tileSize, start_pos.y * tileSize};
     lastPosition = position;
     length = plat_length;
-    tileSize = tileSize;
+    tileSize = tile_size;
     box = Rectangle{position.x, position.y, (float) length * tileSize, (float) tileSize};
     movementBounds = Vector4{position.x, position.x + movement.x * tileSize, position.y, position.y + movement.y * tileSize};
     id = plat_id;
@@ -14,16 +14,13 @@ MovingPlatform::MovingPlatform(Vector2 start_pos, Vector2 movement, int plat_len
         velocity.x = 0.0f;
     if (movementBounds.z == movementBounds.w)
         velocity.y = 0.0f;
-    sprites = {sprite_left, sprite_mid, sprite_right};
 }
 
 void MovingPlatform::Draw() const {
-
-    // for (auto& sprite : sprites){
-    //     sprite.Draw(true, length, sprite);
-    // }
+    sprite.Draw(length);
+    
     DrawRectangleRec(box, color);
-    DrawRectangleLinesEx(box, 1.0f, outlineColor);
+    // DrawRectangleLinesEx(box, 1.0f, outlineColor);
 }
 
 static inline void GetMovementDirection(Vector2 pos, const Vector4& bounds, Vector2& dir){  

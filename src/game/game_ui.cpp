@@ -2,7 +2,7 @@
 #include "game.h"
 
 GameUI::GameUI(Vector2 position, int maxLives) {
-    heartPosition = position;
+    startingPosition = position;
     for (int i = 0; i < maxLives; ++i) {
         hearts[i] = Heart();
     }

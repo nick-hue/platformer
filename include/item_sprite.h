@@ -1,6 +1,7 @@
 #pragma once
 #include "raylib.h"
 #include "anim.h"
+#include "texture.h"
 #include <cstdio>
 #include <utility>
 
@@ -25,7 +26,31 @@ public:
     void SetSprite(Texture2D tex, Vector2 pos, int cols_, int rows_);
     void UpdateAnimation(float dt);
     void Draw() const;
-    void Draw(int col) const;
+};
+
+class TileSprite : public ItemSprite
+{
+public:
     void Draw(std::pair<int,int> location) const;
-    void Draw(bool meow, int length, ItemSprite sprite) const ;
+};
+
+
+class SpikeSprite : public ItemSprite
+{
+public:
+    void Draw(int col) const;
+};
+
+class PlatformSprite : public ItemSprite
+{
+public:
+    // PlatformTextures textures;
+    ItemSprite left;
+    ItemSprite mid;
+    ItemSprite right;
+
+    void SetSprite(Texture2D& tex_left, Texture2D& tex_mid, Texture2D& tex_right, Vector2 pos, int length);
+    void Draw(int length) const ; 
+    void DrawMiddle(int length) const ;
+
 };

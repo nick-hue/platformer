@@ -143,9 +143,9 @@ void Map::CellToTiles() {
 }
 
 void Map::LoadPlatforms(){
-    MovingPlatform platform = MovingPlatform{Vector2{3.0f, 5.0}, Vector2{2.0, 0.0f}, 6, MAP_TILE_WIDTH, (int) grid.platforms.size() + 1};
+    MovingPlatform platform = MovingPlatform{Vector2{3.0f, 5.0}, Vector2{5.0, 0.0f}, 6, MAP_TILE_WIDTH, (int) grid.platforms.size() + 1};
     grid.platforms.emplace_back(platform);
-    platform = MovingPlatform{Vector2{8.0f, 2.0f}, Vector2{0.0f, 4.0f}, 6, MAP_TILE_WIDTH, (int) grid.platforms.size() + 1};
+    platform = MovingPlatform{Vector2{8.0f, 2.0f}, Vector2{0.0f, 4.0f}, 3, MAP_TILE_WIDTH, (int) grid.platforms.size() + 1};
     grid.platforms.emplace_back(platform);
 } 
 

@@ -23,11 +23,7 @@ void TextureHandler::LoadTextures() {
     spike = LoadTexture("assets/sprites/world/items/spike/spikes.png");
     if (spike.id == 0) { TraceLog(LOG_ERROR, "Failed to load spike texture"); }
     textures.emplace_back(spike);
-
-    // floor = LoadTexture("assets/resources/world_tileset.png");
-    // if (floor.id == 0) { TraceLog(LOG_ERROR, "Failed to load floor texture"); }
-    // textures.emplace_back(floor);
-
+    
     ground = LoadTexture("assets/sprites/world/ground-Sheet.png");
     if (ground.id == 0) { TraceLog(LOG_ERROR, "Failed to load ground texture"); }
     textures.emplace_back(ground);
@@ -75,7 +71,7 @@ void TextureHandler::SetupKeyGoalTexture(GameState& gameState){
 
 void TextureHandler::SetupHeartTextures(GameState& gameState) {
     for (int i = 0; i < gameState.maxLives; ++i) {
-        gameState.gameUI.hearts[i].position = Vector2{(i+1) * gameState.gameUI.heartPosition.x, gameState.gameUI.heartPosition.y};
+        gameState.gameUI.hearts[i].position = Vector2{(i+1) * gameState.gameUI.startingPosition.x, gameState.gameUI.startingPosition.y};
         gameState.gameUI.hearts[i].sprite.SetSprite(heart
                                     , gameState.gameUI.hearts[i].position,
                                     3, 1);
@@ -118,40 +114,18 @@ std::pair<int, int> GetSpriteLocation(GroundTileType type){
 
 void TextureHandler::SetupFloorTileTextures(GameState& gameState){
     for (auto& tile : gameState.map.tiles){
-        // tile.sprite.SetSprite(floor, tile.position, 16, 16);
-        // tile.sprite.scale = 2.0f;
-        // tile.spriteSheetLocation = GetSpriteLocation(tile.type);
-        tile.sprite.SetSprite(ground, tile.position, 3, 3);
-        tile.sprite.scale = 1.0f;
+        if (!tile.sprite) tile.sprite = std::make_unique<TileSprite>();
+        tile.sprite->SetSprite(ground, tile.position, 3, 3);   
+        tile.sprite->scale = 1.0f;
         tile.spriteSheetLocation = GetSpriteLocation(tile.type);
     }
 }
 
-void TextureHandler::SetPlatformTexture(ItemSprite& sprite, int index){
-    if (index == 0)
-        sprite.texture = platform.left;
-    else if (index == 1)
-        sprite.texture = platform.mid;
-    else if (index == 2)
-        sprite.texture = platform.right;
-    else 
-        TraceLog(LOG_ERROR, "Bad platform texture");
-    
-}
 
 void TextureHandler::SetupPlatformTextures(GameState& gameState){
     for (auto& plat : gameState.map.grid.platforms){
         printf("Setting up platform : %d\n", plat.id);
-        Vector2 position = plat.position; 
-        int textureIndex = 0;
-        for (auto& sprite : plat.sprites){
-            SetPlatformTexture(sprite, textureIndex++);            
-            sprite.SetSprite(sprite.texture, position, 1, 1);
-            sprite.idle = Anim{0, 0, 1, 12.f};
-            sprite.scale = 1.0f;
-            position.x += 16;
-            printf("sprite texture of plat : %d is : %d\n", plat.id, sprite.texture.id);
-        }
-        
+        plat.sprite.SetSprite(platform.left, platform.mid, platform.right, plat.position, plat.length);
     }
+
 }

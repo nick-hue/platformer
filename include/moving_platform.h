@@ -22,10 +22,7 @@ public:
     Color color{BLACK};
     Color outlineColor{RED};
     
-    ItemSprite sprite_left{}; 
-    ItemSprite sprite_mid{}; 
-    ItemSprite sprite_right{}; 
-    std::vector<ItemSprite> sprites;
+    PlatformSprite sprite{};
     int length = 3; // how many middle segments to repeat
     int tileSize{32};
 
@@ -38,9 +35,6 @@ public:
     void Update(GameState& gameState);
     void Draw() const ;
     void SyncRect() { box.x = position.x; box.y = position.y; };
-
     void Move(GameState& gameState);
-
-
     inline std::string ToString(const MovingPlatform& plat);
 };

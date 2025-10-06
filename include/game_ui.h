@@ -12,7 +12,7 @@ class GameState;
 class GameUI {
 public:
     // hearts
-    Vector2 heartPosition{50.0f, 100.0f};
+    Vector2 startingPosition{50.0f, 100.0f};
     std::array<Heart, 3> hearts;
 
     //background

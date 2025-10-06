@@ -15,7 +15,7 @@ public:
     Color   color{YELLOW};
     TriangleMode mode{TriangleMode::NONE};    
     bool falling{false};
-    ItemSprite sprite;
+    SpikeSprite sprite;
     int spriteCol = 0;
     
     std::array<Vector2,3> vertices{ Vector2{0,0}, Vector2{0,0}, Vector2{0,0} };

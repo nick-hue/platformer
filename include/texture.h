@@ -1,6 +1,7 @@
 #pragma once
 #include "raylib.h"
-#include "tile.h"
+#include <vector>
+
 class GameState;
 
 struct PlatformTextures {
@@ -20,7 +21,6 @@ public:
     Texture2D ground;
     PlatformTextures platform;
     
-
     std::vector<Texture2D> textures;
 
     TextureHandler() = default;
@@ -34,5 +34,4 @@ public:
     void SetupSpikeTextures(GameState& gameState);
     void SetupFloorTileTextures(GameState& gameState);
     void SetupPlatformTextures(GameState& gameState);
-    void SetPlatformTexture(ItemSprite& sprite, int index);
 };

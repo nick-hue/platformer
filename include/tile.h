@@ -1,36 +1,24 @@
 #pragma once
 #include "raylib.h"
 #include <vector>
-#include "item_sprite.h"
+#include <cstdio>
 #include <utility>
+#include <memory>         
 
-// enum GroundTileType {
-//     GRASS,
-//     GROUND,
-//     BROKEN,
-//     UNKNOWN  
-// };
+class TileSprite;         
+
 enum GroundTileType {
-    GRASS_1,
-    GRASS_2,
-    GRASS_3,
-    UNDERGROUND_1,
-    UNDERGROUND_2,
-    UNDERGROUND_3,
-    UNDERGROUND_4,
-    UNDERGROUND_5,
-    UNDERGROUND_6,
+    GRASS_1, GRASS_2, GRASS_3,
+    UNDERGROUND_1, UNDERGROUND_2, UNDERGROUND_3,
+    UNDERGROUND_4, UNDERGROUND_5, UNDERGROUND_6,
     UNKNOWN  
 };
 
 struct GroundTiles {
     std::vector<GroundTileType> grassTiles = {GRASS_1, GRASS_2, GRASS_3};
-    std::vector<GroundTileType> undergroundTiles = {UNDERGROUND_1,
-                                                    UNDERGROUND_2,
-                                                    UNDERGROUND_3,
-                                                    UNDERGROUND_4,    
-                                                    UNDERGROUND_5,
-                                                    UNDERGROUND_6};
+    std::vector<GroundTileType> undergroundTiles = {UNDERGROUND_1, UNDERGROUND_2,
+                                                    UNDERGROUND_3, UNDERGROUND_4,    
+                                                    UNDERGROUND_5, UNDERGROUND_6};
 };
 
 inline void TileTypeToString(GroundTileType type){
@@ -51,27 +39,23 @@ inline void TileTypeToString(GroundTileType type){
 }
 
 // Simple solid object (floor, wall, ceiling, platform)
-struct Tile {
+class Tile {
+public:
     Vector2 position{};
     float width{};
     float height{};
     Rectangle rect{};
     Color color{};
-    GroundTileType type;
-    std::pair<int, int> spriteSheetLocation;
-    ItemSprite sprite;
-    std::pair<int, int> gridPos;
+    GroundTileType type{};
+    std::pair<int,int> spriteSheetLocation{};
+    std::unique_ptr<TileSprite> sprite;   // <-- pointer, not value
+    std::pair<int,int> gridPos{};
 
-    Tile(float x, float y, float w, float h, Color c, GroundTileType t)
-        : position{ x, y }, width{ w }, height{ h }, rect{ x, y, w, h }, color{ c }, type{t}, gridPos{position.x / w, position.y / h} {}
+    Tile(float x, float y, float w, float h, Color c, GroundTileType t);
 
     void Sync() { rect = { position.x, position.y, width, height }; }
 
-    void Draw() { sprite.Draw(spriteSheetLocation); }
+    void Draw();
 
     void DrawOutline() { DrawRectangleLinesEx(rect, 1.0f, RED); }
-    // void Draw() { DrawRectangleRec(rect, color); }
 };
-
-// Global container for tiles/platforms in your level
-extern std::vector<Tile> platforms;
